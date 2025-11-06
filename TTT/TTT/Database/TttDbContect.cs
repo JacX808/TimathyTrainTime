@@ -1,0 +1,27 @@
+﻿using Microsoft.EntityFrameworkCore;
+using TTT.DataSets;
+
+namespace TTT.Database;
+
+// DbContext (in Infrastructure)
+public sealed class TttDbContext : DbContext
+{
+    public DbSet<MovementEvent> MovementEvents => Set<MovementEvent>();
+    public DbSet<CurrentTrainPosition> CurrentPositions => Set<CurrentTrainPosition>();
+    public DbSet<Location> Locations => Set<Location>();
+
+    public TttDbContext(DbContextOptions<TttDbContext> options) : base(options) {}
+
+    protected override void OnModelCreating(ModelBuilder b)
+    {
+        b.Entity<MovementEvent>()
+            .HasIndex(e => new { e.TrainId, e.ActualTimestampMs, e.LocStanox, e.EventType })
+            .IsUnique();
+
+        b.Entity<CurrentTrainPosition>()
+            .HasKey(p => p.TrainId);
+
+        b.Entity<Location>()
+            .HasKey(l => l.Stanox);
+    }
+}
