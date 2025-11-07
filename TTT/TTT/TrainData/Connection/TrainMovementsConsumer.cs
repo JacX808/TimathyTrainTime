@@ -2,11 +2,10 @@
 using Confluent.Kafka;
 using Microsoft.Extensions.Options;
 using TTT.Database;
-using TTT.DataSets;
 using TTT.Movement.ConsumerBackgroundService;
 using TTT.TrainData.DataSets;
 
-namespace TTT.Movement;
+namespace TTT.TrainData.Connection;
 
 // BackgroundService
 public sealed class TrainMovementsConsumer : BackgroundService
