@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-namespace TTT.Controllers;
+namespace TTT.Health;
 
 [ApiController]
 [Route("api/[controller]")]

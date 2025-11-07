@@ -1,8 +1,7 @@
-﻿using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using TTT.Database;
 
-namespace TTT.Movement;
+namespace TTT.TrainData.Movement;
 
 [ApiController]
 [Route("api/trains")]

@@ -1,4 +1,4 @@
-﻿namespace TTT.Movement.ConsumerBackgroundService;
+﻿namespace TTT.TrainData.DataSets;
 
 public sealed class TrainMovementBody
 {
