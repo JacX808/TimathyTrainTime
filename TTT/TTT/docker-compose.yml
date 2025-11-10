@@ -6,6 +6,8 @@ services:
       POSTGRES_USER: ${DB_USERNAME:-app}
       POSTGRES_PASSWORD: ${DB_PASSWORD:-app}
       POSTGRES_DB: ${DB_NAME:-ttt}
+      OpenRail__NR_USERNAME: ${NR_USERNAME:-user}
+      OpenRail__NR_PASSWORD: ${NR_PASSWORD:-pass}
     ports: ["5432:5432"]
     volumes:
       - pg_data:/var/lib/postgresql/data
