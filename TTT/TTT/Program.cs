@@ -1,7 +1,22 @@
+using Microsoft.EntityFrameworkCore;
+using TTT.Database;
 using TTT.TrainData.Connection;
 using TTT.TrainData.DataSets;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Build connection string from environment (also works in GitHub Actions)
+string host = builder.Configuration["DB_HOST"] ?? "localhost";
+string port = builder.Configuration["DB_PORT"] ?? "3306";
+string user = builder.Configuration["DB_USERNAME"] ?? "app";
+string pass = builder.Configuration["DB_PASSWORD"] ?? "app";
+string db   = builder.Configuration["DB_NAME"] ?? "ttt";
+
+// DB connection service
+var connString = $"Host={host};Port={port};Database={db};Username={user};Password={pass}";
+
+builder.Services.AddDbContext<TttDbContext>(opt =>
+    opt.UseNpgsql(connString));
 
 // Swagger & controllers
 builder.Services.AddControllers();
