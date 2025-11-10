@@ -11,6 +11,8 @@ public sealed class TttDbContext : DbContext
     public DbSet<Location> Locations => Set<Location>();
 
     public TttDbContext(DbContextOptions<TttDbContext> options) : base(options) {}
+    
+    public DbSet<TrainRun> TrainRuns => Set<TrainRun>();
 
     protected override void OnModelCreating(ModelBuilder b)
     {
@@ -23,5 +25,12 @@ public sealed class TttDbContext : DbContext
 
         b.Entity<Location>()
             .HasKey(l => l.Stanox);
+    }
+    
+    public sealed class TrainRun
+    {
+        public int Id { get; set; }                  
+        public string TrainId { get; set; } = default!;
+        public DateTimeOffset FirstSeenUtc { get; set; }
     }
 }
