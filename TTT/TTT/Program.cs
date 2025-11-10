@@ -5,18 +5,15 @@ using TTT.TrainData.DataSets;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Build connection string from environment (also works in GitHub Actions)
+// DB Connection
 string host = builder.Configuration["DB_HOST"] ?? "localhost";
-string port = builder.Configuration["DB_PORT"] ?? "3306";
+string port = builder.Configuration["DB_PORT"] ?? "5432";
 string user = builder.Configuration["DB_USERNAME"] ?? "app";
 string pass = builder.Configuration["DB_PASSWORD"] ?? "app";
 string db   = builder.Configuration["DB_NAME"] ?? "ttt";
 
-// DB connection service
-var connString = $"Host={host};Port={port};Database={db};Username={user};Password={pass}";
-
-builder.Services.AddDbContext<TttDbContext>(opt =>
-    opt.UseNpgsql(connString));
+var conn = $"Host={host};Port={port};Database={db};Username={user};Password={pass}";
+builder.Services.AddDbContext<TttDbContext>(o => o.UseNpgsql(conn));
 
 // Swagger & controllers
 builder.Services.AddControllers();

@@ -9,9 +9,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a138a5cd-f4a5-4b3e-9a2f-eb71b297574f" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/TTT/docker-compose.yml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/../.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.TTT/.idea/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.TTT/.idea/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.TTT/.idea/dataSources.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.TTT/.idea/dataSources.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.TTT/.idea/encodings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.TTT/.idea/encodings.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.TTT/.idea/indexLayout.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.TTT/.idea/indexLayout.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.TTT/.idea/projectSettingsUpdater.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.TTT/.idea/projectSettingsUpdater.xml" afterDir="false" />
@@ -35,6 +35,7 @@
       <change beforePath="$PROJECT_DIR$/TTT/TrainData/Movement/MovementController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/TTT/TrainData/Movement/MovementController.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/TTT/appsettings.Development.json" beforeDir="false" afterPath="$PROJECT_DIR$/TTT/appsettings.Development.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/TTT/appsettings.json" beforeDir="false" afterPath="$PROJECT_DIR$/TTT/appsettings.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TTT/docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/TTT/docker-compose.yml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -191,6 +192,7 @@
       <workItem from="1762511206936" duration="1341000" />
       <workItem from="1762512645018" duration="4397000" />
       <workItem from="1762771375218" duration="1448000" />
+      <workItem from="1762772904175" duration="1355000" />
     </task>
     <servers />
   </component>
@@ -228,78 +230,78 @@
         </breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/TTT/Program.cs</url>
-          <line>56</line>
+          <line>53</line>
           <properties documentPath="C:\Work\Projects\TTT\TimathyTrainTime\TTT\TTT\Program.cs" containingFunctionPresentation="">
             <startOffsets>
-              <option value="2020" />
+              <option value="1916" />
             </startOffsets>
             <endOffsets>
-              <option value="2028" />
+              <option value="1924" />
             </endOffsets>
           </properties>
           <option name="timeStamp" value="4" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/TTT/Program.cs</url>
-          <line>52</line>
+          <line>49</line>
           <properties documentPath="C:\Work\Projects\TTT\TimathyTrainTime\TTT\TTT\Program.cs" containingFunctionPresentation="">
             <startOffsets>
-              <option value="1776" />
+              <option value="1672" />
             </startOffsets>
             <endOffsets>
-              <option value="1834" />
+              <option value="1730" />
             </endOffsets>
           </properties>
           <option name="timeStamp" value="5" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/TTT/Program.cs</url>
-          <line>54</line>
+          <line>51</line>
           <properties documentPath="C:\Work\Projects\TTT\TimathyTrainTime\TTT\TTT\Program.cs" containingFunctionPresentation="">
             <startOffsets>
-              <option value="1908" />
+              <option value="1804" />
             </startOffsets>
             <endOffsets>
-              <option value="1963" />
+              <option value="1859" />
             </endOffsets>
           </properties>
           <option name="timeStamp" value="6" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/TTT/Program.cs</url>
-          <line>49</line>
+          <line>46</line>
           <properties documentPath="C:\Work\Projects\TTT\TimathyTrainTime\TTT\TTT\Program.cs" containingFunctionPresentation="">
             <startOffsets>
-              <option value="1695" />
+              <option value="1591" />
             </startOffsets>
             <endOffsets>
-              <option value="1709" />
+              <option value="1605" />
             </endOffsets>
           </properties>
           <option name="timeStamp" value="7" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/TTT/Program.cs</url>
-          <line>48</line>
+          <line>45</line>
           <properties documentPath="C:\Work\Projects\TTT\TimathyTrainTime\TTT\TTT\Program.cs" containingFunctionPresentation="">
             <startOffsets>
-              <option value="1625" />
+              <option value="1521" />
             </startOffsets>
             <endOffsets>
-              <option value="1690" />
+              <option value="1586" />
             </endOffsets>
           </properties>
           <option name="timeStamp" value="8" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/TTT/Program.cs</url>
-          <line>46</line>
+          <line>43</line>
           <properties documentPath="C:\Work\Projects\TTT\TimathyTrainTime\TTT\TTT\Program.cs" containingFunctionPresentation="">
             <startOffsets>
-              <option value="1509" />
+              <option value="1405" />
             </startOffsets>
             <endOffsets>
-              <option value="2146" />
+              <option value="2042" />
             </endOffsets>
           </properties>
           <option name="timeStamp" value="9" />
