@@ -32,8 +32,8 @@ internal class Program
 
         // Open RailOptions + background consumer
         string sConnectUrl = "activemq:tcp://publicdatafeeds.networkrail.co.uk:61619?transport.useInactivityMonitor=false&initialReconnectDelay=250&reconnectDelay=500&consumerExpiryCheckEnabled=false";
-        string sUser = builder.Configuration["NR_USERNAME"] ?? "***";
-        string sPassword =  builder.Configuration["NR_PASSWORD"] ??"***";
+        string sUser = builder.Configuration["OpenRail:NR_USERNAME"] ?? "***";
+        string sPassword =  builder.Configuration["OpenRail:NR_PASSWORD"] ??"***";
         string sTopic1 = "TRAIN_MVT_ALL_TOC";
         string sTopic2 = "VSTP_ALL";
         bool bUseDurableSubscription = true;
@@ -42,7 +42,7 @@ internal class Program
         {
             Console.WriteLine("Connection to OpenRail failed: ");
             Console.WriteLine();
-            Console.WriteLine("ERROR:  Username and password did  not match.");
+            Console.WriteLine("ERROR:  Username and password did not match.");
             Console.ReadLine();
             return;
         }
@@ -52,12 +52,13 @@ internal class Program
         ConcurrentQueue<OpenRailMessage> oMessageQueue2 = new ConcurrentQueue<OpenRailMessage>();
         ConcurrentQueue<OpenRailException> oErrorQueue = new ConcurrentQueue<OpenRailException>();
 
+        
         // create the receiver
-        OpenRailNRODReceiver oNRODReceiver = new OpenRailNRODReceiver(
+        OpenRailNRODReceiver oNrodReceiver = new OpenRailNRODReceiver(
             sConnectUrl, sUser, sPassword, sTopic1, sTopic2, oMessageQueue1, oMessageQueue2, oErrorQueue, bUseDurableSubscription, 100);
-
+    
         // Start the receiver
-        oNRODReceiver.Start();
+        oNrodReceiver.Start();
         
         builder.Services.Configure<OpenRailOptions>(builder.Configuration.GetSection("OpenRail"));
         //builder.Services.AddHostedService < TrainMovementsConsumer);
@@ -68,6 +69,7 @@ internal class Program
         app.UseSwaggerUI();
         app.MapControllers();
         app.Run();
-
+        
+        oNrodReceiver.ListenForMessages();
     }
 }
