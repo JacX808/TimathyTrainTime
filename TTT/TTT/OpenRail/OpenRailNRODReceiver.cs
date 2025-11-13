@@ -24,128 +24,106 @@ namespace TTT.OpenRail
 
     public class OpenRailNRODReceiver
     {
-        private IConnectionFactory moConnectionFactory = null;
-        private IConnection moConnection = null;
-        private ISession moSession = null;
-        private ITopic moTopic1 = null;
-        private ITopic moTopic2 = null;
-        private IMessageConsumer moConsumer1 = null;
-        private IMessageConsumer moConsumer2 = null;
+        private IConnectionFactory? _moConnectionFactory;
+        private IConnection? _moConnection;
+        private ISession? _moSession;
+        private ITopic? _moTopic1;
+        private ITopic? _moTopic2;
+        private IMessageConsumer? _moConsumer1;
+        private IMessageConsumer? _moConsumer2;
         
-        private readonly NrodOptions _opts;
+        private readonly NetRailOptions _opts;
         private readonly ILogger<OpenRailNRODReceiver> _log;
 
-        private string msConnectUrl = null;
-        private string msUser = null;
-        private string msPassword = null;
-        public string msTopic1 = null;
-        public string msTopic2 = null;
-        private bool mbUseDurableSubscription = false;
-        private int miAttemptToConnectForSeconds = 120;
+        private readonly string _msConnectUrl;
+        private readonly string _msUser;
+        private readonly string _msPassword;
+        public readonly string MsTopic1;
+        public readonly string MsTopic2;
+        private readonly bool _mbUseDurableSubscription;
+        private readonly int _miAttemptToConnectForSeconds;
 
-        public ConcurrentQueue<OpenRailMessage> moMessageQueue1 = new ConcurrentQueue<OpenRailMessage>();
-        public ConcurrentQueue<OpenRailMessage> moMessageQueue2 = new ConcurrentQueue<OpenRailMessage>();
-        public ConcurrentQueue<OpenRailException> moErrorQueue = new ConcurrentQueue<OpenRailException>();
+        public readonly ConcurrentQueue<OpenRailMessage> MoMessageQueue1 = new ConcurrentQueue<OpenRailMessage>();
+        public readonly ConcurrentQueue<OpenRailMessage> MoMessageQueue2 = new ConcurrentQueue<OpenRailMessage>();
+        public readonly ConcurrentQueue<OpenRailException> MoErrorQueue = new ConcurrentQueue<OpenRailException>();
 
-        private CancellationTokenSource moCTS = null;
-        private Task mtManagement = null;
+        private CancellationTokenSource _moCts;
+        private Task _mtManagement;
 
-        private long miSpinSpreadUntilUtc = (new DateTime(2000, 1, 1)).Ticks;
-        private long miIsConnected = 0;
-        private long miLastMessageReceivedAtUtc = (new DateTime(2000, 1, 1)).Ticks;
-        private long miMessageReadCount1 = 0;
-        private long miMessageReadCount2 = 0;
-        private long miLastConnectionExceptionAtUtc = (new DateTime(2000, 1, 1)).Ticks;
+        private long _miSpinSpreadUntilUtc = (new DateTime(2000, 1, 1)).Ticks;
+        private long _miIsConnected = 0;
+        private long _miLastMessageReceivedAtUtc = (new DateTime(2000, 1, 1)).Ticks;
+        private long _miMessageReadCount1 = 0;
+        private long _miMessageReadCount2 = 0;
+        private long _miLastConnectionExceptionAtUtc = (new DateTime(2000, 1, 1)).Ticks;
 
         // TODO: Cleanup
-        public OpenRailNRODReceiver(IOptions<NrodOptions> opts, ILogger<OpenRailNRODReceiver> log)
+        public OpenRailNRODReceiver(IOptions<NetRailOptions> opts, ILogger<OpenRailNRODReceiver> log)
         {
             _opts = opts.Value;
             _log  = log;
-            
-            msConnectUrl = _opts.ConnectUrl;
-            msUser = _opts.NR_USERNAME ?? "***";
-            msPassword = _opts.NR_PASSWORD ?? "***";
-            msTopic1 = _opts.Topics.ElementAtOrDefault(0) ?? "TRAIN_MVT_ALL_TOC";
-            msTopic2 = _opts.Topics.ElementAtOrDefault(1) ?? "VSTP_ALL";
-            mbUseDurableSubscription = _opts.UseDurableSubscription;
+            _miAttemptToConnectForSeconds = 200;
+
+            _msConnectUrl = _opts.ConnectUrl;
+            _msUser = _opts.Username ?? "***";
+            _msPassword = _opts.Password ?? "***";
+            MsTopic1 = _opts.Topics.ElementAtOrDefault(0) ?? "TRAIN_MVT_ALL_TOC";
+            MsTopic2 = _opts.Topics.ElementAtOrDefault(1) ?? "VSTP_ALL";
+            _mbUseDurableSubscription = _opts.UseDurableSubscription;
 
             Start();
         }
 
-        public void Start()
+        private void Start()
         {
             lock (this)
             {
-                if (IsRunning) 
-                    throw new ApplicationException("OpenRailNRODReceiver already running!");
-                
-                moCTS = new CancellationTokenSource();
-                mtManagement = Task.Run((Func<Task>)Run);
-                mtManagement.ConfigureAwait(false);
+                _moCts = new CancellationTokenSource();
+                _mtManagement = Task.Run((Func<Task>)Run);
+                _mtManagement.ConfigureAwait(false);
             }
         }
 
-        public bool IsRunning
-        {
-            get
-            {
-                return mtManagement == null
-                    ? false
-                    : !(mtManagement.IsCanceled || mtManagement.IsCompleted || mtManagement.IsFaulted);
-            }
-        }
+        public bool IsRunning => !(_mtManagement.IsCanceled || _mtManagement.IsCompleted || _mtManagement.IsFaulted);
 
-        public bool IsConnected
-        {
-            get { return Interlocked.Read(ref miIsConnected) > 0; }
-        }
+        public bool IsConnected => Interlocked.Read(ref _miIsConnected) > 0;
 
-        public long MessageCount1
-        {
-            get { return Interlocked.Read(ref miMessageReadCount1); }
-        }
+        public long MessageCount1 => Interlocked.Read(ref _miMessageReadCount1);
 
-        public long MessageCount2
-        {
-            get { return Interlocked.Read(ref miMessageReadCount2); }
-        }
+        public long MessageCount2 => Interlocked.Read(ref _miMessageReadCount2);
 
-        public Exception FatalException
-        {
-            get { return mtManagement.IsFaulted ? mtManagement.Exception : null; }
-        }
+        public Exception? FatalException => _mtManagement.IsFaulted ? _mtManagement.Exception : null;
 
         public void RequestStop()
         {
-            if (moCTS != null) moCTS.Cancel();
+            _moCts.Cancel();
         }
 
         private DateTime SpinSpreadUntilUtc
         {
-            get { return new DateTime(Interlocked.Read(ref miSpinSpreadUntilUtc)); }
-            set { Interlocked.Exchange(ref miSpinSpreadUntilUtc, value.Ticks); }
+            get => new(Interlocked.Read(ref _miSpinSpreadUntilUtc));
+            set => Interlocked.Exchange(ref _miSpinSpreadUntilUtc, value.Ticks);
         }
 
         public DateTime LastMessageReceivedAtUtc
         {
-            get { return new DateTime(Interlocked.Read(ref miLastMessageReceivedAtUtc)); }
-            private set { Interlocked.Exchange(ref miLastMessageReceivedAtUtc, value.Ticks); }
+            get => new(Interlocked.Read(ref _miLastMessageReceivedAtUtc));
+            private set { Interlocked.Exchange(ref _miLastMessageReceivedAtUtc, value.Ticks); }
         }
 
-        public DateTime LastConnectionExceptionAtUtc
+        private DateTime LastConnectionExceptionAtUtc
         {
-            get { return new DateTime(Interlocked.Read(ref miLastConnectionExceptionAtUtc)); }
-            private set { Interlocked.Exchange(ref miLastConnectionExceptionAtUtc, value.Ticks); }
+            get => new(Interlocked.Read(ref _miLastConnectionExceptionAtUtc));
+            set => Interlocked.Exchange(ref _miLastConnectionExceptionAtUtc, value.Ticks);
         }
 
         private async Task Run()
         {
-            CancellationToken oCT = moCTS.Token;
+            CancellationToken oCT = _moCts.Token;
             try
             {
-                Interlocked.Exchange(ref miMessageReadCount1, 0);
-                Interlocked.Exchange(ref miMessageReadCount2, 0);
+                Interlocked.Exchange(ref _miMessageReadCount1, 0);
+                Interlocked.Exchange(ref _miMessageReadCount2, 0);
                 await Connect();
 
                 bool bRefreshRequired = false;
@@ -169,14 +147,14 @@ namespace TTT.OpenRail
             {
                 if (!oCT.IsCancellationRequested)
                 {
-                    moErrorQueue.Enqueue(new OpenRailFatalException("OpenRailNRODReceiver FAILED due to " +
-                                                                    OpenRailException.GetShortErrorInfo(oException),
+                    MoErrorQueue.Enqueue(new OpenRailFatalException($"OpenRailNRODReceiver FAILED due to {OpenRailException.GetShortErrorInfo(oException)}" +
+                        $"{oException.StackTrace}",
                         oException));
 
                     // rethrow the exception:
                     // this sets the Exception property of the Task object  
                     // i.e. makes this exception visible in the FatalException property of this class
-                    throw oException;
+                    throw;
                 }
             }
             finally
@@ -187,11 +165,11 @@ namespace TTT.OpenRail
 
         private async Task Connect()
         {
-            DateTime dtAttemptToConnectUntilUtc = DateTime.UtcNow.AddSeconds(miAttemptToConnectForSeconds);
+            DateTime dtAttemptToConnectUntilUtc = DateTime.UtcNow.AddSeconds(_miAttemptToConnectForSeconds);
             DateTime dtNextConnectAtUtc = new DateTime(2000, 1, 1);
             int iDelayDurationMilliSeconds = 250;
             Exception oLastException = null;
-            CancellationToken oCT = moCTS.Token;
+            CancellationToken oCT = _moCts.Token;
 
             while (DateTime.UtcNow < dtAttemptToConnectUntilUtc)
             {
@@ -221,39 +199,39 @@ namespace TTT.OpenRail
         {
             try
             {
-                moConnectionFactory = new NMSConnectionFactory(new Uri(msConnectUrl));
-                moConnection = moConnectionFactory.CreateConnection(msUser, msPassword);
-                moConnection.ClientId = msUser;
-                moConnection.ExceptionListener += new ExceptionListener(OnConnectionException);
-                moSession = moConnection.CreateSession(AcknowledgementMode.AutoAcknowledge);
-                if (!string.IsNullOrWhiteSpace(msTopic1))
+                _moConnectionFactory = new NMSConnectionFactory(new Uri(_msConnectUrl));
+                _moConnection = _moConnectionFactory.CreateConnection(_msUser, _msPassword);
+                _moConnection.ClientId = _msUser;
+                _moConnection.ExceptionListener += new ExceptionListener(OnConnectionException);
+                _moSession = _moConnection.CreateSession(AcknowledgementMode.AutoAcknowledge);
+                if (!string.IsNullOrWhiteSpace(MsTopic1))
                 {
-                    moTopic1 = moSession.GetTopic(msTopic1);
-                    if (mbUseDurableSubscription)
-                        moConsumer1 = moSession.CreateDurableConsumer(moTopic1, msTopic1, null, false);
-                    else moConsumer1 = moSession.CreateConsumer(moTopic1);
-                    moConsumer1.Listener += new MessageListener(OnMessageReceived1);
+                    _moTopic1 = _moSession.GetTopic(MsTopic1);
+                    if (_mbUseDurableSubscription)
+                        _moConsumer1 = _moSession.CreateDurableConsumer(_moTopic1, MsTopic1, null, false);
+                    else _moConsumer1 = _moSession.CreateConsumer(_moTopic1);
+                    _moConsumer1.Listener += new MessageListener(OnMessageReceived1);
                 }
 
-                if (!string.IsNullOrWhiteSpace(msTopic2))
+                if (!string.IsNullOrWhiteSpace(MsTopic2))
                 {
-                    moTopic2 = moSession.GetTopic(msTopic2);
-                    if (mbUseDurableSubscription)
-                        moConsumer2 = moSession.CreateDurableConsumer(moTopic2, msTopic2, null, false);
-                    else moConsumer2 = moSession.CreateConsumer(moTopic2);
-                    moConsumer2.Listener += new MessageListener(OnMessageReceived2);
+                    _moTopic2 = _moSession.GetTopic(MsTopic2);
+                    if (_mbUseDurableSubscription)
+                        _moConsumer2 = _moSession.CreateDurableConsumer(_moTopic2, MsTopic2, null, false);
+                    else _moConsumer2 = _moSession.CreateConsumer(_moTopic2);
+                    _moConsumer2.Listener += new MessageListener(OnMessageReceived2);
                 }
 
                 LastMessageReceivedAtUtc = DateTime.UtcNow;
                 SpinSpreadUntilUtc = DateTime.UtcNow.AddSeconds(30);
 
-                moConnection.Start();
-                Interlocked.Exchange(ref miIsConnected, 1);
+                _moConnection.Start();
+                Interlocked.Exchange(ref _miIsConnected, 1);
                 return true;
             }
             catch (Exception oException)
             {
-                moErrorQueue.Enqueue(new OpenRailConnectException("Connection attempt failed: " +
+                MoErrorQueue.Enqueue(new OpenRailConnectException("Connection attempt failed: " +
                                                                   OpenRailException.GetShortErrorInfo(oException),
                     oException));
                 Disconnect();
@@ -267,7 +245,7 @@ namespace TTT.OpenRail
             {
                 OpenRailConnectionException oConnectionException = new OpenRailConnectionException(
                     OpenRailException.GetShortErrorInfo(exception), exception);
-                moErrorQueue.Enqueue(oConnectionException);
+                MoErrorQueue.Enqueue(oConnectionException);
                 LastConnectionExceptionAtUtc = DateTime.UtcNow;
             }
             catch
@@ -291,25 +269,32 @@ namespace TTT.OpenRail
                     Thread.SpinWait(new Random((int)(iSeed % Int32.MaxValue)).Next(1, 1000000));
                 }
 
-                // text message
-                ITextMessage msgText = message as ITextMessage;
-                if (msgText != null) oMessage = new OpenRailTextMessage(msgText.NMSTimestamp, msgText.Text);
-
-                // bytes message
-                IBytesMessage msgBytes = message as IBytesMessage;
-                if (msgBytes != null) oMessage = new OpenRailBytesMessage(message.NMSTimestamp, msgBytes.Content);
+                switch (message)
+                {
+                    // text message
+                    case ITextMessage msgText:
+                        oMessage = new OpenRailTextMessage(msgText.NMSTimestamp, msgText.Text);
+                        break;
+                    // bytes message
+                    case IBytesMessage msgBytes:
+                        oMessage = new OpenRailBytesMessage(message.NMSTimestamp, msgBytes.Content);
+                        break;
+                }
 
                 // everything else
-                if (oMessage == null)
-                    oMessage = new OpenRailUnsupportedMessage(message.NMSTimestamp, message.GetType().FullName);
+                var sMessageType = message.GetType().FullName;
+                if (sMessageType != null)
+                    oMessage ??= new OpenRailUnsupportedMessage(message.NMSTimestamp, sMessageType);
 
-                Interlocked.Increment(ref miMessageReadCount1);
+                Interlocked.Increment(ref _miMessageReadCount1);
                 LastMessageReceivedAtUtc = DateTime.UtcNow;
-                moMessageQueue1.Enqueue(oMessage);
+                
+                if (oMessage != null)
+                    MoMessageQueue1.Enqueue(oMessage);
             }
             catch (Exception oException)
             {
-                moErrorQueue.Enqueue(new OpenRailMessageException("Message receive for topic 1 failed: " +
+                MoErrorQueue.Enqueue(new OpenRailMessageException("Message receive for topic 1 failed: " +
                                                                   OpenRailException.GetShortErrorInfo(oException),
                     oException));
             }
@@ -319,7 +304,7 @@ namespace TTT.OpenRail
         {
             try
             {
-                OpenRailMessage oMessage = null;
+                OpenRailMessage oMessage = null!;
 
                 // when the Apache code starts receiving messages, a number of worker threads are fired up (inside the Apache assembly)
                 // these threads are all started up at close to the exact same time
@@ -332,86 +317,89 @@ namespace TTT.OpenRail
                 }
 
                 // text message
-                ITextMessage msgText = message as ITextMessage;
+                ITextMessage? msgText = message as ITextMessage;
                 if (msgText != null) oMessage = new OpenRailTextMessage(msgText.NMSTimestamp, msgText.Text);
 
                 // bytes message
-                IBytesMessage msgBytes = message as IBytesMessage;
+                IBytesMessage? msgBytes = message as IBytesMessage;
                 if (msgBytes != null) oMessage = new OpenRailBytesMessage(message.NMSTimestamp, msgBytes.Content);
 
                 // everything else
                 if (oMessage == null)
                     oMessage = new OpenRailUnsupportedMessage(message.NMSTimestamp, message.GetType().FullName);
 
-                Interlocked.Increment(ref miMessageReadCount2);
+                Interlocked.Increment(ref _miMessageReadCount2);
                 LastMessageReceivedAtUtc = DateTime.UtcNow;
-                moMessageQueue2.Enqueue(oMessage);
+                MoMessageQueue2.Enqueue(oMessage);
             }
             catch (Exception oException)
             {
-                moErrorQueue.Enqueue(new OpenRailMessageException("Message receive for topic 2 failed: " +
+                MoErrorQueue.Enqueue(new OpenRailMessageException("Message receive for topic 2 failed: " +
                                                                   OpenRailException.GetShortErrorInfo(oException),
                     oException));
             }
         }
 
+        // TODO: Cleanup
         private void Disconnect()
         {
             try
             {
-                if (moConnection != null)
+                try
                 {
-                    try
-                    {
-                        if (moConnection != null) moConnection.Stop();
-                    }
-                    catch
-                    {
-                    }
+                    _moConnection?.Stop();
+                }
+                catch
+                {
+                    // ignored
+                }
 
-                    try
-                    {
-                        if (moConsumer1 != null) moConsumer1.Close();
-                    }
-                    catch
-                    {
-                    }
+                try
+                {
+                    _moConsumer1?.Close();
+                }
+                catch
+                {
+                    // ignored
+                }
 
-                    try
-                    {
-                        if (moConsumer2 != null) moConsumer2.Close();
-                    }
-                    catch
-                    {
-                    }
+                try
+                {
+                    _moConsumer2?.Close();
+                }
+                catch
+                {
+                    // ignored
+                }
 
-                    try
-                    {
-                        if (moSession != null) moSession.Close();
-                    }
-                    catch
-                    {
-                    }
+                try
+                {
+                    _moSession?.Close();
+                }
+                catch
+                {
+                    // ignored
+                }
 
-                    try
-                    {
-                        if (moConnection != null) moConnection.Close();
-                    }
-                    catch
-                    {
-                    }
+                try
+                {
+                    _moConnection?.Close();
+                }
+                catch
+                {
+                    // ignored
                 }
             }
             finally
             {
-                moConnection = null;
-                moConnectionFactory = null;
-                moSession = null;
-                moTopic1 = null;
-                moTopic2 = null;
-                moConsumer1 = null;
-                moConsumer2 = null;
-                Interlocked.Exchange(ref miIsConnected, 0);
+                _moConnection = null;
+                _moConnectionFactory = null;
+                _moSession = null;
+                _moTopic1 = null;
+                _moTopic2 = null;
+                _moConsumer1 = null;
+                _moConsumer2 = null;
+                Interlocked.Exchange(ref _miIsConnected, 0);
             }
         }
     }

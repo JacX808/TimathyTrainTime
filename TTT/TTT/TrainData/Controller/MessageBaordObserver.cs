@@ -37,10 +37,10 @@ public class MessageBaordObserver : BackgroundService
         while (DateTime.UtcNow < dtRunUntilUtc)
         {
             // attempt to dequeue and process any errors that occurred in the receiver
-            while ((_receiver.moErrorQueue.Count > 0) && (DateTime.UtcNow < dtNextUiUpdateTime))
+            while ((_receiver.MoErrorQueue.Count > 0) && (DateTime.UtcNow < dtNextUiUpdateTime))
             {
                 OpenRailException oOpenRailException = null;
-                if (_receiver.moErrorQueue.TryDequeue(out oOpenRailException))
+                if (_receiver.MoErrorQueue.TryDequeue(out oOpenRailException))
                 {
                     // the code here simply counts the errors, and captures the details of the last 
                     // error - your code may log details of errors to a database or log file
@@ -50,10 +50,10 @@ public class MessageBaordObserver : BackgroundService
             }
 
             // attempt to dequeue and process some messages
-            while ((_receiver.moMessageQueue1.Count > 0) && (DateTime.UtcNow < dtNextUiUpdateTime))
+            while ((_receiver.MoMessageQueue1.Count > 0) && (DateTime.UtcNow < dtNextUiUpdateTime))
             {
                 OpenRailMessage oMessage = null;
-                if (_receiver.moMessageQueue1.TryDequeue(out oMessage))
+                if (_receiver.MoMessageQueue1.TryDequeue(out oMessage))
                 {
                     // All Network Rail Open Data Messages should be text
                     OpenRailTextMessage oTextMessage = oMessage as OpenRailTextMessage;
@@ -73,10 +73,10 @@ public class MessageBaordObserver : BackgroundService
                 }
             }
 
-            while ((_receiver.moMessageQueue2.Count > 0) && (DateTime.UtcNow < dtNextUiUpdateTime))
+            while ((_receiver.MoMessageQueue2.Count > 0) && (DateTime.UtcNow < dtNextUiUpdateTime))
             {
                 OpenRailMessage oMessage = null;
-                if (_receiver.moMessageQueue2.TryDequeue(out oMessage))
+                if (_receiver.MoMessageQueue2.TryDequeue(out oMessage))
                 {
                     // All Network Rail Open Data Messages should be text
                     OpenRailTextMessage oTextMessage = oMessage as OpenRailTextMessage;
@@ -107,18 +107,18 @@ public class MessageBaordObserver : BackgroundService
                 Console.WriteLine("Receiver Status:");
                 Console.WriteLine("  Running = " + _receiver.IsRunning.ToString() + ", Connected To Data Feed = " +
                                   _receiver.IsConnected.ToString());
-                Console.WriteLine("  Size of local In-Memory Queue 1 (" + _receiver.msTopic1 + ") = " +
-                                  _receiver.moMessageQueue1.Count
+                Console.WriteLine("  Size of local In-Memory Queue 1 (" + _receiver.MsTopic1 + ") = " +
+                                  _receiver.MoMessageQueue1.Count
                                       .ToString()); // i.e. messages received from the feed but not yet processed locally
-                Console.WriteLine("  Size of local In-Memory Queue 2 (" + _receiver.msTopic2 + ") = " +
-                                  _receiver.moMessageQueue2.Count
+                Console.WriteLine("  Size of local In-Memory Queue 2 (" + _receiver.MsTopic2 + ") = " +
+                                  _receiver.MoMessageQueue2.Count
                                       .ToString()); // i.e. messages received from the feed but not yet processed locally
                 Console.WriteLine("  Last Message Received At = " + _receiver.LastMessageReceivedAtUtc.ToLocalTime()
                     .ToString("HH:mm:ss.fff ddd dd MMM yyyy"));
-                Console.WriteLine("  Msg Counts:  (1: {0}) = {1}, (2: {2}) = {3}", _receiver.msTopic1, _receiver.MessageCount1,
-                    _receiver.msTopic2, _receiver.MessageCount2);
+                Console.WriteLine("  Msg Counts:  (1: {0}) = {1}, (2: {2}) = {3}", _receiver.MsTopic1, _receiver.MessageCount1,
+                    _receiver.MsTopic2, _receiver.MessageCount2);
                 Console.WriteLine();
-                Console.WriteLine("Processing Status 1 (" + _receiver.msTopic1 + "):");
+                Console.WriteLine("Processing Status 1 (" + _receiver.MsTopic1 + "):");
                 Console.WriteLine("  Msg Counts: Text = {0}, Bytes = {1}, Unsupported = {2}", iTextMessageCount1,
                     iBytesMessageCount1, iUnsupportedMessageCount1);
                 Console.WriteLine("  Last JSON = " + (msLastTextMessage1 == null
@@ -127,7 +127,7 @@ public class MessageBaordObserver : BackgroundService
                         ? msLastTextMessage1.Substring(0, 40) + "..."
                         : msLastTextMessage1)));
                 Console.WriteLine();
-                Console.WriteLine("Processing Status 2 (" + _receiver.msTopic2 + "):");
+                Console.WriteLine("Processing Status 2 (" + _receiver.MsTopic2 + "):");
                 Console.WriteLine("  Msg Counts: Text = {0}, Bytes = {1}, Unsupported = {2}", iTextMessageCount2,
                     iBytesMessageCount2, iUnsupportedMessageCount2);
                 Console.WriteLine("  Last JSON = " + (msLastTextMessage2 == null
@@ -142,7 +142,7 @@ public class MessageBaordObserver : BackgroundService
                 dtNextUiUpdateTime = DateTime.UtcNow.AddMilliseconds(500);
             }
 
-            if ((_receiver.moMessageQueue1.Count < 10) && (_receiver.moMessageQueue2.Count < 10)) Thread.Sleep(50);
+            if ((_receiver.MoMessageQueue1.Count < 10) && (_receiver.MoMessageQueue2.Count < 10)) Thread.Sleep(50);
         }
 
         Console.WriteLine("Stopping Receiver...");

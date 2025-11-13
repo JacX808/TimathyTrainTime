@@ -29,7 +29,7 @@ internal class Program
         builder.Services.AddSwaggerGen();
 
         builder.Services.Configure<OpenRailOptions>(builder.Configuration.GetSection("OpenRail"));
-        builder.Services.Configure<NrodOptions>(builder.Configuration.GetSection("OpenRail"));
+        builder.Services.Configure<NetRailOptions>(builder.Configuration.GetSection("OpenRail"));
         builder.Services.AddSingleton<OpenRailNRODReceiver>();
         builder.Services.AddHostedService<MessageBaordObserver>();
 
