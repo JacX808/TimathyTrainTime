@@ -24,7 +24,7 @@ namespace TTT.OpenRail
 
     public class OpenRailNRODReceiver
     {
-        private IConnectionFactory? _connectionFactory;
+        private IConnectionFactory _connectionFactory;
         private IConnection? _connection;
         private ISession? _session;
         private ITopic? _topic1;
@@ -198,7 +198,7 @@ namespace TTT.OpenRail
         {
             try
             {
-                _connectionFactory = new NMSConnectionFactory(_msConnectUrl);
+                _connectionFactory = new ConnectionFactory(_msConnectUrl);
                 _connection = _connectionFactory.CreateConnection(_msUser, _msPassword);
                 _connection.ClientId = _msUser;
                 _connection.ExceptionListener += new ExceptionListener(OnConnectionException);

@@ -18,6 +18,7 @@
       <change beforePath="$PROJECT_DIR$/.idea/.idea.TTT/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.TTT/.idea/vcs.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.TTT/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.TTT/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/TTT.sln" beforeDir="false" afterPath="$PROJECT_DIR$/TTT.sln" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TTT.sln.DotSettings.user" beforeDir="false" afterPath="$PROJECT_DIR$/TTT.sln.DotSettings.user" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/TTT/Database/TttDbContect.cs" beforeDir="false" afterPath="$PROJECT_DIR$/TTT/Database/TttDbContect.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/TTT/Health/HeathController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/TTT/Health/HeathController.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/TTT/Migrations/20251110112644_InitialCreate.Designer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/TTT/Migrations/20251110112644_InitialCreate.Designer.cs" afterDir="false" />
@@ -56,6 +57,7 @@
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
   </component>
   <component name="HighlightingSettingsPerFile">
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/8271807a61bb8a8540cf6d7a38534480374a4aac934ee4f53d7efdc9aea37ae/IOptions.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/92ee428fc2c9bd7c58c4f3e6f45a30845babdef68213d737456a729d1a95/NMSConnectionFactory.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/bd1d5c50194fea68ff3559c160230b0ab50f5acf4ce3061bffd6d62958e2182/ExceptionDispatchInfo.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/ce37be1a06b16c6faa02038d2cc477dd3bca5b217ceeb41c5f2ad45c1bf9/ServiceProvider.cs" root0="FORCE_HIGHLIGHTING" />
@@ -212,7 +214,7 @@
       <workItem from="1762956608053" duration="1728000" />
       <workItem from="1763030590413" duration="5361000" />
       <workItem from="1763117876794" duration="2840000" />
-      <workItem from="1763973252212" duration="39000" />
+      <workItem from="1763973252212" duration="1645000" />
     </task>
     <servers />
   </component>
@@ -267,26 +269,13 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/TTT/OpenRail/OpenRailNRODReceiver.cs</url>
-          <line>200</line>
-          <properties documentPath="C:\Work\Projects\TTT\TimathyTrainTime\TTT\TTT\OpenRail\OpenRailNRODReceiver.cs" containingFunctionPresentation="Method 'TryConnect'">
-            <startOffsets>
-              <option value="8211" />
-            </startOffsets>
-            <endOffsets>
-              <option value="8272" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="41" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/TTT/OpenRail/OpenRailNRODReceiver.cs</url>
           <line>205</line>
           <properties documentPath="C:\Work\Projects\TTT\TimathyTrainTime\TTT\TTT\OpenRail\OpenRailNRODReceiver.cs" containingFunctionPresentation="Method 'TryConnect'">
             <startOffsets>
-              <option value="8612" />
+              <option value="8608" />
             </startOffsets>
             <endOffsets>
-              <option value="8653" />
+              <option value="8649" />
             </endOffsets>
           </properties>
           <option name="timeStamp" value="42" />
@@ -296,10 +285,10 @@
           <line>204</line>
           <properties documentPath="C:\Work\Projects\TTT\TimathyTrainTime\TTT\TTT\OpenRail\OpenRailNRODReceiver.cs" containingFunctionPresentation="Method 'TryConnect'">
             <startOffsets>
-              <option value="8521" />
+              <option value="8517" />
             </startOffsets>
             <endOffsets>
-              <option value="8595" />
+              <option value="8591" />
             </endOffsets>
           </properties>
           <option name="timeStamp" value="43" />
@@ -309,10 +298,10 @@
           <line>203</line>
           <properties documentPath="C:\Work\Projects\TTT\TimathyTrainTime\TTT\TTT\OpenRail\OpenRailNRODReceiver.cs" containingFunctionPresentation="Method 'TryConnect'">
             <startOffsets>
-              <option value="8426" />
+              <option value="8422" />
             </startOffsets>
             <endOffsets>
-              <option value="8504" />
+              <option value="8500" />
             </endOffsets>
           </properties>
           <option name="timeStamp" value="44" />
@@ -322,10 +311,10 @@
           <line>202</line>
           <properties documentPath="C:\Work\Projects\TTT\TimathyTrainTime\TTT\TTT\OpenRail\OpenRailNRODReceiver.cs" containingFunctionPresentation="Method 'TryConnect'">
             <startOffsets>
-              <option value="8378" />
+              <option value="8374" />
             </startOffsets>
             <endOffsets>
-              <option value="8409" />
+              <option value="8405" />
             </endOffsets>
           </properties>
           <option name="timeStamp" value="45" />
@@ -335,10 +324,10 @@
           <line>201</line>
           <properties documentPath="C:\Work\Projects\TTT\TimathyTrainTime\TTT\TTT\OpenRail\OpenRailNRODReceiver.cs" containingFunctionPresentation="Method 'TryConnect'">
             <startOffsets>
-              <option value="8289" />
+              <option value="8285" />
             </startOffsets>
             <endOffsets>
-              <option value="8361" />
+              <option value="8357" />
             </endOffsets>
           </properties>
           <option name="timeStamp" value="46" />
@@ -358,39 +347,13 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/TTT/OpenRail/OpenRailNRODReceiver.cs</url>
-          <line>166</line>
-          <properties documentPath="C:\Work\Projects\TTT\TimathyTrainTime\TTT\TTT\OpenRail\OpenRailNRODReceiver.cs" containingFunctionPresentation="Method 'Connect'">
-            <startOffsets>
-              <option value="6517" />
-            </startOffsets>
-            <endOffsets>
-              <option value="6613" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="51" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/TTT/OpenRail/OpenRailNRODReceiver.cs</url>
-          <line>120</line>
-          <properties documentPath="C:\Work\Projects\TTT\TimathyTrainTime\TTT\TTT\OpenRail\OpenRailNRODReceiver.cs" containingFunctionPresentation="Method 'Run'">
-            <startOffsets>
-              <option value="4685" />
-            </startOffsets>
-            <endOffsets>
-              <option value="4722" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="52" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/TTT/OpenRail/OpenRailNRODReceiver.cs</url>
           <line>77</line>
           <properties documentPath="C:\Work\Projects\TTT\TimathyTrainTime\TTT\TTT\OpenRail\OpenRailNRODReceiver.cs" containingFunctionPresentation="Method 'Start'">
             <startOffsets>
-              <option value="3162" />
+              <option value="3161" />
             </startOffsets>
             <endOffsets>
-              <option value="3173" />
+              <option value="3172" />
             </endOffsets>
           </properties>
           <option name="timeStamp" value="53" />
@@ -400,91 +363,65 @@
           <line>176</line>
           <properties documentPath="C:\Work\Projects\TTT\TimathyTrainTime\TTT\TTT\OpenRail\OpenRailNRODReceiver.cs" containingFunctionPresentation="Method 'Connect'">
             <startOffsets>
-              <option value="7003" />
+              <option value="7002" />
             </startOffsets>
             <endOffsets>
-              <option value="7020" />
+              <option value="7019" />
             </endOffsets>
           </properties>
           <option name="timeStamp" value="61" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/TTT/OpenRail/OpenRailNRODReceiver.cs</url>
-          <line>125</line>
-          <properties documentPath="C:\Work\Projects\TTT\TimathyTrainTime\TTT\TTT\OpenRail\OpenRailNRODReceiver.cs" containingFunctionPresentation="Method 'Run'">
-            <startOffsets>
-              <option value="4903" />
-            </startOffsets>
-            <endOffsets>
-              <option value="4919" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="62" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/TTT/OpenRail/OpenRailNRODReceiver.cs</url>
-          <line>128</line>
-          <properties documentPath="C:\Work\Projects\TTT\TimathyTrainTime\TTT\TTT\OpenRail\OpenRailNRODReceiver.cs" containingFunctionPresentation="Method 'Run'">
-            <startOffsets>
-              <option value="4984" />
-            </startOffsets>
-            <endOffsets>
-              <option value="5020" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="63" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/TTT/OpenRail/OpenRailNRODReceiver.cs</url>
-          <line>172</line>
-          <properties documentPath="C:\Work\Projects\TTT\TimathyTrainTime\TTT\TTT\OpenRail\OpenRailNRODReceiver.cs" containingFunctionPresentation="Method 'Connect'">
-            <startOffsets>
-              <option value="6840" />
-            </startOffsets>
-            <endOffsets>
-              <option value="6892" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="64" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/TTT/OpenRail/OpenRailNRODReceiver.cs</url>
-          <line>188</line>
-          <properties documentPath="C:\Work\Projects\TTT\TimathyTrainTime\TTT\TTT\OpenRail\OpenRailNRODReceiver.cs" containingFunctionPresentation="Method 'Connect'">
-            <startOffsets>
-              <option value="7689" />
-            </startOffsets>
-            <endOffsets>
-              <option value="7716" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="65" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/TTT/OpenRail/OpenRailNRODReceiver.cs</url>
-          <line>232</line>
-          <properties documentPath="C:\Work\Projects\TTT\TimathyTrainTime\TTT\TTT\OpenRail\OpenRailNRODReceiver.cs" containingFunctionPresentation="Method 'TryConnect'">
-            <startOffsets>
-              <option value="9862" />
-            </startOffsets>
-            <endOffsets>
-              <option value="10092" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="66" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/TTT/OpenRail/OpenRailNRODReceiver.cs</url>
           <line>237</line>
           <properties documentPath="C:\Work\Projects\TTT\TimathyTrainTime\TTT\TTT\OpenRail\OpenRailNRODReceiver.cs" containingFunctionPresentation="Method 'TryConnect'">
             <startOffsets>
-              <option value="10249" />
+              <option value="10245" />
             </startOffsets>
             <endOffsets>
-              <option value="10262" />
+              <option value="10258" />
             </endOffsets>
           </properties>
           <option name="timeStamp" value="67" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/TTT/OpenRail/OpenRailNRODReceiver.cs</url>
+          <line>68</line>
+          <properties documentPath="C:\Work\Projects\TTT\TimathyTrainTime\TTT\TTT\OpenRail\OpenRailNRODReceiver.cs" containingFunctionPresentation="Constructor 'OpenRailNRODReceiver'">
+            <startOffsets>
+              <option value="2864" />
+            </startOffsets>
+            <endOffsets>
+              <option value="2933" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="69" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/TTT/OpenRail/OpenRailNRODReceiver.cs</url>
+          <line>70</line>
+          <properties documentPath="C:\Work\Projects\TTT\TimathyTrainTime\TTT\TTT\OpenRail\OpenRailNRODReceiver.cs" containingFunctionPresentation="Constructor 'OpenRailNRODReceiver'">
+            <startOffsets>
+              <option value="3019" />
+            </startOffsets>
+            <endOffsets>
+              <option value="3076" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="71" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/TTT/Program.cs</url>
+          <line>32</line>
+          <properties documentPath="C:\Work\Projects\TTT\TimathyTrainTime\TTT\TTT\Program.cs" containingFunctionPresentation="Method 'Main'">
+            <startOffsets>
+              <option value="1219" />
+            </startOffsets>
+            <endOffsets>
+              <option value="1277" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="72" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
