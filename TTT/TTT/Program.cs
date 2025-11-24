@@ -1,27 +1,23 @@
-using System.Collections.Concurrent;
-using Microsoft.EntityFrameworkCore;
-using TTT.Database;
 using TTT.OpenRail;
-using TTT.TrainData.Connection;
 using TTT.TrainData.Controller;
-using TTT.TrainData.DataSets;
 
+namespace TTT;
 
-internal class Program
+internal abstract class Program
 {
     static void Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
 
-        // DB Connection
-        string host = builder.Configuration["DB_HOST"] ?? "localhost";
+        // DB Connection TODO Setup DB with new datasets
+        /*string host = builder.Configuration["DB_HOST"] ?? "localhost";
         string port = builder.Configuration["DB_PORT"] ?? "5432";
         string user = builder.Configuration["DB_USERNAME"] ?? "app";
         string pass = builder.Configuration["DB_PASSWORD"] ?? "app";
         string db = builder.Configuration["DB_NAME"] ?? "ttt";
 
         var conn = $"Host={host};Port={port};Database={db};Username={user};Password={pass}";
-        builder.Services.AddDbContext<TttDbContext>(o => o.UseNpgsql(conn));
+        builder.Services.AddDbContext<TttDbContext>(o => o.UseNpgsql(conn));*/
 
         // Swagger & controllers
         builder.Services.AddControllers();
@@ -29,7 +25,7 @@ internal class Program
         builder.Services.AddSwaggerGen();
         
         builder.Services.Configure<NetRailOptions>(builder.Configuration.GetSection("OpenRail"));
-        builder.Services.AddSingleton<OpenRailNRODReceiver>();
+        builder.Services.AddSingleton<OpenRailNrodReceiver>();
         builder.Services.AddHostedService<MessageBaordObserver>();
 
         var app = builder.Build();

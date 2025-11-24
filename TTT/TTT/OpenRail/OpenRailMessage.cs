@@ -1,59 +1,28 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace TTT.OpenRail
+﻿namespace TTT.OpenRail
 {
     public class OpenRailMessage
     {
-        private DateTime mdtNmsTimestamp = DateTime.MinValue;
-
-        public OpenRailMessage(DateTime dtNmsTimestamp)
+        protected OpenRailMessage(DateTime dtNmsTimestamp)
         {
-            mdtNmsTimestamp = dtNmsTimestamp;
+            NmsTimestamp = dtNmsTimestamp;
         }
 
-        public DateTime NmsTimestamp { get { return mdtNmsTimestamp; } }
+        public DateTime NmsTimestamp { get; set; }
     }
 
-    public class OpenRailTextMessage : OpenRailMessage
+    public class OpenRailTextMessage(DateTime dtNmsTimestamp, string sText) : OpenRailMessage(dtNmsTimestamp)
     {
-        private string msText = null;
-
-        public OpenRailTextMessage(DateTime dtNmsTimestamp, string sText) :
-            base(dtNmsTimestamp)
-        {
-            msText = sText;
-        }
-
-        public string Text { get { return msText; } }
+        public string? Text { get; } = sText;
     }
 
-    public class OpenRailBytesMessage : OpenRailMessage
+    public class OpenRailBytesMessage(DateTime dtNmsTimestamp, byte[] bBytes) : OpenRailMessage(dtNmsTimestamp)
     {
-        private byte[] mbBytes = null;
-
-        public OpenRailBytesMessage(DateTime dtNmsTimestamp, byte[] bBytes) :
-            base(dtNmsTimestamp)
-        {
-            mbBytes = bBytes;
-        }
-
-        public byte[] Bytes { get { return mbBytes; } }
+        public byte[]? Bytes { get; } = bBytes;
     }
 
-    public class OpenRailUnsupportedMessage : OpenRailMessage
+    public class OpenRailUnsupportedMessage(DateTime dtNmsTimestamp, string sMessageType)
+        : OpenRailMessage(dtNmsTimestamp)
     {
-        private string msMessageType = null;
-
-        public OpenRailUnsupportedMessage(DateTime dtNmsTimestamp, string sMessageType) :
-            base(dtNmsTimestamp)
-        {
-            msMessageType = sMessageType;
-        }
-
-        public string UnsupportedMessageType { get { return msMessageType; } }
+        public string? UnsupportedMessageType { get; } = sMessageType;
     }
 }

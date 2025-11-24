@@ -1,13 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.Concurrent;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
+﻿using System.Collections.Concurrent;
 using Apache.NMS;
 using Apache.NMS.ActiveMQ;
-using Microsoft.AspNetCore.Connections;
 using Microsoft.Extensions.Options;
 using IConnectionFactory = Apache.NMS.IConnectionFactory;
 using ISession = Apache.NMS.ISession;
@@ -22,9 +15,9 @@ namespace TTT.OpenRail
      * The Apache.NMS and Apache.NMS.Stomp assemblies can be downloaded from http://activemq.apache.org/nms/download.html
      */
 
-    public class OpenRailNRODReceiver
+    public class OpenRailNrodReceiver
     {
-        private IConnectionFactory _connectionFactory;
+        private IConnectionFactory? _connectionFactory;
         private IConnection? _connection;
         private ISession? _session;
         private ITopic? _topic1;
@@ -32,22 +25,17 @@ namespace TTT.OpenRail
         private IMessageConsumer? _consumer1;
         private IMessageConsumer? _consumer2;
 
-        private readonly ILogger<OpenRailNRODReceiver> _log;
+        private readonly ILogger<OpenRailNrodReceiver> _log;
 
-        private readonly string _msConnectUrl;
-        private readonly string _msUser;
-        private readonly string _msPassword;
-        public readonly string MsTopic1;
-        public readonly string MsTopic2;
-        private readonly bool _mbUseDurableSubscription;
+        public readonly NetRailOptions _netRailOptions;
         private readonly int _miAttemptToConnectForSeconds;
 
-        public readonly ConcurrentQueue<OpenRailMessage> MoMessageQueue1 = new ConcurrentQueue<OpenRailMessage>();
-        public readonly ConcurrentQueue<OpenRailMessage> MoMessageQueue2 = new ConcurrentQueue<OpenRailMessage>();
-        public readonly ConcurrentQueue<OpenRailException> MoErrorQueue = new ConcurrentQueue<OpenRailException>();
+        public readonly ConcurrentQueue<OpenRailMessage> MoMessageQueue1 = new();
+        public readonly ConcurrentQueue<OpenRailMessage> MoMessageQueue2 = new();
+        public readonly ConcurrentQueue<OpenRailException> MoErrorQueue = new();
 
-        private CancellationTokenSource _moCts;
-        private Task _mtManagement;
+        private CancellationTokenSource? _moCts;
+        private Task? _mtManagement;
 
         private long _miSpinSpreadUntilUtc = (new DateTime(2000, 1, 1)).Ticks;
         private long _miIsConnected = 0;
@@ -55,20 +43,48 @@ namespace TTT.OpenRail
         private long _miMessageReadCount1 = 0;
         private long _miMessageReadCount2 = 0;
         private long _miLastConnectionExceptionAtUtc = (new DateTime(2000, 1, 1)).Ticks;
+        
+        public bool IsRunning => !(_mtManagement.IsCanceled || _mtManagement.IsCompleted || _mtManagement.IsFaulted);
 
-        // TODO: Cleanup
-        public OpenRailNRODReceiver(IOptions<NetRailOptions> opts, ILogger<OpenRailNRODReceiver> log)
+        public bool IsConnected => Interlocked.Read(ref _miIsConnected) > 0;
+
+        public long MessageCount1 => Interlocked.Read(ref _miMessageReadCount1);
+
+        public long MessageCount2 => Interlocked.Read(ref _miMessageReadCount2);
+        
+        
+        private DateTime SpinSpreadUntilUtc
+        {
+            get => new(Interlocked.Read(ref _miSpinSpreadUntilUtc));
+            set => Interlocked.Exchange(ref _miSpinSpreadUntilUtc, value.Ticks);
+        }
+
+        public DateTime LastMessageReceivedAtUtc
+        {
+            get => new(Interlocked.Read(ref _miLastMessageReceivedAtUtc));
+            private set => Interlocked.Exchange(ref _miLastMessageReceivedAtUtc, value.Ticks);
+        }
+
+        private DateTime LastConnectionExceptionAtUtc
+        {
+            get => new(Interlocked.Read(ref _miLastConnectionExceptionAtUtc));
+            set => Interlocked.Exchange(ref _miLastConnectionExceptionAtUtc, value.Ticks);
+        }
+        
+        public OpenRailNrodReceiver(IOptions<NetRailOptions> opts, ILogger<OpenRailNrodReceiver> log)
         {
             var opts1 = opts.Value;
             _log  = log;
             _miAttemptToConnectForSeconds = 200;
 
-            _msConnectUrl = opts1.ConnectUrl;
-            _msUser = opts1.Username ?? "***";
-            _msPassword = opts1.Password ?? "***";
-            MsTopic1 = opts1.Topics.ElementAtOrDefault(0) ?? "TRAIN_MVT_ALL_TOC";
-            MsTopic2 = opts1.Topics.ElementAtOrDefault(1) ?? "VSTP_ALL";
-            _mbUseDurableSubscription = opts1.UseDurableSubscription;
+            _netRailOptions = new NetRailOptions
+            {
+                ConnectUrl = opts1.ConnectUrl,
+                Username = opts1.Username ?? "***",
+                Password = opts1.Password ?? "***",
+                Topics = opts1.Topics,
+                UseDurableSubscription = opts1.UseDurableSubscription
+            };
 
             Start();
         }
@@ -82,38 +98,10 @@ namespace TTT.OpenRail
                 _mtManagement.ConfigureAwait(false);
             }
         }
-
-        public bool IsRunning => !(_mtManagement.IsCanceled || _mtManagement.IsCompleted || _mtManagement.IsFaulted);
-
-        public bool IsConnected => Interlocked.Read(ref _miIsConnected) > 0;
-
-        public long MessageCount1 => Interlocked.Read(ref _miMessageReadCount1);
-
-        public long MessageCount2 => Interlocked.Read(ref _miMessageReadCount2);
-
-        public Exception? FatalException => _mtManagement.IsFaulted ? _mtManagement.Exception : null;
-
+        
         public void RequestStop()
         {
             _moCts.Cancel();
-        }
-
-        private DateTime SpinSpreadUntilUtc
-        {
-            get => new(Interlocked.Read(ref _miSpinSpreadUntilUtc));
-            set => Interlocked.Exchange(ref _miSpinSpreadUntilUtc, value.Ticks);
-        }
-
-        public DateTime LastMessageReceivedAtUtc
-        {
-            get => new(Interlocked.Read(ref _miLastMessageReceivedAtUtc));
-            private set { Interlocked.Exchange(ref _miLastMessageReceivedAtUtc, value.Ticks); }
-        }
-
-        private DateTime LastConnectionExceptionAtUtc
-        {
-            get => new(Interlocked.Read(ref _miLastConnectionExceptionAtUtc));
-            set => Interlocked.Exchange(ref _miLastConnectionExceptionAtUtc, value.Ticks);
         }
 
         private async Task Run()
@@ -125,14 +113,13 @@ namespace TTT.OpenRail
                 Interlocked.Exchange(ref _miMessageReadCount2, 0);
                 await Connect();
 
-                bool bRefreshRequired = false;
                 while (!oCT.IsCancellationRequested)
                 {
                     await Task.Delay(50);
                     int iMessageGapToleranceSeconds =
                         DateTime.UtcNow < LastConnectionExceptionAtUtc.AddSeconds(60) ? 30 : 120;
-                    bRefreshRequired = (LastMessageReceivedAtUtc.AddSeconds(iMessageGapToleranceSeconds) <
-                                        DateTime.UtcNow);
+                    var bRefreshRequired = (LastMessageReceivedAtUtc.AddSeconds(iMessageGapToleranceSeconds) <
+                                            DateTime.UtcNow);
                     if (bRefreshRequired)
                     {
                         Disconnect();
@@ -168,22 +155,25 @@ namespace TTT.OpenRail
             DateTime dtNextConnectAtUtc = new DateTime(2000, 1, 1);
             int iDelayDurationMilliSeconds = 250;
             Exception oLastException = null;
-            CancellationToken oCT = _moCts.Token;
-
-            while (DateTime.UtcNow < dtAttemptToConnectUntilUtc)
+            if (_moCts != null)
             {
-                if (dtNextConnectAtUtc < DateTime.UtcNow)
-                {
-                    if (TryConnect()) return;
-                    // connect retry time doubles between each attempt (up to 1 minute) otherwise Open Data Service is overwhelmed during recovery
-                    iDelayDurationMilliSeconds = Math.Min(iDelayDurationMilliSeconds * 2, 60000);
-                    dtNextConnectAtUtc = DateTime.UtcNow.AddMilliseconds(iDelayDurationMilliSeconds);
-                }
+                CancellationToken oCt = _moCts.Token;
 
-                await Task.Delay(500);
-                if (oCT.IsCancellationRequested)
-                    throw new OperationCanceledException(
-                        "The connection attempt was cancelled due to OpenRailNRODReceiver.RequestStop() being called.");
+                while (DateTime.UtcNow < dtAttemptToConnectUntilUtc)
+                {
+                    if (dtNextConnectAtUtc < DateTime.UtcNow)
+                    {
+                        if (TryConnect()) return;
+                        // connect retry time doubles between each attempt (up to 1 minute) otherwise Open Data Service is overwhelmed during recovery
+                        iDelayDurationMilliSeconds = Math.Min(iDelayDurationMilliSeconds * 2, 60000);
+                        dtNextConnectAtUtc = DateTime.UtcNow.AddMilliseconds(iDelayDurationMilliSeconds);
+                    }
+
+                    await Task.Delay(500);
+                    if (oCt.IsCancellationRequested)
+                        throw new OperationCanceledException(
+                            "The connection attempt was cancelled due to OpenRailNRODReceiver.RequestStop() being called.");
+                }
             }
 
             if (oLastException == null)
@@ -198,27 +188,27 @@ namespace TTT.OpenRail
         {
             try
             {
-                _connectionFactory = new ConnectionFactory(_msConnectUrl);
-                _connection = _connectionFactory.CreateConnection(_msUser, _msPassword);
-                _connection.ClientId = _msUser;
-                _connection.ExceptionListener += new ExceptionListener(OnConnectionException);
+                _connectionFactory = new ConnectionFactory(_netRailOptions.ConnectUrl);
+                _connection = _connectionFactory.CreateConnection(_netRailOptions.Username, _netRailOptions.Password);
+                _connection.ClientId = _netRailOptions.Username;
+                _connection.ExceptionListener += OnConnectionException;
                 _session = _connection.CreateSession(AcknowledgementMode.AutoAcknowledge);
-                if (!string.IsNullOrWhiteSpace(MsTopic1))
+                if (!string.IsNullOrWhiteSpace(_netRailOptions.Topics[0]))
                 {
-                    _topic1 = _session.GetTopic(MsTopic1);
-                    if (_mbUseDurableSubscription)
-                        _consumer1 = _session.CreateDurableConsumer(_topic1, MsTopic1, null, false);
+                    _topic1 = _session.GetTopic(_netRailOptions.Topics[0]);
+                    if (_netRailOptions.UseDurableSubscription)
+                        _consumer1 = _session.CreateDurableConsumer(_topic1, _netRailOptions.Topics[0], null, false);
                     else _consumer1 = _session.CreateConsumer(_topic1);
-                    _consumer1.Listener += new MessageListener(OnMessageReceived1);
+                    _consumer1.Listener += OnMessageReceived1;
                 }
 
-                if (!string.IsNullOrWhiteSpace(MsTopic2))
+                if (!string.IsNullOrWhiteSpace(_netRailOptions.Topics[1]))
                 {
-                    _topic2 = _session.GetTopic(MsTopic2);
-                    if (_mbUseDurableSubscription)
-                        _consumer2 = _session.CreateDurableConsumer(_topic2, MsTopic2, null, false);
+                    _topic2 = _session.GetTopic(_netRailOptions.Topics[1]);
+                    if (_netRailOptions.UseDurableSubscription)
+                        _consumer2 = _session.CreateDurableConsumer(_topic2, _netRailOptions.Topics[1], null, false);
                     else _consumer2 = _session.CreateConsumer(_topic2);
-                    _consumer2.Listener += new MessageListener(OnMessageReceived2);
+                    _consumer2.Listener += OnMessageReceived2;
                 }
 
                 LastMessageReceivedAtUtc = DateTime.UtcNow;
@@ -234,7 +224,7 @@ namespace TTT.OpenRail
                                                                   OpenRailException.GetShortErrorInfo(oException),
                     oException));
                 Disconnect();
-                _log.LogError($"Error: Connection failed {OpenRailException.GetShortErrorInfo(oException)}");
+                _log.LogError("Error: Connection failed {GetShortErrorInfo}", OpenRailException.GetShortErrorInfo(oException));
                 return false;
             }
         }
@@ -250,6 +240,7 @@ namespace TTT.OpenRail
             }
             catch
             {
+                // ignored
             }
         }
 
@@ -257,7 +248,7 @@ namespace TTT.OpenRail
         {
             try
             {
-                OpenRailMessage oMessage = null;
+                OpenRailMessage? oMessage = null;
 
                 // when the Apache code starts receiving messages, a number of worker threads are fired up (inside the Apache assembly)
                 // these threads are all started up at close to the exact same time
@@ -269,17 +260,14 @@ namespace TTT.OpenRail
                     Thread.SpinWait(new Random((int)(iSeed % Int32.MaxValue)).Next(1, 1000000));
                 }
 
-                switch (message)
+                oMessage = message switch
                 {
                     // text message
-                    case ITextMessage msgText:
-                        oMessage = new OpenRailTextMessage(msgText.NMSTimestamp, msgText.Text);
-                        break;
+                    ITextMessage msgText => new OpenRailTextMessage(msgText.NMSTimestamp, msgText.Text),
                     // bytes message
-                    case IBytesMessage msgBytes:
-                        oMessage = new OpenRailBytesMessage(message.NMSTimestamp, msgBytes.Content);
-                        break;
-                }
+                    IBytesMessage msgBytes => new OpenRailBytesMessage(message.NMSTimestamp, msgBytes.Content),
+                    _ => oMessage
+                };
 
                 // everything else
                 var sMessageType = message.GetType().FullName;

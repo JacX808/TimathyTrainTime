@@ -1,23 +1,28 @@
 ﻿namespace TTT.OpenRail
 {
+    /// <summary>
+    /// All open Rail Exceptions
+    /// </summary>
     public class OpenRailException : ApplicationException
     {
-        public OpenRailException(string sMessage)
+        protected OpenRailException(string sMessage)
             : base(sMessage)
         { }
 
-        public OpenRailException(string sMessage, Exception oInnerException)
+        protected OpenRailException(string sMessage, Exception oInnerException)
             : base(sMessage, oInnerException)
         { }
 
-        public static string GetShortErrorInfo(Exception oException)
+        public static string GetShortErrorInfo(Exception? oException)
         {
             if (oException == null) return "(unknown)";
             else return oException.GetType().FullName + ": " + oException.Message;
         }
     }
 
-    // occurs when an exception is encountered whilst attempting to connect to the open data service
+    /// <summary>
+    /// occurs when an exception is encountered whilst attempting to connect to the open data service
+    /// </summary>
     public class OpenRailConnectException : OpenRailException
     {
         public OpenRailConnectException(string sMessage, Exception oInnerException)
@@ -25,7 +30,9 @@
         { }
     }
 
-    // occurs when time limit is reached for attempting to connect to the open data service
+    /// <summary>
+    /// occurs when time limit is reached for attempting to connect to the open data service
+    /// </summary>
     public class OpenRailConnectTimeoutException : OpenRailException
     {
         public OpenRailConnectTimeoutException(string sMessage)
@@ -37,27 +44,21 @@
         { }
     }
 
-    // occurs when an exception is encountered with the underlying connection to the open data service
-    public class OpenRailConnectionException : OpenRailException
-    {
-        public OpenRailConnectionException(string sMessage, Exception oInnerException)
-            : base(sMessage, oInnerException)
-        { }
-    }
+    /// <summary>
+    /// occurs when an exception is encountered with the underlying connection to the open data service
+    /// </summary>
+    public class OpenRailConnectionException(string sMessage, Exception oInnerException)
+        : OpenRailException(sMessage, oInnerException);
 
-    // occurs when an exception is encountered receiving a message
-    public class OpenRailMessageException : OpenRailException
-    {
-        public OpenRailMessageException(string sMessage, Exception oInnerException)
-            : base(sMessage, oInnerException)
-        { }
-    }
+    /// <summary>
+    /// occurs when an exception is encountered receiving a message
+    /// </summary>
+    public class OpenRailMessageException(string sMessage, Exception oInnerException)
+        : OpenRailException(sMessage, oInnerException);
 
-    // occurs when the message receiver main worker thread fails
-    public class OpenRailFatalException : OpenRailException
-    {
-        public OpenRailFatalException(string sMessage, Exception oInnerException)
-            : base(sMessage, oInnerException)
-        { }
-    }
+    /// <summary>
+    /// occurs when the message receiver main worker thread fails
+    /// </summary>
+    public class OpenRailFatalException(string sMessage, Exception oInnerException)
+        : OpenRailException(sMessage, oInnerException);
 }
