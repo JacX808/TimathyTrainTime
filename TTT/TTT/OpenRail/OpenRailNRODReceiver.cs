@@ -24,15 +24,14 @@ namespace TTT.OpenRail
 
     public class OpenRailNRODReceiver
     {
-        private IConnectionFactory? _moConnectionFactory;
-        private IConnection? _moConnection;
-        private ISession? _moSession;
-        private ITopic? _moTopic1;
-        private ITopic? _moTopic2;
-        private IMessageConsumer? _moConsumer1;
-        private IMessageConsumer? _moConsumer2;
-        
-        private readonly NetRailOptions _opts;
+        private IConnectionFactory? _connectionFactory;
+        private IConnection? _connection;
+        private ISession? _session;
+        private ITopic? _topic1;
+        private ITopic? _topic2;
+        private IMessageConsumer? _consumer1;
+        private IMessageConsumer? _consumer2;
+
         private readonly ILogger<OpenRailNRODReceiver> _log;
 
         private readonly string _msConnectUrl;
@@ -60,16 +59,16 @@ namespace TTT.OpenRail
         // TODO: Cleanup
         public OpenRailNRODReceiver(IOptions<NetRailOptions> opts, ILogger<OpenRailNRODReceiver> log)
         {
-            _opts = opts.Value;
+            var opts1 = opts.Value;
             _log  = log;
             _miAttemptToConnectForSeconds = 200;
 
-            _msConnectUrl = _opts.ConnectUrl;
-            _msUser = _opts.Username ?? "***";
-            _msPassword = _opts.Password ?? "***";
-            MsTopic1 = _opts.Topics.ElementAtOrDefault(0) ?? "TRAIN_MVT_ALL_TOC";
-            MsTopic2 = _opts.Topics.ElementAtOrDefault(1) ?? "VSTP_ALL";
-            _mbUseDurableSubscription = _opts.UseDurableSubscription;
+            _msConnectUrl = opts1.ConnectUrl;
+            _msUser = opts1.Username ?? "***";
+            _msPassword = opts1.Password ?? "***";
+            MsTopic1 = opts1.Topics.ElementAtOrDefault(0) ?? "TRAIN_MVT_ALL_TOC";
+            MsTopic2 = opts1.Topics.ElementAtOrDefault(1) ?? "VSTP_ALL";
+            _mbUseDurableSubscription = opts1.UseDurableSubscription;
 
             Start();
         }
@@ -199,33 +198,33 @@ namespace TTT.OpenRail
         {
             try
             {
-                _moConnectionFactory = new NMSConnectionFactory(new Uri(_msConnectUrl));
-                _moConnection = _moConnectionFactory.CreateConnection(_msUser, _msPassword);
-                _moConnection.ClientId = _msUser;
-                _moConnection.ExceptionListener += new ExceptionListener(OnConnectionException);
-                _moSession = _moConnection.CreateSession(AcknowledgementMode.AutoAcknowledge);
+                _connectionFactory = new NMSConnectionFactory(_msConnectUrl);
+                _connection = _connectionFactory.CreateConnection(_msUser, _msPassword);
+                _connection.ClientId = _msUser;
+                _connection.ExceptionListener += new ExceptionListener(OnConnectionException);
+                _session = _connection.CreateSession(AcknowledgementMode.AutoAcknowledge);
                 if (!string.IsNullOrWhiteSpace(MsTopic1))
                 {
-                    _moTopic1 = _moSession.GetTopic(MsTopic1);
+                    _topic1 = _session.GetTopic(MsTopic1);
                     if (_mbUseDurableSubscription)
-                        _moConsumer1 = _moSession.CreateDurableConsumer(_moTopic1, MsTopic1, null, false);
-                    else _moConsumer1 = _moSession.CreateConsumer(_moTopic1);
-                    _moConsumer1.Listener += new MessageListener(OnMessageReceived1);
+                        _consumer1 = _session.CreateDurableConsumer(_topic1, MsTopic1, null, false);
+                    else _consumer1 = _session.CreateConsumer(_topic1);
+                    _consumer1.Listener += new MessageListener(OnMessageReceived1);
                 }
 
                 if (!string.IsNullOrWhiteSpace(MsTopic2))
                 {
-                    _moTopic2 = _moSession.GetTopic(MsTopic2);
+                    _topic2 = _session.GetTopic(MsTopic2);
                     if (_mbUseDurableSubscription)
-                        _moConsumer2 = _moSession.CreateDurableConsumer(_moTopic2, MsTopic2, null, false);
-                    else _moConsumer2 = _moSession.CreateConsumer(_moTopic2);
-                    _moConsumer2.Listener += new MessageListener(OnMessageReceived2);
+                        _consumer2 = _session.CreateDurableConsumer(_topic2, MsTopic2, null, false);
+                    else _consumer2 = _session.CreateConsumer(_topic2);
+                    _consumer2.Listener += new MessageListener(OnMessageReceived2);
                 }
 
                 LastMessageReceivedAtUtc = DateTime.UtcNow;
                 SpinSpreadUntilUtc = DateTime.UtcNow.AddSeconds(30);
 
-                _moConnection.Start();
+                _connection.Start();
                 Interlocked.Exchange(ref _miIsConnected, 1);
                 return true;
             }
@@ -235,6 +234,7 @@ namespace TTT.OpenRail
                                                                   OpenRailException.GetShortErrorInfo(oException),
                     oException));
                 Disconnect();
+                _log.LogError($"Error: Connection failed {OpenRailException.GetShortErrorInfo(oException)}");
                 return false;
             }
         }
@@ -347,7 +347,7 @@ namespace TTT.OpenRail
             {
                 try
                 {
-                    _moConnection?.Stop();
+                    _connection?.Stop();
                 }
                 catch
                 {
@@ -356,7 +356,7 @@ namespace TTT.OpenRail
 
                 try
                 {
-                    _moConsumer1?.Close();
+                    _consumer1?.Close();
                 }
                 catch
                 {
@@ -365,7 +365,7 @@ namespace TTT.OpenRail
 
                 try
                 {
-                    _moConsumer2?.Close();
+                    _consumer2?.Close();
                 }
                 catch
                 {
@@ -374,7 +374,7 @@ namespace TTT.OpenRail
 
                 try
                 {
-                    _moSession?.Close();
+                    _session?.Close();
                 }
                 catch
                 {
@@ -383,7 +383,7 @@ namespace TTT.OpenRail
 
                 try
                 {
-                    _moConnection?.Close();
+                    _connection?.Close();
                 }
                 catch
                 {
@@ -392,13 +392,13 @@ namespace TTT.OpenRail
             }
             finally
             {
-                _moConnection = null;
-                _moConnectionFactory = null;
-                _moSession = null;
-                _moTopic1 = null;
-                _moTopic2 = null;
-                _moConsumer1 = null;
-                _moConsumer2 = null;
+                _connection = null;
+                _connectionFactory = null;
+                _session = null;
+                _topic1 = null;
+                _topic2 = null;
+                _consumer1 = null;
+                _consumer2 = null;
                 Interlocked.Exchange(ref _miIsConnected, 0);
             }
         }
