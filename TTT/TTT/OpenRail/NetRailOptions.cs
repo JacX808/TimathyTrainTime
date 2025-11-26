@@ -14,4 +14,5 @@ public sealed class NetRailOptions
         get; set;
     } = ["TRAIN_MVT_ALL_TOC", "VSTP_ALL"];
     public bool UseDurableSubscription { get; set; } = true;
+    public string ClientId { get; set; } = "ttt-nrod-client-1";
 }

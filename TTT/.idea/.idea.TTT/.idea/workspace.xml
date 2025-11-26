@@ -9,6 +9,17 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a138a5cd-f4a5-4b3e-9a2f-eb71b297574f" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/TTT/DataSets/MovementEvent.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/TTT/DataSets/TrainActivationBody.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/TTT/DataSets/TrainMovementBody.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/TTT/Database/TttDbContext.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/TTT/Services/MovementsIngestionService.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/TTT/TrainData/Controller/TrainsController.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/TTT/UnitTests/TrainControllerTests.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/TTT/Utility/Converters/Converters.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/TTT/Utility/Converters/Entity.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/TTT/Utility/Trust/TrustEnvelope.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/TTT/Utility/Trust/TrustHeader.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/../.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.TTT/.idea/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.TTT/.idea/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.TTT/.idea/dataSources.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.TTT/.idea/dataSources.xml" afterDir="false" />
@@ -18,11 +29,8 @@
       <change beforePath="$PROJECT_DIR$/.idea/.idea.TTT/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.TTT/.idea/vcs.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.TTT/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.TTT/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/TTT.sln" beforeDir="false" afterPath="$PROJECT_DIR$/TTT.sln" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TTT/Database/TttDbContect.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/TTT.sln.DotSettings.user" beforeDir="false" afterPath="$PROJECT_DIR$/TTT.sln.DotSettings.user" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/TTT/Health/HeathController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/TTT/Health/HeathController.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TTT/Migrations/20251110112644_InitialCreate.Designer.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TTT/Migrations/20251110112644_InitialCreate.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TTT/Migrations/TttDbContextModelSnapshot.cs" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/TTT/OpenRail/NetRailOptions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/TTT/OpenRail/NetRailOptions.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/TTT/OpenRail/OpenRailException.cs" beforeDir="false" afterPath="$PROJECT_DIR$/TTT/OpenRail/OpenRailException.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/TTT/OpenRail/OpenRailMessage.cs" beforeDir="false" afterPath="$PROJECT_DIR$/TTT/OpenRail/OpenRailMessage.cs" afterDir="false" />
@@ -31,17 +39,8 @@
       <change beforePath="$PROJECT_DIR$/TTT/Properties/launchSettings.json" beforeDir="false" afterPath="$PROJECT_DIR$/TTT/Properties/launchSettings.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/TTT/TTT.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/TTT/TTT.csproj" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/TTT/TTT.http" beforeDir="false" afterPath="$PROJECT_DIR$/TTT/TTT.http" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TTT/TrainData/Connection/TrainMovementsConsumer.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TTT/TrainData/Connection/TrustEnvelope.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TTT/TrainData/Connection/TrustHeader.cs" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/TTT/TrainData/Controller/MessageBaordObserver.cs" beforeDir="false" afterPath="$PROJECT_DIR$/TTT/TrainData/Controller/MessageBaordObserver.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/TTT/TrainData/Controller/MovementController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/TTT/TrainData/Controller/MovementController.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TTT/TrainData/DataSets/CurrentTrainPosition.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TTT/TrainData/DataSets/Location.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TTT/TrainData/DataSets/MovementEvent.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TTT/TrainData/DataSets/OpenRailOptions.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TTT/TrainData/DataSets/TrainMovementBody.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/TTT/TrainData/IDs/TrainIDController.cs" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/TTT/appsettings.Development.json" beforeDir="false" afterPath="$PROJECT_DIR$/TTT/appsettings.Development.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/TTT/appsettings.json" beforeDir="false" afterPath="$PROJECT_DIR$/TTT/appsettings.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/TTT/docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/TTT/docker-compose.yml" afterDir="false" />
@@ -58,25 +57,36 @@
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
   </component>
   <component name="HighlightingSettingsPerFile">
+    <setting file="file://$USER_HOME$/.nuget/packages/microsoft.net.test.sdk/18.0.1/build/net8.0/Microsoft.NET.Test.Sdk.Program.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/8271807a61bb8a8540cf6d7a38534480374a4aac934ee4f53d7efdc9aea37ae/IOptions.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/92ee428fc2c9bd7c58c4f3e6f45a30845babdef68213d737456a729d1a95/NMSConnectionFactory.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/bd1d5c50194fea68ff3559c160230b0ab50f5acf4ce3061bffd6d62958e2182/ExceptionDispatchInfo.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/ce37be1a06b16c6faa02038d2cc477dd3bca5b217ceeb41c5f2ad45c1bf9/ServiceProvider.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/TTT/Database/TttDbContect.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/e0e3ccafd588b32b3d7ee942cb73758f1a346f75c92b352f3c229e0cd7c205f/DbContextOptionsBuilder.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/TTT/DataSets/MovementEvent.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/TTT/DataSets/TrainActivationBody.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/TTT/DataSets/TrainMovementBody.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/TTT/Database/TttDbContext.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/TTT/OpenRail/NetRailOptions.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/TTT/OpenRail/OpenRailException.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/TTT/OpenRail/OpenRailMessage.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/TTT/OpenRail/OpenRailNRODReceiver.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/TTT/Services/MovementsIngestionService.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/TTT/TrainData/Controller/MovementController.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/TTT/TrainData/DataSets/CurrentTrainPosition.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/TTT/TrainData/DataSets/Location.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/TTT/TrainData/DataSets/MovementEvent.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/TTT/TrainData/IDs/TrainIDController.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/TTT/TrainData/Controller/TrainsController.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/TTT/UnitTests/TrainControllerTests.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/TTT/Utility/Converters/Converters.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/TTT/Utility/Converters/Entity.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/TTT/Utility/Trust/TrustEnvelope.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/TTT/Utility/Trust/TrustHeader.cs" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="KubernetesApiPersistence">{}</component>
   <component name="KubernetesApiProvider">{
   &quot;isMigrated&quot;: true
 }</component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="Toolset" />
+  </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 1
 }</component>
@@ -88,28 +98,29 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;.NET Launch Settings Profile.TTT: http.executor&quot;: &quot;Debug&quot;,
-    &quot;.NET Launch Settings Profile.TTT: https.executor&quot;: &quot;Run&quot;,
-    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;feature/add-train-api&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    ".NET Launch Settings Profile.TTT: http.executor": "Debug",
+    ".NET Launch Settings Profile.TTT: https.executor": "Run",
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "b399e10e-2da5-4795-8ae5-054a47e45e55.executor": "Debug",
+    "git-widget-placeholder": "feature/add-movment-request-endpoint",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "vue.rearranger.settings.migration": "true"
   },
-  &quot;keyToStringList&quot;: {
-    &quot;DatabaseDriversLRU&quot;: [
-      &quot;mysql&quot;
+  "keyToStringList": {
+    "DatabaseDriversLRU": [
+      "mysql"
     ]
   }
-}</component>
+}]]></component>
   <component name="RunManager" selected=".NET Launch Settings Profile.TTT: http">
     <configuration name="Dev" type="DotNetProject" factoryName=".NET Project">
       <option name="EXE_PATH" value="$PROJECT_DIR$/TTT/bin/Debug/net9.0/TTT.exe" />
@@ -216,6 +227,10 @@
       <workItem from="1763030590413" duration="5361000" />
       <workItem from="1763117876794" duration="2840000" />
       <workItem from="1763973252212" duration="3723000" />
+      <workItem from="1764058917079" duration="3369000" />
+      <workItem from="1764062793102" duration="4225000" />
+      <workItem from="1764148500790" duration="6287000" />
+      <workItem from="1764160900316" duration="1800000" />
     </task>
     <servers />
   </component>
@@ -256,56 +271,82 @@
           <option name="timeStamp" value="26" />
         </breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/TTT/TrainData/Controller/MessageBaordObserver.cs</url>
-          <line>19</line>
-          <properties documentPath="C:\Work\Projects\TTT\TimathyTrainTime\TTT\TTT\TrainData\Controller\MessageBaordObserver.cs" containingFunctionPresentation="Method 'ExecuteAsync'">
-            <startOffsets>
-              <option value="497" />
-            </startOffsets>
-            <endOffsets>
-              <option value="536" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="33" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/TTT/OpenRail/OpenRailNRODReceiver.cs</url>
-          <line>93</line>
-          <properties documentPath="C:\Work\Projects\TTT\TimathyTrainTime\TTT\TTT\OpenRail\OpenRailNRODReceiver.cs" containingFunctionPresentation="Method 'Start'">
-            <startOffsets>
-              <option value="3705" />
-            </startOffsets>
-            <endOffsets>
-              <option value="3716" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="53" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/TTT/OpenRail/OpenRailNRODReceiver.cs</url>
           <line>227</line>
           <properties documentPath="C:\Work\Projects\TTT\TimathyTrainTime\TTT\TTT\OpenRail\OpenRailNRODReceiver.cs" containingFunctionPresentation="Method 'TryConnect'">
             <startOffsets>
-              <option value="9854" />
+              <option value="9840" />
             </startOffsets>
             <endOffsets>
-              <option value="9867" />
+              <option value="9853" />
             </endOffsets>
           </properties>
           <option name="timeStamp" value="67" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/TTT/TrainData/Controller/MessageBaordObserver.cs</url>
-          <line>141</line>
+          <line>133</line>
           <properties documentPath="C:\Work\Projects\TTT\TimathyTrainTime\TTT\TTT\TrainData\Controller\MessageBaordObserver.cs" containingFunctionPresentation="Method 'ListenForMessagesAsync'">
             <startOffsets>
-              <option value="7556" />
+              <option value="6913" />
             </startOffsets>
             <endOffsets>
-              <option value="7614" />
+              <option value="7083" />
             </endOffsets>
           </properties>
           <option name="timeStamp" value="75" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/TTT/UnitTests/TrainControllerTests.cs</url>
+          <line>54</line>
+          <properties documentPath="C:\Work\Projects\TTT\TimathyTrainTime\TTT\TTT\UnitTests\TrainControllerTests\TrainControllerTests.cs" containingFunctionPresentation="Method 'GetTrainIds_WithDate_ReturnsOnlyThatDate'">
+            <startOffsets>
+              <option value="2018" />
+            </startOffsets>
+            <endOffsets>
+              <option value="2123" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="76" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/TTT/UnitTests/TrainControllerTests.cs</url>
+          <line>55</line>
+          <properties documentPath="C:\Work\Projects\TTT\TimathyTrainTime\TTT\TTT\UnitTests\TrainControllerTests\TrainControllerTests.cs" containingFunctionPresentation="Method 'GetTrainIds_WithDate_ReturnsOnlyThatDate'">
+            <startOffsets>
+              <option value="2132" />
+            </startOffsets>
+            <endOffsets>
+              <option value="2165" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="77" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/TTT/UnitTests/TrainControllerTests.cs</url>
+          <line>58</line>
+          <properties documentPath="C:\Work\Projects\TTT\TimathyTrainTime\TTT\TTT\UnitTests\TrainControllerTests\TrainControllerTests.cs" containingFunctionPresentation="Method 'GetTrainIds_WithDate_ReturnsOnlyThatDate'">
+            <startOffsets>
+              <option value="2236" />
+            </startOffsets>
+            <endOffsets>
+              <option value="2294" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="78" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/TTT/TrainData/Controller/TrainsController.cs</url>
+          <line>41</line>
+          <properties documentPath="C:\Work\Projects\TTT\TimathyTrainTime\TTT\TTT\TrainData\Controller\TrainsController.cs" containingFunctionPresentation="Method 'GetTrainIds'">
+            <startOffsets>
+              <option value="1697" />
+            </startOffsets>
+            <endOffsets>
+              <option value="1749" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="79" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
