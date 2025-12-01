@@ -21,13 +21,13 @@ internal abstract class Program
         string db   = builder.Configuration["DB_NAME"] ?? "ttt";
         var conn    = $"Host={host};Port={port};Database={db};Username={user};Password={pass}";
         
-        builder.Services.AddDbContext<TttDbContext>(dbContextOptionsBuilder =>
+        builder.Services.AddEntityFrameworkMySQL().AddDbContext<TttDbContext>(options =>
         {
-            dbContextOptionsBuilder.UseNpgsql(conn);
+            options.UseMySQL(conn);
             
             var dev = builder.Environment.IsDevelopment();
-            dbContextOptionsBuilder.EnableSensitiveDataLogging(dev);
-            dbContextOptionsBuilder.EnableDetailedErrors(dev);
+            options.EnableSensitiveDataLogging(dev);
+            options.EnableDetailedErrors(dev);
         });
         
         builder.Logging.AddFilter("Microsoft.EntityFrameworkCore.Database.Command", LogLevel.Information);

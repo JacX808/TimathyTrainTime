@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Swashbuckle.AspNetCore.Annotations;
 using TTT.Database;
 
 namespace TTT.TrainData.Controller;
@@ -35,10 +34,11 @@ public sealed class TrainsController(TttDbContext dbContext) : ControllerBase
         return Ok(list);
     }
 
-    [HttpGet]
+    [HttpGet("/trainIDs")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<IActionResult> GetTrainIds([FromQuery] DateOnly? date, CancellationToken ct)
     {
+        var hold = date.ToString();
         var queryable = _dbContext.TrainRuns.AsNoTracking();
         if (date is { }) queryable = queryable.Where(x => x.ServiceDate == date);
         var ids = await queryable.OrderBy(x => x.TrainId).Select(x => x.TrainId).ToListAsync(ct);

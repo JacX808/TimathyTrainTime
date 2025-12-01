@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using NUnit.Framework;
-using NUnit.Framework.Legacy;
 using TTT.Database;
 using TTT.DataSets;
 using TTT.TrainData.Controller;
@@ -18,6 +17,7 @@ public class TrainsControllerTests
             .EnableSensitiveDataLogging()
             .EnableDetailedErrors()
             .Options;
+
         var dbContext = new TttDbContext(opts);
 
         // Seed
@@ -26,11 +26,31 @@ public class TrainsControllerTests
             new TrainRun { TrainId = "B2", ServiceDate = new DateOnly(2025, 11, 26) },
             new TrainRun { TrainId = "C3", ServiceDate = new DateOnly(2025, 11, 25) }
         );
-        dbContext.CurrentPositions.Add(new CurrentTrainPosition { TrainId = "A1", LocStanox = "123", ReportedAt = DateTimeOffset.UtcNow });
+
+        dbContext.CurrentPositions.Add(
+            new CurrentTrainPosition { TrainId = "A1", LocStanox = "123", ReportedAt = DateTimeOffset.UtcNow });
+
         dbContext.MovementEvents.AddRange(
-            new MovementEvent { TrainId = "A1", LocStanox = "123", EventType = "ARRIVAL", ActualTimestampMs = 1000 },
-            new MovementEvent { TrainId = "A1", LocStanox = "124", EventType = "DEPARTURE", ActualTimestampMs = 2000 }
+            new MovementEvent
+            {
+                TrainId = "A1",
+                LocStanox = "123",
+                PlannedEventType = "ARRIVAL",
+                EventType = "ARRIVAL",
+                EventSource = "AUTOMATIC",
+                ActualTimestampMs = 1000
+            },
+            new MovementEvent
+            {
+                TrainId = "A1",
+                LocStanox = "124",
+                PlannedEventType = "DEPARTURE",
+                EventType = "DEPARTURE",
+                EventSource = "AUTOMATIC",
+                ActualTimestampMs = 2000
+            }
         );
+
         dbContext.SaveChanges();
         return dbContext;
     }
@@ -42,10 +62,11 @@ public class TrainsControllerTests
         var sut = new TrainsController(db);
 
         var result = await sut.GetTrainIds(null, CancellationToken.None) as OkObjectResult;
-        Assert.That(result, Is.Not.Null);
+        Assert.That(result, Is.Not.Null, "Expected 200 OK");
 
-        var ids = (result!.Value as IReadOnlyList<string>)!;
-        CollectionAssert.AreEquivalent(new[] { "A1", "B2", "C3" }, ids);
+        var ids = result!.Value as IReadOnlyList<string>;
+        Assert.That(ids, Is.Not.Null, "Expected payload list");
+        Assert.That(ids!, Is.EquivalentTo(new[] { "A1", "B2", "C3" }));
     }
 
     [Test]
@@ -55,10 +76,11 @@ public class TrainsControllerTests
         var sut = new TrainsController(db);
 
         var result = await sut.GetTrainIds(new DateOnly(2025, 11, 25), CancellationToken.None) as OkObjectResult;
-        Assert.That(result, Is.Not.Null);
+        Assert.That(result, Is.Not.Null, "Expected 200 OK");
 
-        var ids = (result!.Value as IReadOnlyList<string>)!;
-        CollectionAssert.AreEquivalent(new[] { "A1", "C3" }, ids);
+        var ids = result!.Value as IReadOnlyList<string>;
+        Assert.That(ids, Is.Not.Null, "Expected payload list");
+        Assert.That(ids!, Is.EquivalentTo(new[] { "A1", "C3" }));
     }
 
     [Test]
@@ -68,7 +90,7 @@ public class TrainsControllerTests
         var sut = new TrainsController(db);
 
         var result = await sut.GetPosition("A1", CancellationToken.None);
-        Assert.That(result, Is.TypeOf<OkObjectResult>());
+        Assert.That(result, Is.InstanceOf<OkObjectResult>());
     }
 
     [Test]
@@ -78,7 +100,7 @@ public class TrainsControllerTests
         var sut = new TrainsController(db);
 
         var result = await sut.GetPosition("ZZZ", CancellationToken.None);
-        Assert.That(result, Is.TypeOf<NotFoundResult>());
+        Assert.That(result, Is.InstanceOf<NotFoundResult>());
     }
 
     [Test]
@@ -88,10 +110,11 @@ public class TrainsControllerTests
         var sut = new TrainsController(db);
 
         var result = await sut.GetMovements("A1", null, null, CancellationToken.None) as OkObjectResult;
-        Assert.That(result, Is.Not.Null);
+        Assert.That(result, Is.Not.Null, "Expected 200 OK");
 
-        var list = (result!.Value as IReadOnlyList<MovementEvent>)!;
-        Assert.That(list.Count, Is.EqualTo(2));
-        Assert.That(list.First().ActualTimestampMs, Is.LessThan(list.Last().ActualTimestampMs));
+        var list = result!.Value as IReadOnlyList<MovementEvent>;
+        Assert.That(list, Is.Not.Null, "Expected payload list");
+        Assert.That(list!.Count, Is.EqualTo(2));
+        Assert.That(list!.First().ActualTimestampMs, Is.LessThan(list!.Last().ActualTimestampMs));
     }
 }

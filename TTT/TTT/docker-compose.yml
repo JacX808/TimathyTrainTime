@@ -1,15 +1,17 @@
 ﻿version: "3.9"
 services:
-  postgres:
-    image: postgres:16
+  mysql:
+    image: mysql:8.4
+    command: --default-authentication-plugin=mysql_native_password
     environment:
-      POSTGRES_USER: ${DB_USERNAME:-app}
-      POSTGRES_PASSWORD: ${DB_PASSWORD:-app}
-      POSTGRES_DB: ${DB_NAME:-ttt}
-      OpenRail__NR_USERNAME: ${NR_USERNAME:-user}
+      MYSQL_DATABASE: ${DB_NAME:-tttdb}
+      OpenRail__NR_USERNAME: ${NR_USERNAME:-jacX808}
       OpenRail__NR_PASSWORD: ${NR_PASSWORD:-pass}
-    ports: ["5432:5432"]
+      TZ: Europe/London
+    ports:
+      - "3306:3306"
     volumes:
-      - pg_data:/var/lib/postgresql/data
+      - mysql_data:/var/lib/mysql
+        
 volumes:
-  pg_data:
+  mysqldb:
