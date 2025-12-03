@@ -1,6 +1,6 @@
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
-using MySql.Data.EntityFrameworkCore.Extensions;
 using TTT.Database;
 using TTT.OpenRail;
 using TTT.Services;
@@ -14,17 +14,19 @@ internal abstract class Program
     {
         var builder = WebApplication.CreateBuilder(args);
 
-        // DB Connection TODO Setup DB with new datasets
+        // DB Connection
         string host = builder.Configuration["DB_HOST"] ?? "localhost";
         string port = builder.Configuration["DB_PORT"] ?? "3306";
         string user = builder.Configuration["DB_USERNAME"] ?? "root";
         string pass = builder.Configuration["DB_PASSWORD"] ?? "app";
         string db   = builder.Configuration["DB_NAME"] ?? "ttt";
-        var conn    = $"Host={host};Port={port};Database={db};Username={user};Password={pass}";
+        
+        SqlConnection conn = new SqlConnection(); conn.ConnectionString =
+            $"Server={host},{port};Database={db};User ID=sa;Password={pass};Encrypt=True;TrustServerCertificate=True;";
         
         builder.Services.AddDbContext<TttDbContext>(options =>
         {
-            options.UseMySQL(conn);
+            options.UseSqlServer(conn);
             
             var dev = builder.Environment.IsDevelopment();
             options.EnableSensitiveDataLogging(dev);

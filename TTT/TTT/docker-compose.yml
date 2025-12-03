@@ -1,15 +1,17 @@
 ﻿version: "3.9"
+
 services:
-  ttt_container:
-    image: mysql:8.4
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: tttSQLSS
     environment:
-      MYSQL_DATABASE: "ttt"
-      MYSQL_ROOT_PASSWORD: "dB@min5211"
-      TZ: Europe/London
+      ACCEPT_EULA: "Y"
+      MSSQL_SA_PASSWORD: "dB@min5211"  
     ports:
-      - "3306:3306"
+      - "1433:1433"
     volumes:
-      - ttt_container:/var/lib/mysql
-        
+      - mssql_data:/var/opt/mssql
+    restart: unless-stopped
+
 volumes:
-  ttt_container:
+  mssql_data:

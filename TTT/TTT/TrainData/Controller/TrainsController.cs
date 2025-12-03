@@ -8,13 +8,11 @@ namespace TTT.TrainData.Controller;
 [Route("api/trains")]
 public sealed class TrainsController(TttDbContext dbContext) : ControllerBase
 {
-    private readonly TttDbContext _dbContext = dbContext;
-
     [HttpGet("/position")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<IActionResult> GetPosition(string trainId, CancellationToken cancellationToken)
     {
-        var pos = await _dbContext.CurrentPositions.AsNoTracking().SingleOrDefaultAsync(currentTrainPosition => 
+        var pos = await dbContext.CurrentPositions.AsNoTracking().SingleOrDefaultAsync(currentTrainPosition => 
             currentTrainPosition.TrainId == trainId, cancellationToken);
         
         if (pos is null) 
@@ -27,7 +25,7 @@ public sealed class TrainsController(TttDbContext dbContext) : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<IActionResult> GetMovements(string trainId, [FromQuery] DateTimeOffset? from, [FromQuery] DateTimeOffset? to, CancellationToken ct)
     {
-        var queryable = _dbContext.MovementEvents.AsNoTracking().Where(x => x.TrainId == trainId);
+        var queryable = dbContext.MovementEvents.AsNoTracking().Where(x => x.TrainId == trainId);
         if (from is { }) queryable = queryable.Where(x => x.ActualTimestampMs >= from.Value.ToUnixTimeMilliseconds());
         if (to   is { }) queryable = queryable.Where(x => x.ActualTimestampMs <= to.Value.ToUnixTimeMilliseconds());
         var list = await queryable.OrderBy(x => x.ActualTimestampMs).ToListAsync(ct);
@@ -39,7 +37,7 @@ public sealed class TrainsController(TttDbContext dbContext) : ControllerBase
     public async Task<IActionResult> GetTrainIds([FromQuery] DateOnly? date, CancellationToken ct)
     {
         var hold = date.ToString();
-        var queryable = _dbContext.TrainRuns.AsNoTracking();
+        var queryable = dbContext.TrainRuns.AsNoTracking();
         if (date is { }) queryable = queryable.Where(x => x.ServiceDate == date);
         var ids = await queryable.OrderBy(x => x.TrainId).Select(x => x.TrainId).ToListAsync(ct);
         return Ok(ids);
