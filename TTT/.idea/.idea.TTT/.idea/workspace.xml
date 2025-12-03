@@ -11,16 +11,14 @@
     <list default="true" id="a138a5cd-f4a5-4b3e-9a2f-eb71b297574f" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/../.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/../.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.TTT/.idea/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.TTT/.idea/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.TTT/.idea/dataSources.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.TTT/.idea/dataSources.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.TTT/.idea/dataSources.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.TTT/.idea/encodings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.TTT/.idea/encodings.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.TTT/.idea/indexLayout.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.TTT/.idea/indexLayout.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.TTT/.idea/projectSettingsUpdater.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.TTT/.idea/projectSettingsUpdater.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.TTT/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.TTT/.idea/vcs.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.TTT/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.TTT/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/TTT.sln" beforeDir="false" afterPath="$PROJECT_DIR$/TTT.sln" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TTT.sln.DotSettings.user" beforeDir="false" afterPath="$PROJECT_DIR$/TTT.sln.DotSettings.user" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/TTT/Health/HeathController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/TTT/Health/HeathController.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TTT/OpenRail/NetRailOptions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/TTT/OpenRail/NetRailOptions.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/TTT/OpenRail/OpenRailException.cs" beforeDir="false" afterPath="$PROJECT_DIR$/TTT/OpenRail/OpenRailException.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/TTT/OpenRail/OpenRailMessage.cs" beforeDir="false" afterPath="$PROJECT_DIR$/TTT/OpenRail/OpenRailMessage.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/TTT/OpenRail/OpenRailNRODReceiver.cs" beforeDir="false" afterPath="$PROJECT_DIR$/TTT/OpenRail/OpenRailNRODReceiver.cs" afterDir="false" />
@@ -29,8 +27,6 @@
       <change beforePath="$PROJECT_DIR$/TTT/TTT.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/TTT/TTT.csproj" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/TTT/TTT.http" beforeDir="false" afterPath="$PROJECT_DIR$/TTT/TTT.http" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/TTT/TrainData/Controller/MovementController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/TTT/TrainData/Controller/MovementController.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TTT/TrainData/Controller/TrainsController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/TTT/TrainData/Controller/TrainsController.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TTT/UnitTests/TrainControllerTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/TTT/UnitTests/TrainControllerTests.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/TTT/appsettings.Development.json" beforeDir="false" afterPath="$PROJECT_DIR$/TTT/appsettings.Development.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/TTT/appsettings.json" beforeDir="false" afterPath="$PROJECT_DIR$/TTT/appsettings.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/TTT/docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/TTT/docker-compose.yml" afterDir="false" />
@@ -56,6 +52,7 @@
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/bd1d5c50194fea68ff3559c160230b0ab50f5acf4ce3061bffd6d62958e2182/ExceptionDispatchInfo.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/ce37be1a06b16c6faa02038d2cc477dd3bca5b217ceeb41c5f2ad45c1bf9/ServiceProvider.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/e0e3ccafd588b32b3d7ee942cb73758f1a346f75c92b352f3c229e0cd7c205f/DbContextOptionsBuilder.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$USER_HOME$/AppData/Roaming/Microsoft/UserSecrets/0aea6be8-55b1-4279-b48f-abd5b5ac206c/secrets.json" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/TTT/DataSets/MovementEvent.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/TTT/DataSets/TrainActivationBody.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/TTT/DataSets/TrainMovementBody.cs" root0="FORCE_HIGHLIGHTING" />
@@ -96,6 +93,7 @@
   "keyToString": {
     ".NET Launch Settings Profile.TTT: http.executor": "Debug",
     ".NET Launch Settings Profile.TTT: https.executor": "Run",
+    "Docker.TTT: Compose Deployment.executor": "Run",
     "ModuleVcsDetector.initialDetectionPerformed": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
@@ -117,7 +115,7 @@
     ]
   }
 }]]></component>
-  <component name="RunManager" selected=".NET Launch Settings Profile.TTT: http">
+  <component name="RunManager" selected="Docker.TTT: Compose Deployment">
     <configuration name="Dev" type="DotNetProject" factoryName=".NET Project">
       <option name="EXE_PATH" value="$PROJECT_DIR$/TTT/bin/Debug/net9.0/TTT.exe" />
       <option name="PROGRAM_PARAMETERS" value="" />
@@ -196,10 +194,29 @@
         <option name="Build" />
       </method>
     </configuration>
+    <configuration name="TTT: Compose Deployment" type="docker-deploy" factoryName="docker-compose.yml" temporary="true" server-name="Docker">
+      <deployment type="docker-compose.yml">
+        <settings>
+          <option name="sourceFilePath" value="TTT/docker-compose.yml" />
+        </settings>
+      </deployment>
+      <EXTENSION ID="com.jetbrains.rider.docker.debug" isFastModeEnabled="true" isSslEnabled="false" />
+      <method v="2" />
+    </configuration>
+    <configuration default="true" type="docker-deploy" factoryName="docker-compose.yml" temporary="true">
+      <deployment type="docker-compose.yml" />
+      <method v="2" />
+    </configuration>
     <list>
       <item itemvalue=".NET Launch Settings Profile.TTT: http" />
       <item itemvalue=".NET Project.Dev" />
+      <item itemvalue="Docker.TTT: Compose Deployment" />
     </list>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Docker.TTT: Compose Deployment" />
+      </list>
+    </recent_temporary>
   </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
@@ -232,6 +249,7 @@
       <workItem from="1764165408495" duration="55000" />
       <workItem from="1764165488231" duration="940000" />
       <workItem from="1764393220689" duration="2779000" />
+      <workItem from="1764586971344" duration="4458000" />
     </task>
     <servers />
   </component>
@@ -349,6 +367,19 @@
             </endOffsets>
           </properties>
           <option name="timeStamp" value="95" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/TTT/Program.cs</url>
+          <line>28</line>
+          <properties documentPath="C:\Work\Projects\TTT\TimathyTrainTime\TTT\TTT\Program.cs" containingFunctionPresentation="Lambda expression inside Method 'Main'">
+            <startOffsets>
+              <option value="1024" />
+            </startOffsets>
+            <endOffsets>
+              <option value="1070" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="96" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

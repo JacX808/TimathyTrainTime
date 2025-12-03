@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
+using MySql.Data.EntityFrameworkCore.Extensions;
 using TTT.Database;
 using TTT.OpenRail;
 using TTT.Services;

@@ -11,6 +11,7 @@
         <PackageReference Include="Apache.NMS" Version="2.0.0" />
         <PackageReference Include="Apache.NMS.ActiveMQ" Version="2.0.0" />
         <PackageReference Include="Confluent.Kafka" Version="2.12.0" />
+        <PackageReference Include="JDBC.NET" Version="1.0.3" />
         <PackageReference Include="Kafka" Version="1.0.5814.23193" />
         <PackageReference Include="Microsoft.AspNetCore.Http.Connections" Version="1.2.0" />
         <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.10" />
@@ -27,6 +28,7 @@
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.0.1" />
+        <PackageReference Include="MySql.Data.EntityFrameworkCore" Version="8.0.22" />
         <PackageReference Include="NUnit" Version="4.4.0" />
         <PackageReference Include="NUnit3TestAdapter" Version="5.2.0" />
         <PackageReference Include="Swashbuckle.AspNetCore" Version="9.0.6" />

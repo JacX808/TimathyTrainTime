@@ -1,17 +1,15 @@
 ﻿version: "3.9"
 services:
-  mysql:
+  ttt_container:
     image: mysql:8.4
-    command: --default-authentication-plugin=mysql_native_password
     environment:
-      MYSQL_DATABASE: ${DB_NAME:-tttdb}
-      OpenRail__NR_USERNAME: ${NR_USERNAME:-jacX808}
-      OpenRail__NR_PASSWORD: ${NR_PASSWORD:-pass}
+      MYSQL_DATABASE: "ttt"
+      MYSQL_ROOT_PASSWORD: "dB@min5211"
       TZ: Europe/London
     ports:
       - "3306:3306"
     volumes:
-      - mysql_data:/var/lib/mysql
+      - ttt_container:/var/lib/mysql
         
 volumes:
-  mysqldb:
+  ttt_container:
