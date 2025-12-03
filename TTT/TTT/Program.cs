@@ -16,13 +16,13 @@ internal abstract class Program
 
         // DB Connection TODO Setup DB with new datasets
         string host = builder.Configuration["DB_HOST"] ?? "localhost";
-        string port = builder.Configuration["DB_PORT"] ?? "5432";
-        string user = builder.Configuration["DB_USERNAME"] ?? "app";
+        string port = builder.Configuration["DB_PORT"] ?? "3306";
+        string user = builder.Configuration["DB_USERNAME"] ?? "root";
         string pass = builder.Configuration["DB_PASSWORD"] ?? "app";
         string db   = builder.Configuration["DB_NAME"] ?? "ttt";
         var conn    = $"Host={host};Port={port};Database={db};Username={user};Password={pass}";
         
-        builder.Services.AddEntityFrameworkMySQL().AddDbContext<TttDbContext>(options =>
+        builder.Services.AddDbContext<TttDbContext>(options =>
         {
             options.UseMySQL(conn);
             
