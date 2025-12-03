@@ -10,6 +10,8 @@ namespace TTT.UnitTests;
 [TestFixture]
 public class TrainsControllerTests
 {
+    private static readonly DateOnly Today = new(DateTime.Today.Year, DateTime.Today.Month, DateTime.Today.Day);
+    
     private static TttDbContext MakeDb()
     {
         var opts = new DbContextOptionsBuilder<TttDbContext>()
@@ -22,9 +24,9 @@ public class TrainsControllerTests
 
         // Seed
         dbContext.TrainRuns.AddRange(
-            new TrainRun { TrainId = "A1", ServiceDate = new DateOnly(2025, 11, 25) },
-            new TrainRun { TrainId = "B2", ServiceDate = new DateOnly(2025, 11, 26) },
-            new TrainRun { TrainId = "C3", ServiceDate = new DateOnly(2025, 11, 25) }
+            new TrainRun { TrainId = "A1", ServiceDate = Today },
+            new TrainRun { TrainId = "B2", ServiceDate = Today.AddDays(1)},
+            new TrainRun { TrainId = "C3", ServiceDate = Today}
         );
 
         dbContext.CurrentPositions.Add(
@@ -75,7 +77,9 @@ public class TrainsControllerTests
         await using var db = MakeDb();
         var sut = new TrainsController(db);
 
-        var result = await sut.GetTrainIds(new DateOnly(2025, 11, 25), CancellationToken.None) as OkObjectResult;
+        var result = await sut.GetTrainIds(new DateOnly(Today.Year, Today.Month, Today.Day)
+            , CancellationToken.None) as OkObjectResult;
+        
         Assert.That(result, Is.Not.Null, "Expected 200 OK");
 
         var ids = result!.Value as IReadOnlyList<string>;

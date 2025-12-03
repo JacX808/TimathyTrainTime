@@ -11,12 +11,15 @@
     <list default="true" id="a138a5cd-f4a5-4b3e-9a2f-eb71b297574f" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/../.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/../.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.TTT/.idea/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.TTT/.idea/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.TTT/.idea/dataSources.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.TTT/.idea/dataSources.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.TTT/.idea/data_source_mapping.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.TTT/.idea/data_source_mapping.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.TTT/.idea/encodings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.TTT/.idea/encodings.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.TTT/.idea/indexLayout.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.TTT/.idea/indexLayout.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.TTT/.idea/projectSettingsUpdater.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.TTT/.idea/projectSettingsUpdater.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.TTT/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.TTT/.idea/vcs.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.TTT/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.TTT/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/TTT.sln" beforeDir="false" afterPath="$PROJECT_DIR$/TTT.sln" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TTT.sln.DotSettings.user" beforeDir="false" afterPath="$PROJECT_DIR$/TTT.sln.DotSettings.user" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/TTT/Health/HeathController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/TTT/Health/HeathController.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/TTT/OpenRail/OpenRailException.cs" beforeDir="false" afterPath="$PROJECT_DIR$/TTT/OpenRail/OpenRailException.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/TTT/OpenRail/OpenRailMessage.cs" beforeDir="false" afterPath="$PROJECT_DIR$/TTT/OpenRail/OpenRailMessage.cs" afterDir="false" />
@@ -26,6 +29,7 @@
       <change beforePath="$PROJECT_DIR$/TTT/TTT.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/TTT/TTT.csproj" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/TTT/TTT.http" beforeDir="false" afterPath="$PROJECT_DIR$/TTT/TTT.http" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/TTT/TrainData/Controller/MovementController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/TTT/TrainData/Controller/MovementController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TTT/UnitTests/TrainControllerTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/TTT/UnitTests/TrainControllerTests.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/TTT/appsettings.Development.json" beforeDir="false" afterPath="$PROJECT_DIR$/TTT/appsettings.Development.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/TTT/appsettings.json" beforeDir="false" afterPath="$PROJECT_DIR$/TTT/appsettings.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/TTT/docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/TTT/docker-compose.yml" afterDir="false" />
@@ -43,6 +47,7 @@
   </component>
   <component name="HighlightingSettingsPerFile">
     <setting file="file://$USER_HOME$/.nuget/packages/microsoft.net.test.sdk/18.0.1/build/net8.0/Microsoft.NET.Test.Sdk.Program.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/07591a95a4ee48739104536f73fbfc8624000/72/8cad1653/MySQLOptionsExtension.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/182ec85d25b779c7118bca2890ca95ae8dd32868c52272faee4a3a304f624b/Assert.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/79158649bd7c66c32349fc6782b958e898fee955db6498ffdb52e869ea7bcfb/NpgsqlDbContextOptionsBuilderExtensions.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/8271807a61bb8a8540cf6d7a38534480374a4aac934ee4f53d7efdc9aea37ae/IOptions.cs" root0="FORCE_HIGHLIGHTING" />
@@ -252,7 +257,8 @@
       <workItem from="1764165488231" duration="940000" />
       <workItem from="1764393220689" duration="2779000" />
       <workItem from="1764586971344" duration="4458000" />
-      <workItem from="1764751025618" duration="1179000" />
+      <workItem from="1764751025618" duration="2519000" />
+      <workItem from="1764755957337" duration="892000" />
     </task>
     <servers />
   </component>
@@ -320,56 +326,17 @@
           <option name="timeStamp" value="75" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/TTT/TrainData/Controller/TrainsController.cs</url>
-          <line>44</line>
-          <properties documentPath="C:\Work\Projects\TTT\TimathyTrainTime\TTT\TTT\TrainData\Controller\TrainsController.cs" containingFunctionPresentation="Method 'GetTrainIds'">
-            <startOffsets>
-              <option value="1945" />
-            </startOffsets>
-            <endOffsets>
-              <option value="1960" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="90" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/TTT/UnitTests/TrainControllerTests.cs</url>
-          <line>78</line>
-          <properties documentPath="C:\Work\Projects\TTT\TimathyTrainTime\TTT\TTT\UnitTests\TrainControllerTests.cs" containingFunctionPresentation="Method 'GetTrainIds_WithDate_ReturnsOnlyThatDate'">
+          <line>121</line>
+          <properties documentPath="C:\Work\Projects\TTT\TimathyTrainTime\TTT\TTT\UnitTests\TrainControllerTests.cs" containingFunctionPresentation="Method 'GetMovements_ReturnsChronologicalList'">
             <startOffsets>
-              <option value="2554" />
+              <option value="4026" />
             </startOffsets>
             <endOffsets>
-              <option value="2606" />
+              <option value="4116" />
             </endOffsets>
           </properties>
-          <option name="timeStamp" value="93" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/TTT/TrainData/Controller/TrainsController.cs</url>
-          <line>41</line>
-          <properties documentPath="C:\Work\Projects\TTT\TimathyTrainTime\TTT\TTT\TrainData\Controller\TrainsController.cs" containingFunctionPresentation="Method 'GetTrainIds'">
-            <startOffsets>
-              <option value="1704" />
-            </startOffsets>
-            <endOffsets>
-              <option value="1756" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="94" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/TTT/TrainData/Controller/TrainsController.cs</url>
-          <line>40</line>
-          <properties documentPath="C:\Work\Projects\TTT\TimathyTrainTime\TTT\TTT\TrainData\Controller\TrainsController.cs" containingFunctionPresentation="Method 'GetTrainIds'">
-            <startOffsets>
-              <option value="1668" />
-            </startOffsets>
-            <endOffsets>
-              <option value="1695" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="95" />
+          <option name="timeStamp" value="98" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
