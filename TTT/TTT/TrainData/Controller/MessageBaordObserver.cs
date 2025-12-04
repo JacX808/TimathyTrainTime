@@ -17,7 +17,7 @@ public class MessageBaordObserver : BackgroundService
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        await Task.Run(ListenForMessagesAsync);
+       // await Task.Run(ListenForMessagesAsync);
     }
 
     private async Task ListenForMessagesAsync()
@@ -107,18 +107,18 @@ public class MessageBaordObserver : BackgroundService
                 Console.WriteLine("Receiver Status:");
                 Console.WriteLine("  Running = " + _receiver.IsRunning.ToString() + ", Connected To Data Feed = " +
                                   _receiver.IsConnected.ToString());
-                Console.WriteLine("  Size of local In-Memory Queue 1 (" + _receiver._netRailOptions.Topics[0] + ") = " +
+                Console.WriteLine("  Size of local In-Memory Queue 1 (" + _receiver.NetRailOptions.Topics[0] + ") = " +
                                   _receiver.MoMessageQueue1.Count
                                       .ToString()); // i.e. messages received from the feed but not yet processed locally
-                Console.WriteLine("  Size of local In-Memory Queue 2 (" + _receiver._netRailOptions.Topics[1] + ") = " +
+                Console.WriteLine("  Size of local In-Memory Queue 2 (" + _receiver.NetRailOptions.Topics[1] + ") = " +
                                   _receiver.MoMessageQueue2.Count
                                       .ToString()); // i.e. messages received from the feed but not yet processed locally
                 Console.WriteLine("  Last Message Received At = " + _receiver.LastMessageReceivedAtUtc.ToLocalTime()
                     .ToString("HH:mm:ss.fff ddd dd MMM yyyy"));
-                Console.WriteLine("  Msg Counts:  (1: {0}) = {1}, (2: {2}) = {3}", _receiver._netRailOptions.Topics[0], _receiver.MessageCount1,
-                    _receiver._netRailOptions.Topics[1], _receiver.MessageCount2);
+                Console.WriteLine("  Msg Counts:  (1: {0}) = {1}, (2: {2}) = {3}", _receiver.NetRailOptions.Topics[0], _receiver.MessageCount1,
+                    _receiver.NetRailOptions.Topics[1], _receiver.MessageCount2);
                 Console.WriteLine();
-                Console.WriteLine("Processing Status 1 (" + _receiver._netRailOptions.Topics[0] + "):");
+                Console.WriteLine("Processing Status 1 (" + _receiver.NetRailOptions.Topics[0] + "):");
                 Console.WriteLine("  Msg Counts: Text = {0}, Bytes = {1}, Unsupported = {2}", iTextMessageCount1,
                     iBytesMessageCount1, iUnsupportedMessageCount1);
                 Console.WriteLine("  Last JSON = " + (msLastTextMessage1 == null
@@ -127,19 +127,23 @@ public class MessageBaordObserver : BackgroundService
                         ? msLastTextMessage1.Substring(0, 40) + "..."
                         : msLastTextMessage1)));
                 Console.WriteLine();
-                Console.WriteLine("Processing Status 2 (" + _receiver._netRailOptions.Topics[1] + "):");
-                Console.WriteLine("  Msg Counts: Text = {0}, Bytes = {1}, Unsupported = {2}", iTextMessageCount2,
-                    iBytesMessageCount2, iUnsupportedMessageCount2);
-                Console.WriteLine("  Last JSON = " + (msLastTextMessage2 == null
-                    ? ""
-                    : (msLastTextMessage2.Length > 40
-                        ? msLastTextMessage2.Substring(0, 40) + "..."
-                        : msLastTextMessage2)));
-                Console.WriteLine();
-                Console.WriteLine("Errors:  Total Errors = " + iErrorCount.ToString());
-                Console.WriteLine("  Last Error = " + (msLastErrorInfo == null ? "" : msLastErrorInfo));
-                Console.WriteLine();
-                dtNextUiUpdateTime = DateTime.UtcNow.AddMilliseconds(500);
+
+                if (_receiver.NetRailOptions.Topics.Count > 0)
+                {
+                    Console.WriteLine("Processing Status 2 (" + _receiver.NetRailOptions.Topics[1] + "):");
+                    Console.WriteLine("  Msg Counts: Text = {0}, Bytes = {1}, Unsupported = {2}", iTextMessageCount2,
+                        iBytesMessageCount2, iUnsupportedMessageCount2);
+                    Console.WriteLine("  Last JSON = " + (msLastTextMessage2 == null
+                        ? ""
+                        : (msLastTextMessage2.Length > 40
+                            ? msLastTextMessage2.Substring(0, 40) + "..."
+                            : msLastTextMessage2)));
+                    Console.WriteLine();
+                    Console.WriteLine("Errors:  Total Errors = " + iErrorCount.ToString());
+                    Console.WriteLine("  Last Error = " + (msLastErrorInfo == null ? "" : msLastErrorInfo));
+                    Console.WriteLine();
+                    dtNextUiUpdateTime = DateTime.UtcNow.AddMilliseconds(500);
+                }
             }
 
             if (_receiver.MoMessageQueue1.Count < 10 && _receiver.MoMessageQueue2.Count < 10) Thread.Sleep(50);

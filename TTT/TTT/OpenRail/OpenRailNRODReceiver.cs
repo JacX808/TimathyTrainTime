@@ -27,7 +27,7 @@ namespace TTT.OpenRail
 
         private readonly ILogger<OpenRailNrodReceiver> _log;
 
-        public readonly NetRailOptions _netRailOptions;
+        public readonly NetRailOptions NetRailOptions;
         private readonly int _miAttemptToConnectForSeconds;
 
         public readonly ConcurrentQueue<OpenRailMessage> MoMessageQueue1 = new();
@@ -77,7 +77,7 @@ namespace TTT.OpenRail
             _log  = log;
             _miAttemptToConnectForSeconds = 200;
 
-            _netRailOptions = new NetRailOptions
+            NetRailOptions = new NetRailOptions
             {
                 ConnectUrl = opts1.ConnectUrl,
                 Username = opts1.Username ?? "***",
@@ -188,25 +188,25 @@ namespace TTT.OpenRail
         {
             try
             {
-                _connectionFactory = new ConnectionFactory(_netRailOptions.ConnectUrl);
-                _connection = _connectionFactory.CreateConnection(_netRailOptions.Username, _netRailOptions.Password);
-                _connection.ClientId = _netRailOptions.Username;
+                _connectionFactory = new ConnectionFactory(NetRailOptions.ConnectUrl);
+                _connection = _connectionFactory.CreateConnection(NetRailOptions.Username, NetRailOptions.Password);
+                _connection.ClientId = NetRailOptions.Username;
                 _connection.ExceptionListener += OnConnectionException;
                 _session = _connection.CreateSession(AcknowledgementMode.AutoAcknowledge);
-                if (!string.IsNullOrWhiteSpace(_netRailOptions.Topics[0]))
+                if (!string.IsNullOrWhiteSpace(NetRailOptions.Topics[0]))
                 {
-                    _topic1 = _session.GetTopic(_netRailOptions.Topics[0]);
-                    if (_netRailOptions.UseDurableSubscription)
-                        _consumer1 = _session.CreateDurableConsumer(_topic1, _netRailOptions.Topics[0], null, false);
+                    _topic1 = _session.GetTopic(NetRailOptions.Topics[0]);
+                    if (NetRailOptions.UseDurableSubscription)
+                        _consumer1 = _session.CreateDurableConsumer(_topic1, NetRailOptions.Topics[0], null, false);
                     else _consumer1 = _session.CreateConsumer(_topic1);
                     _consumer1.Listener += OnMessageReceived1;
                 }
 
-                if (!string.IsNullOrWhiteSpace(_netRailOptions.Topics[1]))
+                if (!string.IsNullOrWhiteSpace(NetRailOptions.Topics[1]))
                 {
-                    _topic2 = _session.GetTopic(_netRailOptions.Topics[1]);
-                    if (_netRailOptions.UseDurableSubscription)
-                        _consumer2 = _session.CreateDurableConsumer(_topic2, _netRailOptions.Topics[1], null, false);
+                    _topic2 = _session.GetTopic(NetRailOptions.Topics[1]);
+                    if (NetRailOptions.UseDurableSubscription)
+                        _consumer2 = _session.CreateDurableConsumer(_topic2, NetRailOptions.Topics[1], null, false);
                     else _consumer2 = _session.CreateConsumer(_topic2);
                     _consumer2.Listener += OnMessageReceived2;
                 }
