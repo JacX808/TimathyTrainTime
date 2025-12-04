@@ -14,26 +14,32 @@ namespace TTT.Services;
 /// <summary>
 /// 
 /// </summary>
-public sealed class MovementsIngestionService : BackgroundService
+public sealed class MovementsIngestionService : BackgroundService, IMovementsIngestionService
 {
     private readonly ILogger<MovementsIngestionService> _log;
     private readonly IServiceScopeFactory _scopeFactory;
-    private readonly NetRailOptions _opts;
+    private readonly NetRailOptions _options;
+    private readonly ITrainDataService _trainDataService;
 
     /// <summary>
-    /// 
+    /// Add database connection for endpoints to add data from National Rail data
     /// </summary>
-    /// <param name="log"></param>
+    /// <param name="options"></param>
     /// <param name="scopeFactory"></param>
-    /// <param name="opts"></param>
+    /// <param name="log"></param>
+    /// <param name="dbContext"></param>
     public MovementsIngestionService(
-        ILogger<MovementsIngestionService> log,
+        IOptions<NetRailOptions> options,
         IServiceScopeFactory scopeFactory,
-        IOptions<NetRailOptions> opts)
+        ILogger<MovementsIngestionService> log)
     {
-        _log = log;
+        _options = options.Value;
         _scopeFactory = scopeFactory;
-        _opts = opts.Value;
+        _log = log;
+        
+        using var scope = _scopeFactory.CreateScope();
+        _trainDataService = scope.ServiceProvider.GetRequiredService<ITrainDataService>();
+
     }
 
     /// <summary>
@@ -59,8 +65,9 @@ public sealed class MovementsIngestionService : BackgroundService
                 {
                     await Task.Delay(TimeSpan.FromSeconds(2), stoppingToken);
                 }
-                catch
+                catch (Exception e)
                 {
+                    // ignored
                 }
             }
         }
@@ -75,27 +82,28 @@ public sealed class MovementsIngestionService : BackgroundService
     private async Task RunOpenWireLoop(CancellationToken cancellationToken)
     {
         // Use provider factory with OpenWire tcp:// URI (no "activemq:" prefix)
-        var factory = new ConnectionFactory(_opts.ConnectUrl);
-        using var conn = string.IsNullOrWhiteSpace(_opts.Username)
+        var factory = new ConnectionFactory(_options.ConnectUrl);
+        using var conn = string.IsNullOrWhiteSpace(_options.Username)
             ? await factory.CreateConnectionAsync()
-            : await factory.CreateConnectionAsync(_opts.Username, _opts.Password);
+            : await factory.CreateConnectionAsync(_options.Username, _options.Password);
 
-        if (_opts.UseDurableSubscription)
-            conn.ClientId = _opts.ClientId;
+        if (_options.UseDurableSubscription)
+            conn.ClientId = _options.ClientId;
 
         await conn.StartAsync();
         using var session = await conn.CreateSessionAsync(AcknowledgementMode.AutoAcknowledge);
 
         var consumers = new List<IMessageConsumer>();
-        foreach (var topic in _opts.Topics)
+        
+        foreach (var topic in _options.Topics)
         {
             // TODO - Need better solution
             if (consumers.Count < 1)
             {
                 var dest = await session.GetTopicAsync(topic);
-        
-                var consumer = _opts.UseDurableSubscription
-                    ? await session.CreateDurableConsumerAsync(dest, $"{_opts.ClientId}-{topic}", null, false)
+
+                var consumer = _options.UseDurableSubscription
+                    ? await session.CreateDurableConsumerAsync(dest, $"{_options.ClientId}-{topic}", null, false)
                     : await session.CreateConsumerAsync(dest);
 
                 consumer.Listener += HandleMessage; // fire-and-forget
@@ -219,7 +227,7 @@ public sealed class MovementsIngestionService : BackgroundService
         var db = scope.ServiceProvider.GetRequiredService<TttDbContext>();
 
         // History (idempotent by unique index)
-        var movementEvent = Entity.ToEntity(trainMovementBody);
+        var movementEvent = Mappers.TrainMoveBodyToMoveEvent(trainMovementBody);
         db.MovementEvents.Add(movementEvent);
 
         // Latest position (upsert)
@@ -239,7 +247,8 @@ public sealed class MovementsIngestionService : BackgroundService
         if (run is null)
             db.TrainRuns.Add(new TrainRun
             {
-                TrainId = trainMovementBody.TrainId, TocId = trainMovementBody.TocId, FirstSeenUtc = DateTimeOffset.UtcNow,
+                TrainId = trainMovementBody.TrainId, TocId = trainMovementBody.TocId,
+                FirstSeenUtc = DateTimeOffset.UtcNow,
                 LastSeenUtc = DateTimeOffset.UtcNow
             });
         else
@@ -278,4 +287,164 @@ public sealed class MovementsIngestionService : BackgroundService
         var local = TimeZoneInfo.ConvertTime(t, tz);
         return t; //TimeZoneInfo.IsDaylightSavingTime(local) ? t.AddHours(-1) : t;
     }
+
+    public async Task<int> HandleEnvelopeAsync(JsonElement element, CancellationToken cancellationToken)
+    {
+        var envelope = element.Deserialize<TrustEnvelope>();
+
+        if (envelope?.header.MsgType is null)
+            return 0;
+        
+        switch (envelope.header.MsgType)
+        {
+            case "0001": // Activation
+            {
+                var activationBody = envelope.body.Deserialize<TrainActivationBody>();
+                if (activationBody is null) return 0;
+
+                var now = DateTimeOffset.UtcNow;
+                var run = await _trainDataService.FindTrainRunAsync(activationBody.TrainId, cancellationToken);
+                if (run is null)
+                {
+                    run = new TrainRun
+                    {
+                        TrainId = activationBody.TrainId,
+                        TrainUid = activationBody.TrainUid,
+                        TocId = activationBody.TocId,
+                        ServiceDate = ServiceDateFromActivation(activationBody),
+                        FirstSeenUtc = now,
+                        LastSeenUtc = now
+                    };
+                    await _trainDataService.AddTrainRunAsync(run, cancellationToken);
+                }
+                else
+                {
+                    run.TrainUid ??= activationBody.TrainUid;
+                    run.TocId ??= activationBody.TocId;
+                    run.ServiceDate ??= ServiceDateFromActivation(activationBody);
+                    run.LastSeenUtc = now;
+                }
+
+                return 1;
+            }
+
+            case "0003": // Movement
+            {
+                var movementBody = envelope.body.Deserialize<TrainMovementBody>();
+                if (movementBody is null) return 0;
+
+                // History (unique key protects against duplicates)
+                var evt = Mappers.TrainMoveBodyToMoveEvent(movementBody);
+                await _trainDataService.AddMovementEventAsync(evt, cancellationToken);
+
+                // Latest position snapshot
+                var position = await _trainDataService.FindCurrentPositionAsync(movementBody.TrainId, cancellationToken)
+                               ?? new CurrentTrainPosition { TrainId = movementBody.TrainId };
+
+                position.LocStanox = movementBody.LocStanox;
+                position.ReportedAt = FixDst(movementBody.ActualTimestamp);
+                position.Direction = movementBody.DirectionInd;
+                position.Line = null; // movementBody.;
+                position.VariationStatus = movementBody.VariationStatus;
+
+                await _trainDataService.UpsertCurrentPositionAsync(position, cancellationToken);
+
+                // Touch TrainRun (in case activation missed)
+                var run = await _trainDataService.FindTrainRunAsync(movementBody.TrainId, cancellationToken);
+                if (run is null)
+                {
+                    await _trainDataService.AddTrainRunAsync(new TrainRun
+                    {
+                        TrainId = movementBody.TrainId,
+                        TocId = movementBody.TocId,
+                        FirstSeenUtc = DateTimeOffset.UtcNow,
+                        LastSeenUtc = DateTimeOffset.UtcNow
+                    }, cancellationToken);
+                }
+                else
+                {
+                    run.LastSeenUtc = DateTimeOffset.UtcNow;
+                }
+
+                // Ignore duplicate exceptions (at-least-once)
+                try
+                {
+                    await _trainDataService.SaveChangesAsync(cancellationToken);
+                }
+                catch (DbUpdateException)
+                {
+                    /* dup */
+                }
+
+                return 1;
+            }
+        }
+
+        return 0;
+    }
+
+    public async Task IntegstOnceServiceAsync(string topic, int maxMessages, int maxSeconds,
+        CancellationToken cancellationToken)
+    {
+        try
+        {
+            var startNew = System.Diagnostics.Stopwatch.StartNew();
+
+            // OpenWire connection (use provider factory; no "activemq:" prefix)
+            var factory = new ConnectionFactory(_options.ConnectUrl);
+            using var connectionAsync = string.IsNullOrWhiteSpace(_options.Username)
+                ? await factory.CreateConnectionAsync()
+                : await factory.CreateConnectionAsync(_options.Username, _options.Password);
+
+            if (_options.UseDurableSubscription)
+                connectionAsync.ClientId = _options.ClientId ?? "ttt-nrod-client";
+
+            connectionAsync.Start();
+            using var session = connectionAsync.CreateSession(AcknowledgementMode.AutoAcknowledge);
+            var dest = session.GetTopic(topic);
+
+            using var consumer = _options.UseDurableSubscription
+                ? await session.CreateDurableConsumerAsync(dest, $"{connectionAsync.ClientId}-{topic}", null, false)
+                : await session.CreateConsumerAsync(dest);
+
+            int read = 0, processed = 0, saved = 0;
+
+            while (!cancellationToken.IsCancellationRequested && read < maxMessages &&
+                   startNew.Elapsed < TimeSpan.FromSeconds(maxSeconds))
+            {
+                var message = consumer.Receive(TimeSpan.FromMilliseconds(500)) as ITextMessage;
+                if (message is null) continue;
+
+                read++;
+
+                try
+                {
+                    using var doc = JsonDocument.Parse(message.Text);
+                    var root = doc.RootElement;
+
+                    if (root.ValueKind == JsonValueKind.Array)
+                    {
+                        foreach (var element in root.EnumerateArray())
+                            processed += await HandleEnvelopeAsync(element.Clone(), cancellationToken);
+                    }
+                    else if (root.ValueKind == JsonValueKind.Object)
+                    {
+                        processed += await HandleEnvelopeAsync(root.Clone(), cancellationToken);
+                    }
+                }
+                catch (Exception ex) // TODO add custom exception
+                {
+                    _log.LogError(ex, "Failed to process message payload.");
+                    // TODO add error 500 
+                }
+            }
+        }
+        catch (Exception ex) // TODO add custom exception
+        {
+            // ignored
+        }
+        
+        _log.LogInformation($"Database has been updated at {DateTime.Now}");
+    }
 }
+

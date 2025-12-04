@@ -71,19 +71,19 @@ namespace TTT.OpenRail
             set => Interlocked.Exchange(ref _miLastConnectionExceptionAtUtc, value.Ticks);
         }
         
-        public OpenRailNrodReceiver(IOptions<NetRailOptions> opts, ILogger<OpenRailNrodReceiver> log)
+        public OpenRailNrodReceiver(IOptions<NetRailOptions> options, ILogger<OpenRailNrodReceiver> log)
         {
-            var opts1 = opts.Value;
+            var optionsValue = options.Value;
             _log  = log;
             _miAttemptToConnectForSeconds = 200;
 
             NetRailOptions = new NetRailOptions
             {
-                ConnectUrl = opts1.ConnectUrl,
-                Username = opts1.Username ?? "***",
-                Password = opts1.Password ?? "***",
-                Topics = opts1.Topics,
-                UseDurableSubscription = opts1.UseDurableSubscription
+                ConnectUrl = optionsValue.ConnectUrl,
+                Username = optionsValue.Username ?? "***",
+                Password = optionsValue.Password ?? "***",
+                Topics = optionsValue.Topics,
+                UseDurableSubscription = optionsValue.UseDurableSubscription
             };
 
             Start();
