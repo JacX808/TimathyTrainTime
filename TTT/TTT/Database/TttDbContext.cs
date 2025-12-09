@@ -27,23 +27,3 @@ public sealed class TttDbContext : DbContext
         b.Entity<CurrentTrainPosition>().Property(x => x.LocStanox).HasMaxLength(16);
     }
 }
-
-public sealed class TrainRun
-{
-    public string TrainId { get; set; } = default!;
-    public DateOnly? ServiceDate { get; set; }
-    public string? TrainUid { get; set; }
-    public string? TocId { get; set; }
-    public DateTimeOffset FirstSeenUtc { get; set; }
-    public DateTimeOffset LastSeenUtc { get; set; }
-}
-
-public sealed class CurrentTrainPosition
-{
-    public string TrainId { get; set; } = default!;
-    public string LocStanox { get; set; } = default!;
-    public DateTimeOffset ReportedAt { get; set; }
-    public string? Direction { get; set; }
-    public string? Line { get; set; }
-    public string? VariationStatus { get; set; }
-}

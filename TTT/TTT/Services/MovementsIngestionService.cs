@@ -27,7 +27,6 @@ public sealed class MovementsIngestionService : BackgroundService, IMovementsIng
     /// <param name="options"></param>
     /// <param name="scopeFactory"></param>
     /// <param name="log"></param>
-    /// <param name="dbContext"></param>
     public MovementsIngestionService(
         IOptions<NetRailOptions> options,
         IServiceScopeFactory scopeFactory,
@@ -37,7 +36,7 @@ public sealed class MovementsIngestionService : BackgroundService, IMovementsIng
         _scopeFactory = scopeFactory;
         _log = log;
         
-        using var scope = _scopeFactory.CreateScope();
+        var scope = _scopeFactory.CreateScope();
         _trainDataService = scope.ServiceProvider.GetRequiredService<ITrainDataService>();
 
     }
@@ -83,7 +82,7 @@ public sealed class MovementsIngestionService : BackgroundService, IMovementsIng
     {
         // Use provider factory with OpenWire tcp:// URI (no "activemq:" prefix)
         var factory = new ConnectionFactory(_options.ConnectUrl);
-        using var conn = string.IsNullOrWhiteSpace(_options.Username)
+        var conn = string.IsNullOrWhiteSpace(_options.Username)
             ? await factory.CreateConnectionAsync()
             : await factory.CreateConnectionAsync(_options.Username, _options.Password);
 
@@ -91,7 +90,7 @@ public sealed class MovementsIngestionService : BackgroundService, IMovementsIng
             conn.ClientId = _options.ClientId;
 
         await conn.StartAsync();
-        using var session = await conn.CreateSessionAsync(AcknowledgementMode.AutoAcknowledge);
+        var session = await conn.CreateSessionAsync(AcknowledgementMode.AutoAcknowledge);
 
         var consumers = new List<IMessageConsumer>();
         
@@ -130,7 +129,7 @@ public sealed class MovementsIngestionService : BackgroundService, IMovementsIng
 
         try
         {
-            using var doc = JsonDocument.Parse(text.Text);
+            var doc = JsonDocument.Parse(text.Text);
             var root = doc.RootElement;
 
             if (root.ValueKind == JsonValueKind.Array)
@@ -154,20 +153,20 @@ public sealed class MovementsIngestionService : BackgroundService, IMovementsIng
         try
         {
             var env = el.Deserialize<TrustEnvelope>();
-            if (env is null || env.header?.MsgType is null) return;
+            if (env is null || env.Header?.MsgType is null) return;
 
-            switch (env.header.MsgType)
+            switch (env.Header.MsgType)
             {
                 case "0001": // Activation
                 {
-                    var b = env.body.Deserialize<TrainActivationBody>();
+                    var b = env.Body.Deserialize<TrainActivationBody>();
                     if (b is null) return;
                     _ = UpsertTrainRun(b);
                     break;
                 }
                 case "0003": // Movement
                 {
-                    var b = env.body.Deserialize<TrainMovementBody>();
+                    var b = env.Body.Deserialize<TrainMovementBody>();
                     if (b is null) return;
                     _ = UpsertMovement(b);
                     break;
@@ -188,7 +187,7 @@ public sealed class MovementsIngestionService : BackgroundService, IMovementsIng
     /// <param name="a"></param>
     private async Task UpsertTrainRun(TrainActivationBody a)
     {
-        using var scope = _scopeFactory.CreateScope();
+        var scope = _scopeFactory.CreateScope();
         var db = scope.ServiceProvider.GetRequiredService<TttDbContext>();
 
         var now = DateTimeOffset.UtcNow;
@@ -223,7 +222,7 @@ public sealed class MovementsIngestionService : BackgroundService, IMovementsIng
     /// <param name="trainMovementBody"></param>
     private async Task UpsertMovement(TrainMovementBody trainMovementBody)
     {
-        using var scope = _scopeFactory.CreateScope();
+        var scope = _scopeFactory.CreateScope();
         var db = scope.ServiceProvider.GetRequiredService<TttDbContext>();
 
         // History (idempotent by unique index)
@@ -292,14 +291,14 @@ public sealed class MovementsIngestionService : BackgroundService, IMovementsIng
     {
         var envelope = element.Deserialize<TrustEnvelope>();
 
-        if (envelope?.header.MsgType is null)
+        if (envelope?.Header.MsgType is null)
             return 0;
         
-        switch (envelope.header.MsgType)
+        switch (envelope.Header.MsgType)
         {
             case "0001": // Activation
             {
-                var activationBody = envelope.body.Deserialize<TrainActivationBody>();
+                var activationBody = envelope.Body.Deserialize<TrainActivationBody>();
                 if (activationBody is null) return 0;
 
                 var now = DateTimeOffset.UtcNow;
@@ -330,12 +329,13 @@ public sealed class MovementsIngestionService : BackgroundService, IMovementsIng
 
             case "0003": // Movement
             {
-                var movementBody = envelope.body.Deserialize<TrainMovementBody>();
-                if (movementBody is null) return 0;
+                var movementBody = envelope.Body.Deserialize<TrainMovementBody>();
+                if (movementBody is null) 
+                    return 0;
 
                 // History (unique key protects against duplicates)
-                var evt = Mappers.TrainMoveBodyToMoveEvent(movementBody);
-                await _trainDataService.AddMovementEventAsync(evt, cancellationToken);
+                var movementEvent = Mappers.TrainMoveBodyToMoveEvent(movementBody);
+                await _trainDataService.AddMovementEventAsync(movementEvent, cancellationToken);
 
                 // Latest position snapshot
                 var position = await _trainDataService.FindCurrentPositionAsync(movementBody.TrainId, cancellationToken)
@@ -392,7 +392,7 @@ public sealed class MovementsIngestionService : BackgroundService, IMovementsIng
 
             // OpenWire connection (use provider factory; no "activemq:" prefix)
             var factory = new ConnectionFactory(_options.ConnectUrl);
-            using var connectionAsync = string.IsNullOrWhiteSpace(_options.Username)
+            var connectionAsync = string.IsNullOrWhiteSpace(_options.Username)
                 ? await factory.CreateConnectionAsync()
                 : await factory.CreateConnectionAsync(_options.Username, _options.Password);
 
@@ -400,10 +400,10 @@ public sealed class MovementsIngestionService : BackgroundService, IMovementsIng
                 connectionAsync.ClientId = _options.ClientId ?? "ttt-nrod-client";
 
             connectionAsync.Start();
-            using var session = connectionAsync.CreateSession(AcknowledgementMode.AutoAcknowledge);
+            var session = connectionAsync.CreateSession(AcknowledgementMode.AutoAcknowledge);
             var dest = session.GetTopic(topic);
 
-            using var consumer = _options.UseDurableSubscription
+            var consumer = _options.UseDurableSubscription
                 ? await session.CreateDurableConsumerAsync(dest, $"{connectionAsync.ClientId}-{topic}", null, false)
                 : await session.CreateConsumerAsync(dest);
 
@@ -419,7 +419,7 @@ public sealed class MovementsIngestionService : BackgroundService, IMovementsIng
 
                 try
                 {
-                    using var doc = JsonDocument.Parse(message.Text);
+                    var doc = JsonDocument.Parse(message.Text);
                     var root = doc.RootElement;
 
                     if (root.ValueKind == JsonValueKind.Array)
@@ -438,13 +438,13 @@ public sealed class MovementsIngestionService : BackgroundService, IMovementsIng
                     // TODO add error 500 
                 }
             }
+            
+            _log.LogInformation($"Database has been updated at {DateTime.Now}");
         }
-        catch (Exception ex) // TODO add custom exception
+        catch (Exception exception) // TODO add custom exception
         {
-            // ignored
+            _log.LogError($"Failed to process message payload: {exception.StackTrace}");
         }
-        
-        _log.LogInformation($"Database has been updated at {DateTime.Now}");
     }
 }
 

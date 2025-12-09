@@ -1,10 +1,13 @@
 ﻿using System.Text.Json;
-using TTT.DataSets;
+using System.Text.Json.Serialization;
 
 namespace TTT.Utility.Trust;
 
 sealed class TrustEnvelope
 {
-    public TrustHeader header { get; set; } = default!;
-    public JsonElement body { get; set; }
+    [JsonPropertyName("header")]
+    public TrustHeader Header { get; set; } = default!;
+    
+    [JsonPropertyName("body")]
+    public JsonElement Body { get; set; }
 }

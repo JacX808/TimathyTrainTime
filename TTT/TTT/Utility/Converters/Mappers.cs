@@ -21,7 +21,7 @@ public class Mappers
         PlannedTimestampMs = Converters.ToLong(movementBody.PlannedTimestamp),
 
         // Event details
-        PlannedEventType = movementBody.PlannedEventType ?? movementBody.EventType,
+        PlannedEventType = movementBody.PlannedEventType,
         EventType        = movementBody.EventType,
         EventSource      = movementBody.EventSource,
 

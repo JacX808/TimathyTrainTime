@@ -13,7 +13,7 @@ public sealed class MovementsIngestController : ControllerBase
 
     public MovementsIngestController(IServiceScopeFactory scopeFactory, ILogger<MovementsIngestController> log)
     {
-        using var scope = scopeFactory.CreateScope();
+        var scope = scopeFactory.CreateScope();
         _movementsIngestionService = scope.ServiceProvider.GetRequiredService<IMovementsIngestionService>();
         
         _log = log;
