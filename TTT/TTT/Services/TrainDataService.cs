@@ -45,10 +45,10 @@ public sealed class TrainDataService : ITrainDataService
 
     public async Task UpsertCurrentPositionAsync(CurrentTrainPosition position, CancellationToken cancellationToken)
     {
-        var existing = await _dbContext.CurrentPositions.FindAsync([position.TrainId], cancellationToken);
+        var existing = await _dbContext.CurrentTrainPosition.FindAsync([position.TrainId], cancellationToken);
         if (existing is null)
         {
-            await _dbContext.CurrentPositions.AddAsync(position, cancellationToken);
+            await _dbContext.CurrentTrainPosition.AddAsync(position, cancellationToken);
         }
         else
         {
@@ -57,12 +57,12 @@ public sealed class TrainDataService : ITrainDataService
             existing.Direction       = position.Direction;
             existing.Line            = position.Line;
             existing.VariationStatus = position.VariationStatus;
-            _dbContext.CurrentPositions.Update(existing);
+            _dbContext.CurrentTrainPosition.Update(existing);
         }
     }
     
     public Task<CurrentTrainPosition?> FindCurrentPositionAsync(string trainId, CancellationToken cancellationToken)
-        => _dbContext.CurrentPositions.AsNoTracking().SingleOrDefaultAsync(currentTrainPosition => 
+        => _dbContext.CurrentTrainPosition.AsNoTracking().SingleOrDefaultAsync(currentTrainPosition => 
             currentTrainPosition.TrainId == trainId, cancellationToken);
 
     // NEW: bulk/filtered (any filter can be null)
@@ -73,7 +73,7 @@ public sealed class TrainDataService : ITrainDataService
         int take,
         CancellationToken cancellationToken)
     {
-        var trainPositions = _dbContext.CurrentPositions.AsNoTracking().AsQueryable();
+        var trainPositions = _dbContext.CurrentTrainPosition.AsNoTracking().AsQueryable();
 
         if (!string.IsNullOrWhiteSpace(trainId))
             trainPositions = trainPositions.Where(currentTrainPosition => currentTrainPosition.TrainId == trainId);

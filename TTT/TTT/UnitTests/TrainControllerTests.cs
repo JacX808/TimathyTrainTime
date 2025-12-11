@@ -20,7 +20,12 @@ public class TrainsControllerTests
             .EnableDetailedErrors()
             .Options;
 
-        var dbContext = new TttDbContext(opts);
+        var dbContext = new TttDbContext(opts, new DbConfig(
+            "localhost",
+            1433,
+            "postgres",
+             "root",
+            "train"));
 
         // Seed
         dbContext.TrainRuns.AddRange(
@@ -29,7 +34,7 @@ public class TrainsControllerTests
             new TrainRun { TrainId = "C3", ServiceDate = Today}
         );
 
-        dbContext.CurrentPositions.Add(
+        dbContext.CurrentTrainPosition.Add(
             new CurrentTrainPosition { TrainId = "A1", LocStanox = "123", ReportedAt = DateTimeOffset.UtcNow });
 
         dbContext.MovementEvents.AddRange(

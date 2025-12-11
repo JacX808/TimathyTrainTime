@@ -19,7 +19,7 @@ public sealed class TrainsController(TttDbContext dbContext) : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<IActionResult> GetPosition(string trainId, CancellationToken cancellationToken)
     {
-        var pos = await dbContext.CurrentPositions.AsNoTracking().SingleOrDefaultAsync(currentTrainPosition => 
+        var pos = await dbContext.CurrentTrainPosition.AsNoTracking().SingleOrDefaultAsync(currentTrainPosition => 
             currentTrainPosition.TrainId == trainId, cancellationToken);
         
         if (pos is null) 

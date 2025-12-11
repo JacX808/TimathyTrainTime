@@ -230,7 +230,7 @@ public sealed class MovementsIngestionService : BackgroundService, IMovementsIng
         db.MovementEvents.Add(movementEvent);
 
         // Latest position (upsert)
-        var pos = await db.CurrentPositions.FindAsync(trainMovementBody.TrainId) ??
+        var pos = await db.CurrentTrainPosition.FindAsync(trainMovementBody.TrainId) ??
                   new CurrentTrainPosition { TrainId = trainMovementBody.TrainId };
 
         pos.LocStanox = trainMovementBody.LocStanox;
@@ -239,7 +239,7 @@ public sealed class MovementsIngestionService : BackgroundService, IMovementsIng
         pos.Line = "";
         pos.VariationStatus = trainMovementBody.VariationStatus;
 
-        db.CurrentPositions.Update(pos);
+        db.CurrentTrainPosition.Update(pos);
 
         // TrainRun touch (in case activation was missed)
         var run = await db.TrainRuns.FindAsync(trainMovementBody.TrainId);

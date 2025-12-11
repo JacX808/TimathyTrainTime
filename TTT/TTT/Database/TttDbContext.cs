@@ -3,14 +3,22 @@ using TTT.DataSets;
 
 namespace TTT.Database;
 
-public sealed class TttDbContext : DbContext
+public sealed class TttDbContext(DbContextOptions<TttDbContext> options, DbConfig dbConfig) : DbContext(options)
 {
-    public TttDbContext(DbContextOptions<TttDbContext> options) : base(options) { }
-
     public DbSet<TrainRun> TrainRuns => Set<TrainRun>();
     public DbSet<MovementEvent> MovementEvents => Set<MovementEvent>();
-    public DbSet<CurrentTrainPosition> CurrentPositions => Set<CurrentTrainPosition>();
+    public DbSet<CurrentTrainPosition> CurrentTrainPosition => Set<CurrentTrainPosition>();
 
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    {
+        optionsBuilder.UseMySQL(
+            $"server={dbConfig.Host}," +
+            $"{dbConfig.Port};" +
+            $"database={dbConfig.DatabaseName};" +
+            $"user id={dbConfig.UserName};" +
+            $"password={dbConfig.Password};");
+    }
+    
     protected override void OnModelCreating(ModelBuilder b)
     {
         b.Entity<TrainRun>().HasKey(x => x.TrainId); // natural key
