@@ -1,16 +1,17 @@
 ﻿// File: Services/TrainDataService.cs
+
 using Microsoft.EntityFrameworkCore;
 using TTT.Database;
-using TTT.DataSets;
+using TTT.TrainData.DataSets;
 
-namespace TTT.Services;
+namespace TTT.TrainData.Model;
 
-public sealed class TrainDataService : ITrainDataService
+public sealed class TrainDataModel : ITrainDataModel
 {
     private readonly TttDbContext _dbContext;
-    private readonly ILogger<TrainDataService> _log;
+    private readonly ILogger<TrainDataModel> _log;
 
-    public TrainDataService(TttDbContext dbContext, ILogger<TrainDataService> log)
+    public TrainDataModel(TttDbContext dbContext, ILogger<TrainDataModel> log)
     {
         _dbContext = dbContext;
         _log = log;

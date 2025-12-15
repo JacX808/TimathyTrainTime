@@ -1,7 +1,7 @@
 ﻿using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace TTT.Utility.Converters;
+namespace TTT.TrainData.Utility;
 
 public abstract class Converters
 {

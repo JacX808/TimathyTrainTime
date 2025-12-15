@@ -19,7 +19,8 @@ public sealed class TrainsController(TttDbContext dbContext) : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<IActionResult> GetPosition(string trainId, CancellationToken cancellationToken)
     {
-        var pos = await dbContext.CurrentTrainPosition.AsNoTracking().SingleOrDefaultAsync(currentTrainPosition => 
+        var pos = 
+            await dbContext.CurrentTrainPosition.AsNoTracking().SingleOrDefaultAsync(currentTrainPosition => 
             currentTrainPosition.TrainId == trainId, cancellationToken);
         
         if (pos is null) 
@@ -34,16 +35,21 @@ public sealed class TrainsController(TttDbContext dbContext) : ControllerBase
     /// <param name="trainId"></param>
     /// <param name="from"></param>
     /// <param name="to"></param>
-    /// <param name="ct"></param>
+    /// <param name="cancellationToken"></param>
     /// <returns></returns>
     [HttpGet("/movements")]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    public async Task<IActionResult> GetMovements(string trainId, [FromQuery] DateTimeOffset? from, [FromQuery] DateTimeOffset? to, CancellationToken ct)
+    public async Task<IActionResult> GetMovements(string trainId, [FromQuery] DateTimeOffset? from,
+        [FromQuery] DateTimeOffset? to, CancellationToken cancellationToken)
     {
         var queryable = dbContext.MovementEvents.AsNoTracking().Where(x => x.TrainId == trainId);
-        if (from is { }) queryable = queryable.Where(x => x.ActualTimestampMs >= from.Value.ToUnixTimeMilliseconds());
-        if (to   is { }) queryable = queryable.Where(x => x.ActualTimestampMs <= to.Value.ToUnixTimeMilliseconds());
-        var list = await queryable.OrderBy(x => x.ActualTimestampMs).ToListAsync(ct);
+        if (from is not null) 
+            queryable = queryable.Where(x => x.ActualTimestampMs >= from.Value.ToUnixTimeMilliseconds());
+        
+        if (to   is not null) 
+            queryable = queryable.Where(x => x.ActualTimestampMs <= to.Value.ToUnixTimeMilliseconds());
+        
+        var list = await queryable.OrderBy(x => x.ActualTimestampMs).ToListAsync(cancellationToken);
         return Ok(list);
     }
 
@@ -51,15 +57,20 @@ public sealed class TrainsController(TttDbContext dbContext) : ControllerBase
     /// Gets train Ids from DB
     /// </summary>
     /// <param name="date"></param>
-    /// <param name="ct"></param>
+    /// <param name="cancellationToken"></param>
     /// <returns></returns>
     [HttpGet("/trainIDs")]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    public async Task<IActionResult> GetTrainIds([FromQuery] DateOnly? date, CancellationToken ct)
+    public async Task<IActionResult> GetTrainIds([FromQuery] DateOnly? date, 
+        CancellationToken cancellationToken = default)
     {
         var queryable = dbContext.TrainRuns.AsNoTracking();
-        if (date is { }) queryable = queryable.Where(x => x.ServiceDate == date);
-        var ids = await queryable.OrderBy(x => x.TrainId).Select(x => x.TrainId).ToListAsync(ct);
+        if (date is not null) 
+            queryable = queryable.Where(x => x.ServiceDate == date);
+        
+        var ids = 
+            await queryable.OrderBy(x => x.TrainId).Select(x => x.TrainId).ToListAsync(cancellationToken);
+        
         return Ok(ids);
     }
 }

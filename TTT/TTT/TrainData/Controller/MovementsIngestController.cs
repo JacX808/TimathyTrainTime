@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using TTT.Services;
 
 namespace TTT.TrainData.Controller;
 

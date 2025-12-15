@@ -2,8 +2,8 @@
 using Microsoft.EntityFrameworkCore;
 using NUnit.Framework;
 using TTT.Database;
-using TTT.DataSets;
 using TTT.TrainData.Controller;
+using TTT.TrainData.DataSets;
 
 namespace TTT.UnitTests;
 
@@ -14,18 +14,19 @@ public class TrainsControllerTests
     
     private static TttDbContext MakeDb()
     {
-        var opts = new DbContextOptionsBuilder<TttDbContext>()
-            .UseInMemoryDatabase(Guid.NewGuid().ToString())
+        var options = new DbContextOptionsBuilder<TttDbContext>()
             .EnableSensitiveDataLogging()
             .EnableDetailedErrors()
             .Options;
-
-        var dbContext = new TttDbContext(opts, new DbConfig(
+        
+        DbConfig dbConfig = new DbConfig(
             "localhost",
-            1433,
-            "postgres",
-             "root",
-            "train"));
+            3307,
+            "ttt",
+            "root",
+            "dB@min5211");
+
+        var dbContext = new TttDbContext(options, dbConfig);
 
         // Seed
         dbContext.TrainRuns.AddRange(
@@ -82,8 +83,8 @@ public class TrainsControllerTests
         await using var db = MakeDb();
         var sut = new TrainsController(db);
 
-        var result = await sut.GetTrainIds(new DateOnly(Today.Year, Today.Month, Today.Day)
-            , CancellationToken.None) as OkObjectResult;
+        var result = await sut.GetTrainIds(new DateOnly(Today.Year, Today.Month, Today.Day),
+            CancellationToken.None) as OkObjectResult;
         
         Assert.That(result, Is.Not.Null, "Expected 200 OK");
 

@@ -1,7 +1,8 @@
 ﻿// File: Services/IMovementsIngestionService.cs
+
 using System.Text.Json;
 
-namespace TTT.Services;
+namespace TTT.TrainData.Controller;
 
 public interface IMovementsIngestionService
 {

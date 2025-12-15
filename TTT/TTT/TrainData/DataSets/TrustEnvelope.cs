@@ -1,7 +1,7 @@
 ﻿using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace TTT.Utility.Trust;
+namespace TTT.TrainData.DataSets;
 
 sealed class TrustEnvelope
 {

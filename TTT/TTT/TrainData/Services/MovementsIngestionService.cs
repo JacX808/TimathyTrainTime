@@ -4,12 +4,13 @@ using Apache.NMS.ActiveMQ;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using TTT.Database;
-using TTT.DataSets;
 using TTT.OpenRail;
-using TTT.Utility.Converters;
-using TTT.Utility.Trust;
+using TTT.TrainData.Controller;
+using TTT.TrainData.DataSets;
+using TTT.TrainData.Model;
+using TTT.TrainData.Utility;
 
-namespace TTT.Services;
+namespace TTT.TrainData.Services;
 
 /// <summary>
 /// 
@@ -19,7 +20,7 @@ public sealed class MovementsIngestionService : BackgroundService, IMovementsIng
     private readonly ILogger<MovementsIngestionService> _log;
     private readonly IServiceScopeFactory _scopeFactory;
     private readonly NetRailOptions _options;
-    private readonly ITrainDataService _trainDataService;
+    private readonly ITrainDataModel _trainDataModel;
 
     /// <summary>
     /// Add database connection for endpoints to add data from National Rail data
@@ -37,7 +38,7 @@ public sealed class MovementsIngestionService : BackgroundService, IMovementsIng
         _log = log;
         
         var scope = _scopeFactory.CreateScope();
-        _trainDataService = scope.ServiceProvider.GetRequiredService<ITrainDataService>();
+        _trainDataModel = scope.ServiceProvider.GetRequiredService<ITrainDataModel>();
 
     }
 
@@ -302,7 +303,7 @@ public sealed class MovementsIngestionService : BackgroundService, IMovementsIng
                 if (activationBody is null) return 0;
 
                 var now = DateTimeOffset.UtcNow;
-                var run = await _trainDataService.FindTrainRunAsync(activationBody.TrainId, cancellationToken);
+                var run = await _trainDataModel.FindTrainRunAsync(activationBody.TrainId, cancellationToken);
                 if (run is null)
                 {
                     run = new TrainRun
@@ -314,7 +315,7 @@ public sealed class MovementsIngestionService : BackgroundService, IMovementsIng
                         FirstSeenUtc = now,
                         LastSeenUtc = now
                     };
-                    await _trainDataService.AddTrainRunAsync(run, cancellationToken);
+                    await _trainDataModel.AddTrainRunAsync(run, cancellationToken);
                 }
                 else
                 {
@@ -335,10 +336,10 @@ public sealed class MovementsIngestionService : BackgroundService, IMovementsIng
 
                 // History (unique key protects against duplicates)
                 var movementEvent = Mappers.TrainMoveBodyToMoveEvent(movementBody);
-                await _trainDataService.AddMovementEventAsync(movementEvent, cancellationToken);
+                await _trainDataModel.AddMovementEventAsync(movementEvent, cancellationToken);
 
                 // Latest position snapshot
-                var position = await _trainDataService.FindCurrentPositionAsync(movementBody.TrainId, cancellationToken)
+                var position = await _trainDataModel.FindCurrentPositionAsync(movementBody.TrainId, cancellationToken)
                                ?? new CurrentTrainPosition { TrainId = movementBody.TrainId };
 
                 position.LocStanox = movementBody.LocStanox;
@@ -347,13 +348,13 @@ public sealed class MovementsIngestionService : BackgroundService, IMovementsIng
                 position.Line = null; // movementBody.;
                 position.VariationStatus = movementBody.VariationStatus;
 
-                await _trainDataService.UpsertCurrentPositionAsync(position, cancellationToken);
+                await _trainDataModel.UpsertCurrentPositionAsync(position, cancellationToken);
 
                 // Touch TrainRun (in case activation missed)
-                var run = await _trainDataService.FindTrainRunAsync(movementBody.TrainId, cancellationToken);
+                var run = await _trainDataModel.FindTrainRunAsync(movementBody.TrainId, cancellationToken);
                 if (run is null)
                 {
-                    await _trainDataService.AddTrainRunAsync(new TrainRun
+                    await _trainDataModel.AddTrainRunAsync(new TrainRun
                     {
                         TrainId = movementBody.TrainId,
                         TocId = movementBody.TocId,
@@ -369,7 +370,7 @@ public sealed class MovementsIngestionService : BackgroundService, IMovementsIng
                 // Ignore duplicate exceptions (at-least-once)
                 try
                 {
-                    await _trainDataService.SaveChangesAsync(cancellationToken);
+                    await _trainDataModel.SaveChangesAsync(cancellationToken);
                 }
                 catch (DbUpdateException)
                 {

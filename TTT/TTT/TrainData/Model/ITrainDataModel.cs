@@ -1,9 +1,8 @@
-﻿using TTT.Database;
-using TTT.DataSets; 
+﻿using TTT.TrainData.DataSets;
 
-namespace TTT.Services;
+namespace TTT.TrainData.Model;
 
-public interface ITrainDataService
+public interface ITrainDataModel
 {
     Task<TrainRun?> FindTrainRunAsync(string trainId, CancellationToken cancellationToken);
     Task AddTrainRunAsync(TrainRun run, CancellationToken ct);

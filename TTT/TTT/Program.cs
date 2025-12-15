@@ -1,7 +1,9 @@
 using Microsoft.OpenApi.Models;
 using TTT.Database;
 using TTT.OpenRail;
-using TTT.Services;
+using TTT.TrainData.Controller;
+using TTT.TrainData.Model;
+using TTT.TrainData.Services;
 
 namespace TTT;
 
@@ -14,7 +16,7 @@ internal abstract class Program
         // DB Connection
         DbConfig dbConfig = new DbConfig(
             builder.Configuration["DB_HOST"] ?? "localhost",
-            3306,
+            3307,
             builder.Configuration["DB_DATABASE"] ?? "ttt",
             builder.Configuration["DB_USERNAME"] ?? "root",
             builder.Configuration["DB_PASSWORD"] ?? "train");
@@ -30,7 +32,7 @@ internal abstract class Program
         builder.Logging.AddFilter("Microsoft.EntityFrameworkCore.Database.Command", LogLevel.Information);
         builder.Logging.AddFilter("Microsoft.EntityFrameworkCore.Query", LogLevel.Warning);
         
-        builder.Services.AddScoped<ITrainDataService, TrainDataService>();
+        builder.Services.AddScoped<ITrainDataModel, TrainDataModel>();
         builder.Services.AddScoped<IMovementsIngestionService, MovementsIngestionService>();
         
         // NR config & services

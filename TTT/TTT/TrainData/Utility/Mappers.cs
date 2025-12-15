@@ -1,6 +1,6 @@
-﻿using TTT.DataSets;
+﻿using TTT.TrainData.DataSets;
 
-namespace TTT.Utility.Converters;
+namespace TTT.TrainData.Utility;
 
 public class Mappers
 {

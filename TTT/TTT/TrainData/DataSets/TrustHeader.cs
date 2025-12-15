@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace TTT.Utility.Trust;
+namespace TTT.TrainData.DataSets;
 
 sealed class TrustHeader
 {

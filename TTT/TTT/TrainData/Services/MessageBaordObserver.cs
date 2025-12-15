@@ -1,6 +1,6 @@
 ﻿using TTT.OpenRail;
 
-namespace TTT.Services;
+namespace TTT.TrainData.Services;
 
 public class MessageBaordObserver : BackgroundService
 {
