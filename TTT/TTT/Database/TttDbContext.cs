@@ -1,16 +1,30 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using TTT.DataSets;
+using TTT.TrainData.DataSets;
 
 namespace TTT.Database;
 
-public sealed class TttDbContext : DbContext
+public sealed class TttDbContext(DbContextOptions<TttDbContext> options, DbConfig dbConfig) : DbContext(options)
 {
-    public TttDbContext(DbContextOptions<TttDbContext> options) : base(options) { }
-
     public DbSet<TrainRun> TrainRuns => Set<TrainRun>();
     public DbSet<MovementEvent> MovementEvents => Set<MovementEvent>();
-    public DbSet<CurrentTrainPosition> CurrentPositions => Set<CurrentTrainPosition>();
+    public DbSet<CurrentTrainPosition> CurrentTrainPosition => Set<CurrentTrainPosition>();
 
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    {
+        if (dbConfig.DatabaseName.Equals("test"))
+        {
+            optionsBuilder.UseInMemoryDatabase("TestDatabase");
+            return;
+        }
+        
+        optionsBuilder.UseMySQL(
+            $"server={dbConfig.Host}," +
+            $"{dbConfig.Port};" +
+            $"database={dbConfig.DatabaseName};" +
+            $"user id={dbConfig.UserName};" +
+            $"password={dbConfig.Password};");
+    }
+    
     protected override void OnModelCreating(ModelBuilder b)
     {
         b.Entity<TrainRun>().HasKey(x => x.TrainId); // natural key
@@ -26,24 +40,4 @@ public sealed class TttDbContext : DbContext
         b.Entity<CurrentTrainPosition>().Property(x => x.TrainId).HasMaxLength(32);
         b.Entity<CurrentTrainPosition>().Property(x => x.LocStanox).HasMaxLength(16);
     }
-}
-
-public sealed class TrainRun
-{
-    public string TrainId { get; set; } = default!;
-    public DateOnly? ServiceDate { get; set; }
-    public string? TrainUid { get; set; }
-    public string? TocId { get; set; }
-    public DateTimeOffset FirstSeenUtc { get; set; }
-    public DateTimeOffset LastSeenUtc { get; set; }
-}
-
-public sealed class CurrentTrainPosition
-{
-    public string TrainId { get; set; } = default!;
-    public string LocStanox { get; set; } = default!;
-    public DateTimeOffset ReportedAt { get; set; }
-    public string? Direction { get; set; }
-    public string? Line { get; set; }
-    public string? VariationStatus { get; set; }
 }

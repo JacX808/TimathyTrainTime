@@ -1,17 +1,34 @@
 ﻿version: "3.9"
 
 services:
-  sqlserver:
-    image: mcr.microsoft.com/mssql/server:2022-latest
-    container_name: tttSQLSS
+  mysql:
+    image: mysql:8.4
+    container_name: tttMySQL
     environment:
-      ACCEPT_EULA: "Y"
-      MSSQL_SA_PASSWORD: "dB@min5211"  
+      MYSQL_ROOT_PASSWORD: "dB@min5211"
+      MYSQL_DATABASE: "ttt"
+      MYSQL_HOST: "127.0.0.1"
     ports:
-      - "1433:1433"
+      - "3307:3306"
     volumes:
-      - mssql_data:/var/opt/mssql
+      - mysql_data:/var/lib/mysql
+    restart: unless-stopped
+    
+  mysqlTest:
+    image: mysql:8.4
+    container_name: tttMySQLTest
+    environment:
+      MYSQL_ROOT_PASSWORD: "dB@min5211"
+      MYSQL_DATABASE: "tttTest"
+      MYSQL_HOST: "127.0.0.1"
+      MYSQL_USER: "testAdmin"
+      MYSQL_PASSWORD: "test"
+    ports:
+      - "3308:3306"
+    volumes:
+      - mysql_data_test:/var/lib/mysql
     restart: unless-stopped
 
 volumes:
-  mssql_data:
+  mysql_data:
+  mysql_data_test:

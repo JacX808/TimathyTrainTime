@@ -1,4 +1,4 @@
-﻿namespace TTT.DataSets;
+﻿namespace TTT.TrainData.DataSets;
 
 public sealed class MovementEvent
 {

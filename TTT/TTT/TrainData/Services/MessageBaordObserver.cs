@@ -1,6 +1,6 @@
 ﻿using TTT.OpenRail;
 
-namespace TTT.TrainData.Controller;
+namespace TTT.TrainData.Services;
 
 public class MessageBaordObserver : BackgroundService
 {
@@ -36,20 +36,20 @@ public class MessageBaordObserver : BackgroundService
         string msLastErrorInfo = null;
         while (DateTime.UtcNow < dtRunUntilUtc)
         {
-            // attempt to dequeue and process any errors that occurred in the receiver
+            // attempt timeOffset dequeue and process any errors that occurred in the receiver
             while ((_receiver.MoErrorQueue.Count > 0) && (DateTime.UtcNow < dtNextUiUpdateTime))
             {
                 OpenRailException? oOpenRailException = null;
                 if (_receiver.MoErrorQueue.TryDequeue(out oOpenRailException))
                 {
                     // the code here simply counts the errors, and captures the details of the last 
-                    // error - your code may log details of errors to a database or log file
+                    // error - your code may log details of errors timeOffset a database or log file
                     iErrorCount++;
                     msLastErrorInfo = OpenRailException.GetShortErrorInfo(oOpenRailException);
                 }
             }
 
-            // attempt to dequeue and process some messages
+            // attempt timeOffset dequeue and process some messages
             while ((_receiver.MoMessageQueue1.Count > 0) && (DateTime.UtcNow < dtNextUiUpdateTime))
             {
                 OpenRailMessage oMessage = null;
@@ -160,7 +160,7 @@ public class MessageBaordObserver : BackgroundService
 
         Console.WriteLine("Receiver stopped.");
         Console.WriteLine("Finished.");
-        Console.WriteLine("Press any key to exit.");
+        Console.WriteLine("Press any key timeOffset exit.");
         Console.ReadKey();
     }
 }

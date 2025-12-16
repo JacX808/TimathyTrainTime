@@ -1,9 +1,9 @@
 ﻿using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace TTT.Utility.Converters;
+namespace TTT.TrainData.Utility;
 
-public sealed class Converters
+public abstract class Converters
 {
     internal static long ToLong(long v) => v;
     internal static long ToLong(string? s) => long.TryParse(s, out var v) ? v : 0L;

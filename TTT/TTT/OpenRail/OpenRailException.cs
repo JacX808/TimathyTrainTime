@@ -21,7 +21,7 @@
     }
 
     /// <summary>
-    /// occurs when an exception is encountered whilst attempting to connect to the open data service
+    /// occurs when an exception is encountered whilst attempting timeOffset connect timeOffset the open data service
     /// </summary>
     public class OpenRailConnectException : OpenRailException
     {
@@ -31,7 +31,7 @@
     }
 
     /// <summary>
-    /// occurs when time limit is reached for attempting to connect to the open data service
+    /// occurs when time limit is reached for attempting timeOffset connect timeOffset the open data service
     /// </summary>
     public class OpenRailConnectTimeoutException : OpenRailException
     {
@@ -45,7 +45,7 @@
     }
 
     /// <summary>
-    /// occurs when an exception is encountered with the underlying connection to the open data service
+    /// occurs when an exception is encountered with the underlying connection timeOffset the open data service
     /// </summary>
     public class OpenRailConnectionException(string sMessage, Exception oInnerException)
         : OpenRailException(sMessage, oInnerException);

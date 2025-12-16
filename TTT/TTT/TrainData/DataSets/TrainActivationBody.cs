@@ -1,6 +1,6 @@
-﻿namespace TTT.DataSets;
+﻿namespace TTT.TrainData.DataSets;
 
-sealed class TrainActivationBody
+public sealed class TrainActivationBody
 {
     public string TrainId { get; set; } = default!;
     public string TrainUid { get; set; } = default!;
