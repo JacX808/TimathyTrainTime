@@ -20,6 +20,7 @@
       <change beforePath="$PROJECT_DIR$/.idea/.idea.TTT/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.TTT/.idea/vcs.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.TTT/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.TTT/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/TTT.sln" beforeDir="false" afterPath="$PROJECT_DIR$/TTT.sln" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TTT/Database/TttDbContext.cs" beforeDir="false" afterPath="$PROJECT_DIR$/TTT/Database/TttDbContext.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/TTT/OpenRail/OpenRailException.cs" beforeDir="false" afterPath="$PROJECT_DIR$/TTT/OpenRail/OpenRailException.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/TTT/OpenRail/OpenRailMessage.cs" beforeDir="false" afterPath="$PROJECT_DIR$/TTT/OpenRail/OpenRailMessage.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/TTT/OpenRail/OpenRailNRODReceiver.cs" beforeDir="false" afterPath="$PROJECT_DIR$/TTT/OpenRail/OpenRailNRODReceiver.cs" afterDir="false" />
@@ -27,13 +28,7 @@
       <change beforePath="$PROJECT_DIR$/TTT/Properties/launchSettings.json" beforeDir="false" afterPath="$PROJECT_DIR$/TTT/Properties/launchSettings.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/TTT/TTT.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/TTT/TTT.csproj" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/TTT/TTT.http" beforeDir="false" afterPath="$PROJECT_DIR$/TTT/TTT.http" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TTT/TrainData/Controller/HeathController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/TTT/TrainData/Controller/HeathController.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/TTT/TrainData/Controller/TrainsController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/TTT/TrainData/Controller/TrainsController.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TTT/TrainData/Model/ITrainDataModel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/TTT/TrainData/Model/ITrainDataModel.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TTT/TrainData/Model/TrainDataModel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/TTT/TrainData/Model/TrainDataModel.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TTT/TrainData/Services/MessageBaordObserver.cs" beforeDir="false" afterPath="$PROJECT_DIR$/TTT/TrainData/Services/MessageBaordObserver.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TTT/TrainData/Services/MovementsIngestionService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/TTT/TrainData/Services/MovementsIngestionService.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TTT/TrainData/Utility/Mappers.cs" beforeDir="false" afterPath="$PROJECT_DIR$/TTT/TrainData/Utility/Mappers.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/TTT/UnitTests/TrainControllerTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/TTT/UnitTests/TrainControllerTests.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/TTT/appsettings.Development.json" beforeDir="false" afterPath="$PROJECT_DIR$/TTT/appsettings.Development.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/TTT/appsettings.json" beforeDir="false" afterPath="$PROJECT_DIR$/TTT/appsettings.json" afterDir="false" />
@@ -267,7 +262,7 @@
       <workItem from="1765803808541" duration="817000" />
       <workItem from="1765829276749" duration="2038000" />
       <workItem from="1765831818119" duration="834000" />
-      <workItem from="1765883471992" duration="1273000" />
+      <workItem from="1765883471992" duration="3748000" />
     </task>
     <servers />
   </component>
@@ -381,6 +376,45 @@
             </endOffsets>
           </properties>
           <option name="timeStamp" value="162" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/TTT/UnitTests/TrainControllerTests.cs</url>
+          <line>113</line>
+          <properties documentPath="C:\Work\Projects\TTT\TimathyTrainTime\TTT\TTT\UnitTests\TrainControllerTests.cs" containingFunctionPresentation="Method 'GetPosition_NotFound_Returns404'">
+            <startOffsets>
+              <option value="3653" />
+            </startOffsets>
+            <endOffsets>
+              <option value="3732" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="164" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/TTT/UnitTests/TrainControllerTests.cs</url>
+          <line>114</line>
+          <properties documentPath="C:\Work\Projects\TTT\TimathyTrainTime\TTT\TTT\UnitTests\TrainControllerTests.cs" containingFunctionPresentation="Method 'GetPosition_NotFound_Returns404'">
+            <startOffsets>
+              <option value="3741" />
+            </startOffsets>
+            <endOffsets>
+              <option value="3802" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="165" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/TTT/TrainData/Controller/TrainsController.cs</url>
+          <line>76</line>
+          <properties documentPath="C:\Work\Projects\TTT\TimathyTrainTime\TTT\TTT\TrainData\Controller\TrainsController.cs" containingFunctionPresentation="Method 'GetTrainIds'">
+            <startOffsets>
+              <option value="2299" />
+            </startOffsets>
+            <endOffsets>
+              <option value="2348" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="168" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

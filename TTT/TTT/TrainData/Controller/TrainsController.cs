@@ -1,7 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using TTT.Database;
-using TTT.TrainData.DataSets;
 using TTT.TrainData.Model;
 
 namespace TTT.TrainData.Controller;
@@ -72,7 +69,7 @@ public sealed class TrainsController(TrainDataModel trainDataModel) : Controller
     /// <returns></returns>
     [HttpGet("/trainIDs")]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    public async Task<IActionResult> GetTrainIds([FromQuery] DateOnly date, 
+    public async Task<IActionResult> GetTrainIds([FromQuery] DateOnly? date, 
         CancellationToken cancellationToken = default)
     {
         if (date.Equals(null))

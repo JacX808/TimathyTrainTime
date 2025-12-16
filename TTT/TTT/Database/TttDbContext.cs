@@ -11,6 +11,12 @@ public sealed class TttDbContext(DbContextOptions<TttDbContext> options, DbConfi
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
+        if (dbConfig.DatabaseName.Equals("test"))
+        {
+            optionsBuilder.UseInMemoryDatabase("TestDatabase");
+            return;
+        }
+        
         optionsBuilder.UseMySQL(
             $"server={dbConfig.Host}," +
             $"{dbConfig.Port};" +

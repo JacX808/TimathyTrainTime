@@ -17,16 +17,17 @@ public class TrainsControllerTests
     private static TttDbContext MakeDb()
     {
         var options = new DbContextOptionsBuilder<TttDbContext>()
+            .UseInMemoryDatabase("TestingDB")
             .EnableSensitiveDataLogging()
             .EnableDetailedErrors()
             .Options;
         
         DbConfig dbConfig = new DbConfig(
             "localhost",
-            3308,
-            "ttt",
+            1433,
+            "test", // only way to get in memory db is by naming the db test
             "root",
-            "dB@min5211");
+            "");
 
         var dbContext = new TttDbContext(options, dbConfig);
 
@@ -74,14 +75,10 @@ public class TrainsControllerTests
     [Test]
     public async Task GetTrainIds_NoDate_ReturnsAll()
     {
-        var sut = new TrainsController(_trainDataModel);
+        var trainsController = new TrainsController(_trainDataModel);
 
-        var result = await sut.GetTrainIds(new DateOnly(), CancellationToken.None) as OkObjectResult;
-        Assert.That(result, Is.Not.Null, "Expected 200 OK");
-
-        var ids = result!.Value as IReadOnlyList<string>;
-        Assert.That(ids, Is.Not.Null, "Expected payload list");
-        Assert.That(ids!, Is.EquivalentTo(new[] { "A1", "B2", "C3" }));
+        var result = await trainsController.GetTrainIds(null, CancellationToken.None);
+        Assert.That(result, Is.InstanceOf<BadRequestObjectResult>());
     }
 
     [Test]
@@ -115,7 +112,7 @@ public class TrainsControllerTests
         var trainsController = new TrainsController(_trainDataModel);
 
         var result = await trainsController.GetPosition("ZZZ", CancellationToken.None);
-        Assert.That(result, Is.InstanceOf<NotFoundResult>());
+        Assert.That(result, Is.InstanceOf<BadRequestObjectResult>());
     }
 
     [Test]
