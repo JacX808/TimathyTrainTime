@@ -1,12 +1,14 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TTT.Database;
+using TTT.TrainData.DataSets;
+using TTT.TrainData.Model;
 
 namespace TTT.TrainData.Controller;
 
 [ApiController]
 [Route("api/trains")]
-public sealed class TrainsController(TttDbContext dbContext) : ControllerBase
+public sealed class TrainsController(TrainDataModel trainDataModel) : ControllerBase
 {
     
     /// <summary>
@@ -17,16 +19,21 @@ public sealed class TrainsController(TttDbContext dbContext) : ControllerBase
     /// <returns></returns>
     [HttpGet("/position")]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    public async Task<IActionResult> GetPosition(string trainId, CancellationToken cancellationToken)
+    public async Task<IActionResult?> GetPosition(string trainId, CancellationToken cancellationToken)
     {
-        var pos = 
-            await dbContext.CurrentTrainPosition.AsNoTracking().SingleOrDefaultAsync(currentTrainPosition => 
-            currentTrainPosition.TrainId == trainId, cancellationToken);
+        if (trainId.Equals(""))
+        {
+            return BadRequest("Error: TrainId invalid.");
+        }
         
-        if (pos is null) 
-            return NotFound();
+        var result = await trainDataModel.GetPosition(trainId, cancellationToken);
+
+        if (result == null)
+        {
+            return BadRequest("Info: Train not found.");
+        }
         
-        return Ok(pos);
+        return Ok(result);
     }
 
     /// <summary>
@@ -34,23 +41,27 @@ public sealed class TrainsController(TttDbContext dbContext) : ControllerBase
     /// </summary>
     /// <param name="trainId"></param>
     /// <param name="from"></param>
-    /// <param name="to"></param>
+    /// <param name="timeOffset"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
     [HttpGet("/movements")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<IActionResult> GetMovements(string trainId, [FromQuery] DateTimeOffset? from,
-        [FromQuery] DateTimeOffset? to, CancellationToken cancellationToken)
+        [FromQuery] DateTimeOffset? timeOffset, CancellationToken cancellationToken)
     {
-        var queryable = dbContext.MovementEvents.AsNoTracking().Where(x => x.TrainId == trainId);
-        if (from is not null) 
-            queryable = queryable.Where(x => x.ActualTimestampMs >= from.Value.ToUnixTimeMilliseconds());
+        if (trainId.Equals(""))
+        {
+            return BadRequest("Error: TrainId invalid.");
+        }
         
-        if (to   is not null) 
-            queryable = queryable.Where(x => x.ActualTimestampMs <= to.Value.ToUnixTimeMilliseconds());
+        var result = await trainDataModel.GetMovements(trainId, from, timeOffset, cancellationToken);
+
+        if (result.Count == 0)
+        {
+            return BadRequest("Info: No trains found.");
+        }
         
-        var list = await queryable.OrderBy(x => x.ActualTimestampMs).ToListAsync(cancellationToken);
-        return Ok(list);
+        return Ok(result);
     }
 
     /// <summary>
@@ -61,16 +72,21 @@ public sealed class TrainsController(TttDbContext dbContext) : ControllerBase
     /// <returns></returns>
     [HttpGet("/trainIDs")]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    public async Task<IActionResult> GetTrainIds([FromQuery] DateOnly? date, 
+    public async Task<IActionResult> GetTrainIds([FromQuery] DateOnly date, 
         CancellationToken cancellationToken = default)
     {
-        var queryable = dbContext.TrainRuns.AsNoTracking();
-        if (date is not null) 
-            queryable = queryable.Where(x => x.ServiceDate == date);
+        if (date.Equals(null))
+        {
+            return BadRequest("Error: Date cannot be null.");
+        }
+
+        var result = await trainDataModel.GetTrainIds(date, cancellationToken);
+
+        if (result.Count == 0)
+        {
+            return BadRequest("Info: TrainId not found.");
+        }
         
-        var ids = 
-            await queryable.OrderBy(x => x.TrainId).Select(x => x.TrainId).ToListAsync(cancellationToken);
-        
-        return Ok(ids);
+        return Ok(result);
     }
 }

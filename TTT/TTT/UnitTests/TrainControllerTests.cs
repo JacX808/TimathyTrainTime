@@ -4,6 +4,7 @@ using NUnit.Framework;
 using TTT.Database;
 using TTT.TrainData.Controller;
 using TTT.TrainData.DataSets;
+using TTT.TrainData.Model;
 
 namespace TTT.UnitTests;
 
@@ -11,6 +12,7 @@ namespace TTT.UnitTests;
 public class TrainsControllerTests
 {
     private static readonly DateOnly Today = new(DateTime.Today.Year, DateTime.Today.Month, DateTime.Today.Day);
+    private readonly TrainDataModel _trainDataModel;
     
     private static TttDbContext MakeDb()
     {
@@ -21,7 +23,7 @@ public class TrainsControllerTests
         
         DbConfig dbConfig = new DbConfig(
             "localhost",
-            3307,
+            3308,
             "ttt",
             "root",
             "dB@min5211");
@@ -63,13 +65,18 @@ public class TrainsControllerTests
         return dbContext;
     }
 
+    public TrainsControllerTests()
+    {
+        var database = MakeDb();
+        _trainDataModel = new TrainDataModel(database, new Logger<TrainDataModel>(new LoggerFactory()));
+    }
+
     [Test]
     public async Task GetTrainIds_NoDate_ReturnsAll()
     {
-        await using var db = MakeDb();
-        var sut = new TrainsController(db);
+        var sut = new TrainsController(_trainDataModel);
 
-        var result = await sut.GetTrainIds(null, CancellationToken.None) as OkObjectResult;
+        var result = await sut.GetTrainIds(new DateOnly(), CancellationToken.None) as OkObjectResult;
         Assert.That(result, Is.Not.Null, "Expected 200 OK");
 
         var ids = result!.Value as IReadOnlyList<string>;
@@ -80,10 +87,9 @@ public class TrainsControllerTests
     [Test]
     public async Task GetTrainIds_WithDate_ReturnsOnlyThatDate()
     {
-        await using var db = MakeDb();
-        var sut = new TrainsController(db);
+        var trainsController = new TrainsController(_trainDataModel);
 
-        var result = await sut.GetTrainIds(new DateOnly(Today.Year, Today.Month, Today.Day),
+        var result = await trainsController.GetTrainIds(new DateOnly(Today.Year, Today.Month, Today.Day),
             CancellationToken.None) as OkObjectResult;
         
         Assert.That(result, Is.Not.Null, "Expected 200 OK");
@@ -96,30 +102,28 @@ public class TrainsControllerTests
     [Test]
     public async Task GetPosition_Found_ReturnsOk()
     {
-        await using var db = MakeDb();
-        var sut = new TrainsController(db);
+        var trainsController = new TrainsController(_trainDataModel);
 
-        var result = await sut.GetPosition("A1", CancellationToken.None);
+        var result = await trainsController.GetPosition("A1", CancellationToken.None);
         Assert.That(result, Is.InstanceOf<OkObjectResult>());
     }
 
     [Test]
     public async Task GetPosition_NotFound_Returns404()
     {
-        await using var db = MakeDb();
-        var sut = new TrainsController(db);
+        
+        var trainsController = new TrainsController(_trainDataModel);
 
-        var result = await sut.GetPosition("ZZZ", CancellationToken.None);
+        var result = await trainsController.GetPosition("ZZZ", CancellationToken.None);
         Assert.That(result, Is.InstanceOf<NotFoundResult>());
     }
 
     [Test]
     public async Task GetMovements_ReturnsChronologicalList()
     {
-        await using var db = MakeDb();
-        var sut = new TrainsController(db);
+        var trainsController = new TrainsController(_trainDataModel);
 
-        var result = await sut.GetMovements("A1", null, null, CancellationToken.None) as OkObjectResult;
+        var result = await trainsController.GetMovements("A1", null, null, CancellationToken.None) as OkObjectResult;
         Assert.That(result, Is.Not.Null, "Expected 200 OK");
 
         var list = result!.Value as IReadOnlyList<MovementEvent>;

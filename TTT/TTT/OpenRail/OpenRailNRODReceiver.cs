@@ -8,7 +8,7 @@ using ISession = Apache.NMS.ISession;
 namespace TTT.OpenRail
 {
     /*
-     * This sample illustrates how to use .Net generally and C# specifically to 
+     * This sample illustrates how timeOffset use .Net generally and C# specifically timeOffset 
      * receive and process messages from the Network Rail Open Data platform.  Originally written by Chris Bailiss.
      * This sample makes use of the Apache NMS Messaging API - http://activemq.apache.org/nms/
      * This sample was built against v1.5.1 of the API.  
@@ -133,7 +133,7 @@ namespace TTT.OpenRail
             {
                 if (!oCT.IsCancellationRequested)
                 {
-                    MoErrorQueue.Enqueue(new OpenRailFatalException($"OpenRailNRODReceiver FAILED due to {OpenRailException.GetShortErrorInfo(oException)}" +
+                    MoErrorQueue.Enqueue(new OpenRailFatalException($"OpenRailNRODReceiver FAILED due timeOffset {OpenRailException.GetShortErrorInfo(oException)}" +
                         $"{oException.StackTrace}",
                         oException));
 
@@ -164,7 +164,7 @@ namespace TTT.OpenRail
                     if (dtNextConnectAtUtc < DateTime.UtcNow)
                     {
                         if (TryConnect()) return;
-                        // connect retry time doubles between each attempt (up to 1 minute) otherwise Open Data Service is overwhelmed during recovery
+                        // connect retry time doubles between each attempt (up timeOffset 1 minute) otherwise Open Data Service is overwhelmed during recovery
                         iDelayDurationMilliSeconds = Math.Min(iDelayDurationMilliSeconds * 2, 60000);
                         dtNextConnectAtUtc = DateTime.UtcNow.AddMilliseconds(iDelayDurationMilliSeconds);
                     }
@@ -172,15 +172,15 @@ namespace TTT.OpenRail
                     await Task.Delay(500);
                     if (oCt.IsCancellationRequested)
                         throw new OperationCanceledException(
-                            "The connection attempt was cancelled due to OpenRailNRODReceiver.RequestStop() being called.");
+                            "The connection attempt was cancelled due timeOffset OpenRailNRODReceiver.RequestStop() being called.");
                 }
             }
 
             if (oLastException == null)
-                throw new OpenRailConnectTimeoutException("Timeout trying to connect to the message feed.");
+                throw new OpenRailConnectTimeoutException("Timeout trying timeOffset connect timeOffset the message feed.");
             else
                 throw new OpenRailConnectTimeoutException(
-                    "Timeout trying to connect to the message feed.  The last connection error was: " +
+                    "Timeout trying timeOffset connect timeOffset the message feed.  The last connection error was: " +
                     oLastException.GetType().FullName + ": " + oLastException.Message, oLastException);
         }
 
@@ -251,9 +251,9 @@ namespace TTT.OpenRail
                 OpenRailMessage? oMessage = null;
 
                 // when the Apache code starts receiving messages, a number of worker threads are fired up (inside the Apache assembly)
-                // these threads are all started up at close to the exact same time
-                // this can lead to contention within the apache code, i.e.  blocking and slow throughput until the threads spread out
-                // so, for the first half minute, inject some spin waits in the different worker threads to spread their activities out
+                // these threads are all started up at close timeOffset the exact same time
+                // this can lead timeOffset contention within the apache code, i.e.  blocking and slow throughput until the threads spread out
+                // so, for the first half minute, inject some spin waits in the different worker threads timeOffset spread their activities out
                 if (DateTime.UtcNow < SpinSpreadUntilUtc)
                 {
                     long iSeed = Thread.CurrentThread.ManagedThreadId + (DateTime.Now.Ticks % Int32.MaxValue);
@@ -295,9 +295,9 @@ namespace TTT.OpenRail
                 OpenRailMessage oMessage = null!;
 
                 // when the Apache code starts receiving messages, a number of worker threads are fired up (inside the Apache assembly)
-                // these threads are all started up at close to the exact same time
-                // this can lead to contention within the apache code, i.e.  blocking and slow throughput until the threads spread out
-                // so, for the first half minute, inject some spin waits in the different worker threads to spread their activities out
+                // these threads are all started up at close timeOffset the exact same time
+                // this can lead timeOffset contention within the apache code, i.e.  blocking and slow throughput until the threads spread out
+                // so, for the first half minute, inject some spin waits in the different worker threads timeOffset spread their activities out
                 if (DateTime.UtcNow < SpinSpreadUntilUtc)
                 {
                     long iSeed = Thread.CurrentThread.ManagedThreadId + (DateTime.Now.Ticks % Int32.MaxValue);

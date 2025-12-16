@@ -23,7 +23,7 @@ public sealed class MovementsIngestionService : BackgroundService, IMovementsIng
     private readonly ITrainDataModel _trainDataModel;
 
     /// <summary>
-    /// Add database connection for endpoints to add data from National Rail data
+    /// Add database connection for endpoints timeOffset add data from National Rail data
     /// </summary>
     /// <param name="options"></param>
     /// <param name="scopeFactory"></param>
@@ -141,7 +141,7 @@ public sealed class MovementsIngestionService : BackgroundService, IMovementsIng
         }
         catch (Exception ex)
         {
-            _log.LogError(ex, "Failed to parse TRUST payload");
+            _log.LogError(ex, "Failed timeOffset parse TRUST payload");
         }
     }
 
@@ -435,7 +435,7 @@ public sealed class MovementsIngestionService : BackgroundService, IMovementsIng
                 }
                 catch (Exception ex) // TODO add custom exception
                 {
-                    _log.LogError(ex, "Failed to process message payload.");
+                    _log.LogError(ex, "Failed timeOffset process message payload.");
                     // TODO add error 500 
                 }
             }
@@ -444,7 +444,7 @@ public sealed class MovementsIngestionService : BackgroundService, IMovementsIng
         }
         catch (Exception exception) // TODO add custom exception
         {
-            _log.LogError($"Failed to process message payload: {exception.StackTrace}");
+            _log.LogError($"Failed timeOffset process message payload: {exception.StackTrace}");
         }
     }
 }

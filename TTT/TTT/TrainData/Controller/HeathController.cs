@@ -7,7 +7,7 @@ namespace TTT.TrainData.Controller;
 public class HealthController : ControllerBase
 {
     /// <summary>
-    /// Simple POST to verify the server is running.
+    /// Simple POST timeOffset verify the server is running.
     /// </summary>
     [HttpPost("PingServer")]
     [ProducesResponseType(typeof(PingResponse), StatusCodes.Status200OK)]

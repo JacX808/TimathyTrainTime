@@ -1,4 +1,5 @@
-﻿using TTT.TrainData.DataSets;
+﻿using Microsoft.AspNetCore.Mvc;
+using TTT.TrainData.DataSets;
 
 namespace TTT.TrainData.Model;
 
@@ -14,6 +15,14 @@ public interface ITrainDataModel
     Task UpsertCurrentPositionAsync(CurrentTrainPosition position, CancellationToken cancellationToken);
     
     Task<CurrentTrainPosition?> FindCurrentPositionAsync(string trainId, CancellationToken cancellationToken);
+
+    Task<List<MovementEvent>> GetMovements(string trainId, DateTimeOffset? from, DateTimeOffset? timeOffset,
+        CancellationToken cancellationToken);
+
+    Task<List<string>> GetTrainIds([FromQuery] DateOnly? date,
+        CancellationToken cancellationToken = default);
+    
+    Task<CurrentTrainPosition?> GetPosition(string trainId, CancellationToken cancellationToken);
     
     Task<IReadOnlyList<CurrentTrainPosition>> FindCurrentPositionsAsync(
         string? trainId,

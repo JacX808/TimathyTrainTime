@@ -5,7 +5,7 @@ namespace TTT.TrainData.Utility;
 public class Mappers
 {
     /// <summary>
-    /// Maps TrainMovementBody to MovementEvent
+    /// Maps TrainMovementBody timeOffset MovementEvent
     /// </summary>
     /// <param name="movementBody"></param>
     /// <returns></returns>

@@ -1,27 +1,20 @@
 ﻿// File: Services/TrainDataService.cs
 
+using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TTT.Database;
 using TTT.TrainData.DataSets;
 
 namespace TTT.TrainData.Model;
 
-public sealed class TrainDataModel : ITrainDataModel
+public sealed class TrainDataModel(TttDbContext dbContext, ILogger<TrainDataModel> log) : ITrainDataModel
 {
-    private readonly TttDbContext _dbContext;
-    private readonly ILogger<TrainDataModel> _log;
-
-    public TrainDataModel(TttDbContext dbContext, ILogger<TrainDataModel> log)
-    {
-        _dbContext = dbContext;
-        _log = log;
-    }
-
     public Task<TrainRun?> FindTrainRunAsync(string trainId, CancellationToken cancellationToken)
-        => _dbContext.TrainRuns.AsNoTracking().SingleOrDefaultAsync(trainRun => trainRun.TrainId == trainId, cancellationToken);
+        => dbContext.TrainRuns.AsNoTracking().SingleOrDefaultAsync(trainRun => trainRun.TrainId == trainId, cancellationToken);
 
     public async Task AddTrainRunAsync(TrainRun run, CancellationToken ct)
-        => await _dbContext.TrainRuns.AddAsync(run, ct);
+        => await dbContext.TrainRuns.AddAsync(run, ct);
 
     public async Task<bool> AddMovementEventAsync(MovementEvent movementEvent, CancellationToken cancellationToken, bool ignoreDuplicates = true)
     {
@@ -30,26 +23,63 @@ public sealed class TrainDataModel : ITrainDataModel
         
         try
         {
-            await _dbContext.MovementEvents.AddAsync(movementEvent, cancellationToken);
-            await _dbContext.SaveChangesAsync(cancellationToken); // persist early to surface dup quickly
+            await dbContext.MovementEvents.AddAsync(movementEvent, cancellationToken);
+            await dbContext.SaveChangesAsync(cancellationToken); // persist early timeOffset surface dup quickly
             return true;
         }
         catch (DbUpdateException dbUpdateException)
         {
             // Likely unique index violation on (train_id, ActualTimestampMs, loc_stanox, event_type)
-            _dbContext.Entry(movementEvent).State = EntityState.Detached;
-            _log.LogDebug(dbUpdateException, "Duplicate MovementEvent ignored for {train_id}@{Ts}/{Loc}/{Type}",
+            dbContext.Entry(movementEvent).State = EntityState.Detached;
+            log.LogDebug(dbUpdateException, "Duplicate MovementEvent ignored for {train_id}@{Ts}/{Loc}/{Type}",
                 movementEvent.TrainId, movementEvent.ActualTimestampMs, movementEvent.LocStanox, movementEvent.EventType);
             return false;
         }
     }
 
+    public async Task<CurrentTrainPosition?> GetPosition(string trainId, CancellationToken cancellationToken)
+    {
+        var pos = 
+            await dbContext.CurrentTrainPosition.SingleOrDefaultAsync(currentTrainPosition => 
+                currentTrainPosition.TrainId == trainId, cancellationToken);
+        
+        return pos;
+    }
+
+    public async Task<List<MovementEvent>> GetMovements(string trainId, DateTimeOffset? from,
+        DateTimeOffset? timeOffset,
+        CancellationToken cancellationToken)
+    {
+        var queryable = dbContext.MovementEvents.AsNoTracking().Where(x => x.TrainId == trainId);
+        if (from is not null) 
+            queryable = queryable.Where(x => x.ActualTimestampMs >= from.Value.ToUnixTimeMilliseconds());
+        
+        if (timeOffset   is not null) 
+            queryable = queryable.Where(x => x.ActualTimestampMs <= timeOffset.Value.ToUnixTimeMilliseconds());
+        
+        var list = await queryable.OrderBy(x => x.ActualTimestampMs).ToListAsync(cancellationToken);
+        return list;
+    }
+
+    public async Task<List<string>> GetTrainIds([FromQuery] DateOnly? date,
+        CancellationToken cancellationToken = default)
+    {
+        var queryable = dbContext.TrainRuns.AsNoTracking();
+        if (date is not null) 
+            queryable = queryable.Where(x => x.ServiceDate == date);
+        
+        var ids = 
+            await queryable.OrderBy(x => x.TrainId).Select(x => x.TrainId).ToListAsync(cancellationToken);
+        
+        return ids;
+    }
+
     public async Task UpsertCurrentPositionAsync(CurrentTrainPosition position, CancellationToken cancellationToken)
     {
-        var existing = await _dbContext.CurrentTrainPosition.FindAsync([position.TrainId], cancellationToken);
+        var existing = await dbContext.CurrentTrainPosition.FindAsync([position.TrainId], cancellationToken);
         if (existing is null)
         {
-            await _dbContext.CurrentTrainPosition.AddAsync(position, cancellationToken);
+            await dbContext.CurrentTrainPosition.AddAsync(position, cancellationToken);
         }
         else
         {
@@ -58,12 +88,12 @@ public sealed class TrainDataModel : ITrainDataModel
             existing.Direction       = position.Direction;
             existing.Line            = position.Line;
             existing.VariationStatus = position.VariationStatus;
-            _dbContext.CurrentTrainPosition.Update(existing);
+            dbContext.CurrentTrainPosition.Update(existing);
         }
     }
     
     public Task<CurrentTrainPosition?> FindCurrentPositionAsync(string trainId, CancellationToken cancellationToken)
-        => _dbContext.CurrentTrainPosition.AsNoTracking().SingleOrDefaultAsync(currentTrainPosition => 
+        => dbContext.CurrentTrainPosition.AsNoTracking().SingleOrDefaultAsync(currentTrainPosition => 
             currentTrainPosition.TrainId == trainId, cancellationToken);
 
     // NEW: bulk/filtered (any filter can be null)
@@ -74,7 +104,7 @@ public sealed class TrainDataModel : ITrainDataModel
         int take,
         CancellationToken cancellationToken)
     {
-        var trainPositions = _dbContext.CurrentTrainPosition.AsNoTracking().AsQueryable();
+        var trainPositions = dbContext.CurrentTrainPosition.AsNoTracking().AsQueryable();
 
         if (!string.IsNullOrWhiteSpace(trainId))
             trainPositions = trainPositions.Where(currentTrainPosition => currentTrainPosition.TrainId == trainId);
@@ -92,5 +122,5 @@ public sealed class TrainDataModel : ITrainDataModel
         return await trainPositions.ToListAsync(cancellationToken);
     }
 
-    public Task<int> SaveChangesAsync(CancellationToken cancellationToken) => _dbContext.SaveChangesAsync(cancellationToken);
+    public Task<int> SaveChangesAsync(CancellationToken cancellationToken) => dbContext.SaveChangesAsync(cancellationToken);
 }
