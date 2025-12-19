@@ -1,7 +1,7 @@
 using Microsoft.OpenApi.Models;
 using TTT.Database;
-using TTT.OpenRail;
 using TTT.TrainData.Controller;
+using TTT.TrainData.DataSets.OpenRail;
 using TTT.TrainData.Model;
 using TTT.TrainData.Services;
 
@@ -37,8 +37,6 @@ internal abstract class Program
         
         // NR config & services
         builder.Services.Configure<NetRailOptions>(builder.Configuration.GetSection("OpenRail"));
-        builder.Services.AddSingleton<OpenRailNrodReceiver>();
-        builder.Services.AddHostedService<MessageBaordObserver>();
         
         // Swagger & controllers
         builder.Services.AddControllers();
