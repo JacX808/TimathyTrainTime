@@ -262,7 +262,7 @@
       <workItem from="1765829276749" duration="2038000" />
       <workItem from="1765831818119" duration="834000" />
       <workItem from="1765883471992" duration="3748000" />
-      <workItem from="1766150483234" duration="6135000" />
+      <workItem from="1766150483234" duration="9067000" />
     </task>
     <servers />
   </component>
@@ -347,97 +347,79 @@
           <option name="timeStamp" value="119" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/TTT/TrainData/Services/MovementsIngestionService.cs</url>
-          <line>447</line>
-          <properties documentPath="C:\Work\Projects\TTT\TimathyTrainTime\TTT\TTT\Services\MovementsIngestionService.cs" containingFunctionPresentation="Method 'IntegstOnceServiceAsync'" />
-          <option name="timeStamp" value="153" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/TTT/TrainData/Services/MovementsIngestionService.cs</url>
-          <line>443</line>
-          <properties documentPath="C:\Work\Projects\TTT\TimathyTrainTime\TTT\TTT\Services\MovementsIngestionService.cs" containingFunctionPresentation="Method 'IntegstOnceServiceAsync'" />
-          <option name="timeStamp" value="154" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/TTT/TrainData/Services/MovementsIngestionService.cs</url>
-          <line>438</line>
-          <properties documentPath="C:\Work\Projects\TTT\TimathyTrainTime\TTT\TTT\Services\MovementsIngestionService.cs" containingFunctionPresentation="Method 'IntegstOnceServiceAsync'" />
-          <option name="timeStamp" value="156" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/TTT/TrainData/Model/TrainDataModel.cs</url>
-          <line>150</line>
+          <line>147</line>
           <properties documentPath="C:\Work\Projects\TTT\TimathyTrainTime\TTT\TTT\TrainData\Model\TrainDataModel.cs" containingFunctionPresentation="Method 'DeleteAllOldMovementEvents'">
             <startOffsets>
-              <option value="6332" />
+              <option value="6248" />
             </startOffsets>
             <endOffsets>
-              <option value="6379" />
+              <option value="6295" />
             </endOffsets>
           </properties>
           <option name="timeStamp" value="170" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/TTT/TrainData/Model/TrainDataModel.cs</url>
-          <line>127</line>
+          <line>124</line>
           <properties documentPath="C:\Work\Projects\TTT\TimathyTrainTime\TTT\TTT\TrainData\Model\TrainDataModel.cs" containingFunctionPresentation="Method 'DeleteAllOldTrainPositions'">
             <startOffsets>
-              <option value="5516" />
+              <option value="5432" />
             </startOffsets>
             <endOffsets>
-              <option value="5582" />
+              <option value="5498" />
             </endOffsets>
           </properties>
           <option name="timeStamp" value="171" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/TTT/TrainData/Model/TrainDataModel.cs</url>
-          <line>173</line>
+          <line>170</line>
           <properties documentPath="C:\Work\Projects\TTT\TimathyTrainTime\TTT\TTT\TrainData\Model\TrainDataModel.cs" containingFunctionPresentation="Method 'DeleteAllOldTrains'">
             <startOffsets>
-              <option value="7076" />
+              <option value="6992" />
             </startOffsets>
             <endOffsets>
-              <option value="7157" />
+              <option value="7073" />
             </endOffsets>
           </properties>
           <option name="timeStamp" value="172" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/TTT/TrainData/Model/TrainDataModel.cs</url>
-          <line>178</line>
+          <line>175</line>
           <properties documentPath="C:\Work\Projects\TTT\TimathyTrainTime\TTT\TTT\TrainData\Model\TrainDataModel.cs" containingFunctionPresentation="Method 'DeleteAllOldTrains'">
             <startOffsets>
-              <option value="7266" />
+              <option value="7182" />
             </startOffsets>
             <endOffsets>
-              <option value="7432" />
+              <option value="7348" />
             </endOffsets>
           </properties>
           <option name="timeStamp" value="173" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/TTT/TrainData/Model/TrainDataModel.cs</url>
-          <line>154</line>
+          <line>151</line>
           <properties documentPath="C:\Work\Projects\TTT\TimathyTrainTime\TTT\TTT\TrainData\Model\TrainDataModel.cs" containingFunctionPresentation="Method 'DeleteAllOldMovementEvents'">
             <startOffsets>
-              <option value="6415" />
+              <option value="6331" />
             </startOffsets>
             <endOffsets>
-              <option value="6575" />
+              <option value="6491" />
             </endOffsets>
           </properties>
           <option name="timeStamp" value="174" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/TTT/TrainData/Model/TrainDataModel.cs</url>
-          <line>131</line>
+          <line>128</line>
           <properties documentPath="C:\Work\Projects\TTT\TimathyTrainTime\TTT\TTT\TrainData\Model\TrainDataModel.cs" containingFunctionPresentation="Method 'DeleteAllOldTrainPositions'">
             <startOffsets>
-              <option value="5618" />
+              <option value="5534" />
             </startOffsets>
             <endOffsets>
-              <option value="5775" />
+              <option value="5691" />
             </endOffsets>
           </properties>
           <option name="timeStamp" value="175" />
@@ -447,13 +429,78 @@
           <line>105</line>
           <properties documentPath="C:\Work\Projects\TTT\TimathyTrainTime\TTT\TTT\TrainData\Controller\TrainsController.cs" containingFunctionPresentation="Method 'DeleteAllOldData'">
             <startOffsets>
-              <option value="3493" />
+              <option value="3494" />
             </startOffsets>
             <endOffsets>
-              <option value="3511" />
+              <option value="3512" />
             </endOffsets>
           </properties>
           <option name="timeStamp" value="176" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/TTT/TrainData/Services/MovementsIngestionService.cs</url>
+          <line>442</line>
+          <properties documentPath="C:\Work\Projects\TTT\TimathyTrainTime\TTT\TTT\TrainData\Services\MovementsIngestionService.cs" containingFunctionPresentation="Method 'IntegstOnceServiceAsync'">
+            <startOffsets>
+              <option value="15642" />
+            </startOffsets>
+            <endOffsets>
+              <option value="15710" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="179" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/TTT/TrainData/Controller/TrainsController.cs</url>
+          <line>84</line>
+          <properties documentPath="C:\Work\Projects\TTT\TimathyTrainTime\TTT\TTT\TrainData\Controller\TrainsController.cs" containingFunctionPresentation="Method 'GetTrainIds'">
+            <startOffsets>
+              <option value="2708" />
+            </startOffsets>
+            <endOffsets>
+              <option value="2779" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="180" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/TTT/TrainData/Model/TrainDataModel.cs</url>
+          <line>64</line>
+          <properties documentPath="C:\Work\Projects\TTT\TimathyTrainTime\TTT\TTT\TrainData\Model\TrainDataModel.cs" containingFunctionPresentation="Method 'GetTrainIds'">
+            <startOffsets>
+              <option value="2816" />
+            </startOffsets>
+            <endOffsets>
+              <option value="2867" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="181" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/TTT/TrainData/Model/TrainDataModel.cs</url>
+          <line>68</line>
+          <properties documentPath="C:\Work\Projects\TTT\TimathyTrainTime\TTT\TTT\TrainData\Model\TrainDataModel.cs" containingFunctionPresentation="Method 'GetTrainIds'">
+            <startOffsets>
+              <option value="2985" />
+            </startOffsets>
+            <endOffsets>
+              <option value="3102" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="182" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/TTT/TrainData/Model/TrainDataModel.cs</url>
+          <line>71</line>
+          <properties documentPath="C:\Work\Projects\TTT\TimathyTrainTime\TTT\TTT\TrainData\Model\TrainDataModel.cs" containingFunctionPresentation="Method 'GetTrainIds'">
+            <startOffsets>
+              <option value="3120" />
+            </startOffsets>
+            <endOffsets>
+              <option value="3131" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="183" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

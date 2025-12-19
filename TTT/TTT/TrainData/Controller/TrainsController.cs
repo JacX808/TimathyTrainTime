@@ -5,7 +5,7 @@ namespace TTT.TrainData.Controller;
 
 [ApiController]
 [Route("api/trains")]
-public sealed class TrainsController(TrainDataModel trainDataModel, ILogger<TrainsController> log) : ControllerBase
+public sealed class TrainsController(ITrainDataModel trainDataModel, ILogger<TrainsController> log) : ControllerBase
 {
     
     /// <summary>

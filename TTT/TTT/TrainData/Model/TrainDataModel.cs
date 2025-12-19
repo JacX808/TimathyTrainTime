@@ -1,7 +1,4 @@
-﻿// File: Services/TrainDataService.cs
-
-using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TTT.Database;
 using TTT.TrainData.DataSets;

@@ -13,7 +13,7 @@ public class TrainsControllerTests
 {
     private static readonly DateOnly Today = new(DateTime.Today.Year, DateTime.Today.Month, DateTime.Today.Day);
     private readonly TrainDataModel _trainDataModel;
-    private readonly ILogger<TrainsController> _logger;
+    private readonly Logger<TrainsController> _logger;
 
     public TrainsControllerTests()
     {
@@ -21,7 +21,7 @@ public class TrainsControllerTests
         
         // logs for unit tests
         _logger = new Logger<TrainsController>(new LoggerFactory());
-        ILogger<TrainDataModel> trainLogger = new  Logger<TrainDataModel>(new LoggerFactory());
+        ILogger<TrainDataModel> trainLogger = new Logger<TrainDataModel>(new LoggerFactory());
         
         _trainDataModel = new TrainDataModel(database, trainLogger);
     }
