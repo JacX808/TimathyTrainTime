@@ -13,6 +13,18 @@ public class TrainsControllerTests
 {
     private static readonly DateOnly Today = new(DateTime.Today.Year, DateTime.Today.Month, DateTime.Today.Day);
     private readonly TrainDataModel _trainDataModel;
+    private readonly ILogger<TrainsController> _logger;
+
+    public TrainsControllerTests()
+    {
+        var database = MakeDb();
+        
+        // logs for unit tests
+        _logger = new Logger<TrainsController>(new LoggerFactory());
+        ILogger<TrainDataModel> trainLogger = new  Logger<TrainDataModel>(new LoggerFactory());
+        
+        _trainDataModel = new TrainDataModel(database, trainLogger);
+    }
     
     private static TttDbContext MakeDb()
     {
@@ -66,16 +78,10 @@ public class TrainsControllerTests
         return dbContext;
     }
 
-    public TrainsControllerTests()
-    {
-        var database = MakeDb();
-        _trainDataModel = new TrainDataModel(database, new Logger<TrainDataModel>(new LoggerFactory()));
-    }
-
     [Test]
     public async Task GetTrainIds_NoDate_ReturnsAll()
     {
-        var trainsController = new TrainsController(_trainDataModel);
+        var trainsController = new TrainsController(_trainDataModel, _logger);
 
         var result = await trainsController.GetTrainIds(null, CancellationToken.None);
         Assert.That(result, Is.InstanceOf<BadRequestObjectResult>());
@@ -84,7 +90,7 @@ public class TrainsControllerTests
     [Test]
     public async Task GetTrainIds_WithDate_ReturnsOnlyThatDate()
     {
-        var trainsController = new TrainsController(_trainDataModel);
+        var trainsController = new TrainsController(_trainDataModel, _logger);
 
         var result = await trainsController.GetTrainIds(new DateOnly(Today.Year, Today.Month, Today.Day),
             CancellationToken.None) as OkObjectResult;
@@ -93,13 +99,14 @@ public class TrainsControllerTests
 
         var ids = result!.Value as IReadOnlyList<string>;
         Assert.That(ids, Is.Not.Null, "Expected payload list");
-        Assert.That(ids!, Is.EquivalentTo(new[] { "A1", "C3" }));
+        Assert.That(ids!, Is.EquivalentTo(["A1", "C3"]));
+        Assert.That(ids!, Is.EquivalentTo(["A1", "C3"]));
     }
 
     [Test]
     public async Task GetPosition_Found_ReturnsOk()
     {
-        var trainsController = new TrainsController(_trainDataModel);
+        var trainsController = new TrainsController(_trainDataModel, _logger);
 
         var result = await trainsController.GetPosition("A1", CancellationToken.None);
         Assert.That(result, Is.InstanceOf<OkObjectResult>());
@@ -109,7 +116,7 @@ public class TrainsControllerTests
     public async Task GetPosition_NotFound_Returns404()
     {
         
-        var trainsController = new TrainsController(_trainDataModel);
+        var trainsController = new TrainsController(_trainDataModel, _logger);
 
         var result = await trainsController.GetPosition("ZZZ", CancellationToken.None);
         Assert.That(result, Is.InstanceOf<BadRequestObjectResult>());
@@ -118,7 +125,7 @@ public class TrainsControllerTests
     [Test]
     public async Task GetMovements_ReturnsChronologicalList()
     {
-        var trainsController = new TrainsController(_trainDataModel);
+        var trainsController = new TrainsController(_trainDataModel, _logger);
 
         var result = await trainsController.GetMovements("A1", null, null, CancellationToken.None) as OkObjectResult;
         Assert.That(result, Is.Not.Null, "Expected 200 OK");

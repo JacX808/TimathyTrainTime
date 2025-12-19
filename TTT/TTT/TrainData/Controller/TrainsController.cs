@@ -5,11 +5,11 @@ namespace TTT.TrainData.Controller;
 
 [ApiController]
 [Route("api/trains")]
-public sealed class TrainsController(TrainDataModel trainDataModel) : ControllerBase
+public sealed class TrainsController(TrainDataModel trainDataModel, ILogger<TrainsController> log) : ControllerBase
 {
     
     /// <summary>
-    /// Gets train poition using ID from DB
+    /// Gets train position using ID from database
     /// </summary>
     /// <param name="trainId"></param>
     /// <param name="cancellationToken"></param>
@@ -20,6 +20,7 @@ public sealed class TrainsController(TrainDataModel trainDataModel) : Controller
     {
         if (trainId.Equals(""))
         {
+            log.LogError("TrainId invalid.");
             return BadRequest("Error: TrainId invalid.");
         }
         
@@ -27,6 +28,7 @@ public sealed class TrainsController(TrainDataModel trainDataModel) : Controller
 
         if (result == null)
         {
+            log.LogInformation("Train not found.");
             return BadRequest("Info: Train not found.");
         }
         
@@ -34,7 +36,7 @@ public sealed class TrainsController(TrainDataModel trainDataModel) : Controller
     }
 
     /// <summary>
-    /// 
+    /// Get movement data from database on trainID
     /// </summary>
     /// <param name="trainId"></param>
     /// <param name="from"></param>
@@ -48,6 +50,7 @@ public sealed class TrainsController(TrainDataModel trainDataModel) : Controller
     {
         if (trainId.Equals(""))
         {
+            log.LogError("TrainId invalid.");
             return BadRequest("Error: TrainId invalid.");
         }
         
@@ -55,6 +58,7 @@ public sealed class TrainsController(TrainDataModel trainDataModel) : Controller
 
         if (result.Count == 0)
         {
+            log.LogInformation("No trains found.");
             return BadRequest("Info: No trains found.");
         }
         
@@ -62,7 +66,7 @@ public sealed class TrainsController(TrainDataModel trainDataModel) : Controller
     }
 
     /// <summary>
-    /// Gets train Ids from DB
+    /// Gets train Ids from database
     /// </summary>
     /// <param name="date"></param>
     /// <param name="cancellationToken"></param>
@@ -74,6 +78,7 @@ public sealed class TrainsController(TrainDataModel trainDataModel) : Controller
     {
         if (date.Equals(null))
         {
+            log.LogError("Error: Date cannot be null.");
             return BadRequest("Error: Date cannot be null.");
         }
 
@@ -81,9 +86,42 @@ public sealed class TrainsController(TrainDataModel trainDataModel) : Controller
 
         if (result.Count == 0)
         {
+            log.LogInformation("TrainIds not found on {date}", date);
             return BadRequest("Info: TrainId not found.");
         }
         
         return Ok(result);
+    }
+
+    /// <summary>
+    /// Delete all data older than today
+    /// </summary>
+    /// <param name="dayOffset">Date offset of how long ago you want to delete. Cannot be 0 or less</param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    [HttpPost("/deleteOldData")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    public async Task<IActionResult> DeleteAllOldData([FromQuery] int dayOffset, CancellationToken cancellationToken = default)
+    {
+        if (dayOffset > 0)
+        {
+            int deleteCount = 0;
+        
+            if (await trainDataModel.DeleteAllOldMovementEvents(dayOffset, cancellationToken))
+                deleteCount++;
+        
+            if(await trainDataModel.DeleteAllOldTrainPositions(dayOffset, cancellationToken))
+                deleteCount++;
+        
+            if(await trainDataModel.DeleteAllOldTrains(dayOffset, cancellationToken))
+                deleteCount++;
+        
+            log.LogInformation("Total sets deleted: {deleteCount}", deleteCount);
+        
+            return Ok();
+        }
+        
+        log.LogError("dayOffset invalid. Cannot be 0 or less");
+        return BadRequest("Error: day offset invalid.");
     }
 }
