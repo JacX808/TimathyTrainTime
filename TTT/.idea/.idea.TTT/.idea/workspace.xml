@@ -10,7 +10,6 @@
   <component name="ChangeListManager">
     <list default="true" id="a138a5cd-f4a5-4b3e-9a2f-eb71b297574f" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/../.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/../.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../README.md" beforeDir="false" afterPath="$PROJECT_DIR$/../README.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.TTT/.idea/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.TTT/.idea/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.TTT/.idea/dataSources.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.TTT/.idea/dataSources.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.TTT/.idea/data_source_mapping.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.TTT/.idea/data_source_mapping.xml" afterDir="false" />
@@ -21,7 +20,7 @@
       <change beforePath="$PROJECT_DIR$/.idea/.idea.TTT/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.TTT/.idea/vcs.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.TTT/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.TTT/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/TTT.sln" beforeDir="false" afterPath="$PROJECT_DIR$/TTT.sln" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TTT.sln.DotSettings.user" beforeDir="false" afterPath="$PROJECT_DIR$/TTT.sln.DotSettings.user" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TTT/Database/TttDbContext.cs" beforeDir="false" afterPath="$PROJECT_DIR$/TTT/Database/TttDbContext.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/TTT/OpenRail/OpenRailException.cs" beforeDir="false" afterPath="$PROJECT_DIR$/TTT/OpenRail/OpenRailException.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/TTT/OpenRail/OpenRailMessage.cs" beforeDir="false" afterPath="$PROJECT_DIR$/TTT/OpenRail/OpenRailMessage.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/TTT/OpenRail/OpenRailNRODReceiver.cs" beforeDir="false" afterPath="$PROJECT_DIR$/TTT/OpenRail/OpenRailNRODReceiver.cs" afterDir="false" />
@@ -29,6 +28,8 @@
       <change beforePath="$PROJECT_DIR$/TTT/Properties/launchSettings.json" beforeDir="false" afterPath="$PROJECT_DIR$/TTT/Properties/launchSettings.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/TTT/TTT.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/TTT/TTT.csproj" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/TTT/TTT.http" beforeDir="false" afterPath="$PROJECT_DIR$/TTT/TTT.http" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TTT/TrainData/Controller/TrainsController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/TTT/TrainData/Controller/TrainsController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TTT/UnitTests/TrainControllerTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/TTT/UnitTests/TrainControllerTests.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/TTT/appsettings.Development.json" beforeDir="false" afterPath="$PROJECT_DIR$/TTT/appsettings.Development.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/TTT/appsettings.json" beforeDir="false" afterPath="$PROJECT_DIR$/TTT/appsettings.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/TTT/docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/TTT/docker-compose.yml" afterDir="false" />
@@ -102,7 +103,7 @@
     "RunOnceActivity.git.unshallow": "true",
     "b399e10e-2da5-4795-8ae5-054a47e45e55.executor": "Debug",
     "d7f911cf-46d2-49c2-9e22-3e7d1b7e9357.executor": "Debug",
-    "git-widget-placeholder": "feature/delete-old-data-endpoint",
+    "git-widget-placeholder": "refactor/remove-openrail-example-project",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -262,7 +263,6 @@
       <workItem from="1765829276749" duration="2038000" />
       <workItem from="1765831818119" duration="834000" />
       <workItem from="1765883471992" duration="3748000" />
-      <workItem from="1766150483234" duration="9067000" />
     </task>
     <servers />
   </component>
@@ -304,19 +304,6 @@
           <option name="timeStamp" value="26" />
         </breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/TTT/TrainData/Services/MessageBaordObserver.cs</url>
-          <line>133</line>
-          <properties documentPath="C:\Work\Projects\TTT\TimathyTrainTime\TTT\TTT\TrainData\Controller\MessageBaordObserver.cs" containingFunctionPresentation="Method 'ListenForMessagesAsync'">
-            <startOffsets>
-              <option value="6935" />
-            </startOffsets>
-            <endOffsets>
-              <option value="7105" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="75" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/TTT/TrainData/Services/MovementsIngestionService.cs</url>
           <line>85</line>
           <properties documentPath="C:\Work\Projects\TTT\TimathyTrainTime\TTT\TTT\Services\MovementsIngestionService.cs" containingFunctionPresentation="Method 'RunOpenWireLoop'" />
@@ -347,160 +334,61 @@
           <option name="timeStamp" value="119" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/TTT/TrainData/Model/TrainDataModel.cs</url>
-          <line>147</line>
-          <properties documentPath="C:\Work\Projects\TTT\TimathyTrainTime\TTT\TTT\TrainData\Model\TrainDataModel.cs" containingFunctionPresentation="Method 'DeleteAllOldMovementEvents'">
-            <startOffsets>
-              <option value="6248" />
-            </startOffsets>
-            <endOffsets>
-              <option value="6295" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="170" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/TTT/TrainData/Model/TrainDataModel.cs</url>
-          <line>124</line>
-          <properties documentPath="C:\Work\Projects\TTT\TimathyTrainTime\TTT\TTT\TrainData\Model\TrainDataModel.cs" containingFunctionPresentation="Method 'DeleteAllOldTrainPositions'">
-            <startOffsets>
-              <option value="5432" />
-            </startOffsets>
-            <endOffsets>
-              <option value="5498" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="171" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/TTT/TrainData/Model/TrainDataModel.cs</url>
-          <line>170</line>
-          <properties documentPath="C:\Work\Projects\TTT\TimathyTrainTime\TTT\TTT\TrainData\Model\TrainDataModel.cs" containingFunctionPresentation="Method 'DeleteAllOldTrains'">
-            <startOffsets>
-              <option value="6992" />
-            </startOffsets>
-            <endOffsets>
-              <option value="7073" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="172" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/TTT/TrainData/Model/TrainDataModel.cs</url>
-          <line>175</line>
-          <properties documentPath="C:\Work\Projects\TTT\TimathyTrainTime\TTT\TTT\TrainData\Model\TrainDataModel.cs" containingFunctionPresentation="Method 'DeleteAllOldTrains'">
-            <startOffsets>
-              <option value="7182" />
-            </startOffsets>
-            <endOffsets>
-              <option value="7348" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="173" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/TTT/TrainData/Model/TrainDataModel.cs</url>
-          <line>151</line>
-          <properties documentPath="C:\Work\Projects\TTT\TimathyTrainTime\TTT\TTT\TrainData\Model\TrainDataModel.cs" containingFunctionPresentation="Method 'DeleteAllOldMovementEvents'">
-            <startOffsets>
-              <option value="6331" />
-            </startOffsets>
-            <endOffsets>
-              <option value="6491" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="174" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/TTT/TrainData/Model/TrainDataModel.cs</url>
-          <line>128</line>
-          <properties documentPath="C:\Work\Projects\TTT\TimathyTrainTime\TTT\TTT\TrainData\Model\TrainDataModel.cs" containingFunctionPresentation="Method 'DeleteAllOldTrainPositions'">
-            <startOffsets>
-              <option value="5534" />
-            </startOffsets>
-            <endOffsets>
-              <option value="5691" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="175" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/TTT/TrainData/Controller/TrainsController.cs</url>
-          <line>105</line>
-          <properties documentPath="C:\Work\Projects\TTT\TimathyTrainTime\TTT\TTT\TrainData\Controller\TrainsController.cs" containingFunctionPresentation="Method 'DeleteAllOldData'">
-            <startOffsets>
-              <option value="3494" />
-            </startOffsets>
-            <endOffsets>
-              <option value="3512" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="176" />
+          <url>file://$PROJECT_DIR$/TTT/TrainData/Services/MovementsIngestionService.cs</url>
+          <line>447</line>
+          <properties documentPath="C:\Work\Projects\TTT\TimathyTrainTime\TTT\TTT\Services\MovementsIngestionService.cs" containingFunctionPresentation="Method 'IntegstOnceServiceAsync'" />
+          <option name="timeStamp" value="153" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/TTT/TrainData/Services/MovementsIngestionService.cs</url>
-          <line>442</line>
-          <properties documentPath="C:\Work\Projects\TTT\TimathyTrainTime\TTT\TTT\TrainData\Services\MovementsIngestionService.cs" containingFunctionPresentation="Method 'IntegstOnceServiceAsync'">
-            <startOffsets>
-              <option value="15642" />
-            </startOffsets>
-            <endOffsets>
-              <option value="15710" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="179" />
+          <line>443</line>
+          <properties documentPath="C:\Work\Projects\TTT\TimathyTrainTime\TTT\TTT\Services\MovementsIngestionService.cs" containingFunctionPresentation="Method 'IntegstOnceServiceAsync'" />
+          <option name="timeStamp" value="154" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/TTT/TrainData/Controller/TrainsController.cs</url>
-          <line>84</line>
-          <properties documentPath="C:\Work\Projects\TTT\TimathyTrainTime\TTT\TTT\TrainData\Controller\TrainsController.cs" containingFunctionPresentation="Method 'GetTrainIds'">
-            <startOffsets>
-              <option value="2708" />
-            </startOffsets>
-            <endOffsets>
-              <option value="2779" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="180" />
+          <url>file://$PROJECT_DIR$/TTT/TrainData/Services/MovementsIngestionService.cs</url>
+          <line>438</line>
+          <properties documentPath="C:\Work\Projects\TTT\TimathyTrainTime\TTT\TTT\Services\MovementsIngestionService.cs" containingFunctionPresentation="Method 'IntegstOnceServiceAsync'" />
+          <option name="timeStamp" value="156" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/TTT/TrainData/Model/TrainDataModel.cs</url>
-          <line>64</line>
-          <properties documentPath="C:\Work\Projects\TTT\TimathyTrainTime\TTT\TTT\TrainData\Model\TrainDataModel.cs" containingFunctionPresentation="Method 'GetTrainIds'">
+          <url>file://$PROJECT_DIR$/TTT/Program.cs</url>
+          <line>23</line>
+          <properties documentPath="C:\Work\Projects\TTT\TimathyTrainTime\TTT\TTT\Program.cs" containingFunctionPresentation="Method 'Main'">
             <startOffsets>
-              <option value="2816" />
+              <option value="657" />
             </startOffsets>
             <endOffsets>
-              <option value="2867" />
+              <option value="697" />
             </endOffsets>
           </properties>
-          <option name="timeStamp" value="181" />
+          <option name="timeStamp" value="162" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/TTT/TrainData/Model/TrainDataModel.cs</url>
-          <line>68</line>
-          <properties documentPath="C:\Work\Projects\TTT\TimathyTrainTime\TTT\TTT\TrainData\Model\TrainDataModel.cs" containingFunctionPresentation="Method 'GetTrainIds'">
+          <url>file://$PROJECT_DIR$/TTT/UnitTests/TrainControllerTests.cs</url>
+          <line>113</line>
+          <properties documentPath="C:\Work\Projects\TTT\TimathyTrainTime\TTT\TTT\UnitTests\TrainControllerTests.cs" containingFunctionPresentation="Method 'GetPosition_NotFound_Returns404'">
             <startOffsets>
-              <option value="2985" />
+              <option value="3653" />
             </startOffsets>
             <endOffsets>
-              <option value="3102" />
+              <option value="3732" />
             </endOffsets>
           </properties>
-          <option name="timeStamp" value="182" />
+          <option name="timeStamp" value="164" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/TTT/TrainData/Model/TrainDataModel.cs</url>
-          <line>71</line>
-          <properties documentPath="C:\Work\Projects\TTT\TimathyTrainTime\TTT\TTT\TrainData\Model\TrainDataModel.cs" containingFunctionPresentation="Method 'GetTrainIds'">
+          <url>file://$PROJECT_DIR$/TTT/UnitTests/TrainControllerTests.cs</url>
+          <line>114</line>
+          <properties documentPath="C:\Work\Projects\TTT\TimathyTrainTime\TTT\TTT\UnitTests\TrainControllerTests.cs" containingFunctionPresentation="Method 'GetPosition_NotFound_Returns404'">
             <startOffsets>
-              <option value="3120" />
+              <option value="3741" />
             </startOffsets>
             <endOffsets>
-              <option value="3131" />
+              <option value="3802" />
             </endOffsets>
           </properties>
-          <option name="timeStamp" value="183" />
+          <option name="timeStamp" value="165" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
