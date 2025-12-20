@@ -35,7 +35,7 @@ public interface ITrainDataModel
     
     Task<bool> DeleteAllOldMovementEvents(int dayOffest, CancellationToken cancellationToken);
     
-    Task<bool> DeleteAllOldTrains(int dayOffest, CancellationToken cancellationToken);
+    Task<bool> DeleteAllOldTrains(int dateOffest, CancellationToken cancellationToken);
 
     Task<int> SaveChangesAsync(CancellationToken cancellationToken);
 }

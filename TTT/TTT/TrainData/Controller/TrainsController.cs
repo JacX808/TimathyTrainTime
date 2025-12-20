@@ -87,7 +87,7 @@ public sealed class TrainsController(ITrainDataModel trainDataModel, ILogger<Tra
         if (result.Count == 0)
         {
             log.LogInformation("TrainIds not found on {date}", date);
-            return BadRequest("Info: TrainId not found.");
+            return Ok($"TrainIds not found on {date}");
         }
         
         return Ok(result);
@@ -118,7 +118,7 @@ public sealed class TrainsController(ITrainDataModel trainDataModel, ILogger<Tra
         
             log.LogInformation("Total sets deleted: {deleteCount}", deleteCount);
         
-            return Ok();
+            return Ok($"Total sets deleted: {deleteCount}");
         }
         
         log.LogError("dayOffset invalid. Cannot be 0 or less");

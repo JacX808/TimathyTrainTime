@@ -166,38 +166,21 @@ public sealed class TrainDataModel(TttDbContext dbContext, ILogger<TrainDataMode
         }
     }
 
-    public async Task<bool> DeleteAllOldTrains(int dayOffset, CancellationToken cancellationToken)
+    public async Task<bool> DeleteAllOldTrains(int dateOffest, CancellationToken cancellationToken)
     {
-        var cutoffDate = DateOnly.FromDateTime(DateTime.UtcNow.Date.AddDays(-dayOffset));
+        var cutoff = DateTimeOffset.UtcNow - TimeSpan.FromDays(dateOffest);
 
         try
         {
-            // Delete dependents first (safe if you have FK constraints)
-            var oldTrainIds = dbContext.TrainRuns
-                .AsNoTracking()
-                .Where(r => r.ServiceDate < cutoffDate)
-                .Select(r => r.TrainId);
-
-            var movementDeleted = await dbContext.MovementEvents
-                .Where(m => oldTrainIds.Contains(m.TrainId))
-                .ExecuteDeleteAsync(cancellationToken);
-
-            var positionDeleted = await dbContext.CurrentTrainPosition
-                .Where(p => oldTrainIds.Contains(p.TrainId))
-                .ExecuteDeleteAsync(cancellationToken);
-
             var runsDeleted = await dbContext.TrainRuns
-                .Where(r => r.ServiceDate < cutoffDate)
+                .Where(r => r.LastSeenUtc < cutoff)
                 .ExecuteDeleteAsync(cancellationToken);
 
-            var total = movementDeleted + positionDeleted + runsDeleted;
-
-            if (total > 0)
+            if (runsDeleted > 0)
                 log.LogInformation(
-                    "Deleted old trains before {cutoffDate}: TrainRuns={runs}, MovementEvents={movements}, CurrentTrainPosition={positions}.",
-                    cutoffDate, runsDeleted, movementDeleted, positionDeleted);
+                    "Deleted old trains before {cutoffDate}: TrainRuns={runs}.", cutoff, runsDeleted);
 
-            return total > 0;
+            return runsDeleted > 0;
         }
         catch (Exception ex)
         {

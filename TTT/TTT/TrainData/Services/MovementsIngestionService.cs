@@ -398,17 +398,17 @@ public sealed class MovementsIngestionService : BackgroundService, IMovementsIng
                 : await factory.CreateConnectionAsync(_options.Username, _options.Password);
 
             if (_options.UseDurableSubscription)
-                connectionAsync.ClientId = _options.ClientId ?? "ttt-nrod-client";
+                connectionAsync.ClientId = _options.ClientId;
 
             connectionAsync.Start();
             var session = connectionAsync.CreateSession(AcknowledgementMode.AutoAcknowledge);
             var dest = session.GetTopic(topic);
 
             var consumer = _options.UseDurableSubscription
-                ? await session.CreateDurableConsumerAsync(dest, $"{connectionAsync.ClientId}-{topic}", null, false)
-                : await session.CreateConsumerAsync(dest);
+                ? await session.CreateDurableConsumerAsync(dest, $"{connectionAsync.ClientId}-{topic}",
+                    null, false) : await session.CreateConsumerAsync(dest);
 
-            int read = 0, processed = 0, saved = 0;
+            int read = 0, processed = 0;
 
             while (!cancellationToken.IsCancellationRequested && read < maxMessages &&
                    startNew.Elapsed < TimeSpan.FromSeconds(maxSeconds))
@@ -439,8 +439,8 @@ public sealed class MovementsIngestionService : BackgroundService, IMovementsIng
                     // TODO add error 500 
                 }
             }
-            
-            _log.LogInformation($"Database has been updated at {DateTime.Now}");
+
+            _log.LogInformation($"Database has been updated at {DateTime.Now}. Processed: {processed}.");
         }
         catch (Exception exception) // TODO add custom exception
         {
