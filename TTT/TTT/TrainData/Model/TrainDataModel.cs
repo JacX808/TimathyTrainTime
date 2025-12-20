@@ -1,7 +1,4 @@
-﻿// File: Services/TrainDataService.cs
-
-using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TTT.Database;
 using TTT.TrainData.DataSets;
@@ -10,6 +7,7 @@ namespace TTT.TrainData.Model;
 
 public sealed class TrainDataModel(TttDbContext dbContext, ILogger<TrainDataModel> log) : ITrainDataModel
 {
+    
     public Task<TrainRun?> FindTrainRunAsync(string trainId, CancellationToken cancellationToken)
         => dbContext.TrainRuns.AsNoTracking().SingleOrDefaultAsync(trainRun => trainRun.TrainId == trainId, cancellationToken);
 
@@ -120,6 +118,75 @@ public sealed class TrainDataModel(TttDbContext dbContext, ILogger<TrainDataMode
             currentTrainPosition.ReportedAt).Take(Math.Clamp(take, 1, 10_000));
 
         return await trainPositions.ToListAsync(cancellationToken);
+    }
+
+    public async Task<bool> DeleteAllOldTrainPositions(int dayOffset, CancellationToken cancellationToken)
+    {
+        var cutoff = DateTimeOffset.UtcNow - TimeSpan.FromDays(dayOffset);
+
+        try
+        {
+            var deleted = await dbContext.CurrentTrainPosition
+                .Where(p => p.ReportedAt < cutoff)
+                .ExecuteDeleteAsync(cancellationToken);
+
+            if (deleted > 0)
+                log.LogInformation("Deleted {count} old CurrentTrainPosition rows older than {cutoff}.", deleted, cutoff);
+
+            return deleted > 0;
+        }
+        catch (Exception ex)
+        {
+            log.LogError(ex, "Failed deleting old CurrentTrainPosition rows.");
+            return false;
+        }
+    }
+
+    public async Task<bool> DeleteAllOldMovementEvents(int dateOffset, CancellationToken cancellationToken)
+    {
+        var cutoff = DateTimeOffset.UtcNow - TimeSpan.FromDays(dateOffset);
+        var cutoffMs = cutoff.ToUnixTimeMilliseconds();
+
+        try
+        {
+            var deleted = await dbContext.MovementEvents
+                .Where(e => e.ActualTimestampMs < cutoffMs)
+                .ExecuteDeleteAsync(cancellationToken);
+
+            if (deleted > 0)
+                log.LogInformation("Deleted {count} old MovementEvent rows older than {cutoff} ({cutoffMs}).",
+                    deleted, cutoff, cutoffMs);
+
+            return deleted > 0;
+        }
+        catch (Exception ex)
+        {
+            log.LogError(ex, "Failed deleting old MovementEvent rows.");
+            return false;
+        }
+    }
+
+    public async Task<bool> DeleteAllOldTrains(int dateOffest, CancellationToken cancellationToken)
+    {
+        var cutoff = DateTimeOffset.UtcNow - TimeSpan.FromDays(dateOffest);
+
+        try
+        {
+            var runsDeleted = await dbContext.TrainRuns
+                .Where(r => r.LastSeenUtc < cutoff)
+                .ExecuteDeleteAsync(cancellationToken);
+
+            if (runsDeleted > 0)
+                log.LogInformation(
+                    "Deleted old trains before {cutoffDate}: TrainRuns={runs}.", cutoff, runsDeleted);
+
+            return runsDeleted > 0;
+        }
+        catch (Exception ex)
+        {
+            log.LogError(ex, "Failed deleting old TrainRuns (and dependent rows).");
+            return false;
+        }
     }
 
     public Task<int> SaveChangesAsync(CancellationToken cancellationToken) => dbContext.SaveChangesAsync(cancellationToken);
