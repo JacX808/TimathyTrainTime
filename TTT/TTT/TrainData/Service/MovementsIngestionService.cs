@@ -10,7 +10,7 @@ using TTT.TrainData.DataSets.OpenRail;
 using TTT.TrainData.Model;
 using TTT.TrainData.Utility;
 
-namespace TTT.TrainData.Services;
+namespace TTT.TrainData.Service;
 
 /// <summary>
 /// 
@@ -384,7 +384,7 @@ public sealed class MovementsIngestionService : BackgroundService, IMovementsIng
         return 0;
     }
 
-    public async Task IntegstOnceServiceAsync(string topic, int maxMessages, int maxSeconds,
+    public async Task<int> IntegstOnceServiceAsync(string topic, int maxMessages, int maxSeconds,
         CancellationToken cancellationToken)
     {
         try
@@ -436,15 +436,18 @@ public sealed class MovementsIngestionService : BackgroundService, IMovementsIng
                 catch (Exception ex) // TODO add custom exception
                 {
                     _log.LogError(ex, "Failed timeOffset process message payload.");
+                    return processed;
                     // TODO add error 500 
                 }
             }
 
             _log.LogInformation($"Database has been updated at {DateTime.Now}. Processed: {processed}.");
+            return processed;
         }
         catch (Exception exception) // TODO add custom exception
         {
             _log.LogError($"Failed timeOffset process message payload: {exception.StackTrace}");
+            return 0;
         }
     }
 }

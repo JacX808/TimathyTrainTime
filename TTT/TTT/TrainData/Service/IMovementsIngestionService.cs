@@ -9,7 +9,7 @@ public interface IMovementsIngestionService
     /// <summary>
     /// Pulls TRUST movement data once (bounded by max messages / seconds) and upserts into the DB.
     /// </summary>
-    internal Task IntegstOnceServiceAsync(string topic, int maxMessages, int maxSeconds,
+    internal Task<int> IntegstOnceServiceAsync(string topic, int maxMessages, int maxSeconds,
         CancellationToken cancellationToken);
 
     /// <summary>

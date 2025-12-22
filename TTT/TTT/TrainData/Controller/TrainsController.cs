@@ -92,36 +92,4 @@ public sealed class TrainsController(ITrainDataModel trainDataModel, ILogger<Tra
         
         return Ok(result);
     }
-
-    /// <summary>
-    /// Delete all data older than today
-    /// </summary>
-    /// <param name="dayOffset">Date offset of how long ago you want to delete. Cannot be 0 or less</param>
-    /// <param name="cancellationToken"></param>
-    /// <returns></returns>
-    [HttpPost("/deleteOldData")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    public async Task<IActionResult> DeleteAllOldData([FromQuery] int dayOffset, CancellationToken cancellationToken = default)
-    {
-        if (dayOffset > 0)
-        {
-            int deleteCount = 0;
-        
-            if (await trainDataModel.DeleteAllOldMovementEvents(dayOffset, cancellationToken))
-                deleteCount++;
-        
-            if(await trainDataModel.DeleteAllOldTrainPositions(dayOffset, cancellationToken))
-                deleteCount++;
-        
-            if(await trainDataModel.DeleteAllOldTrains(dayOffset, cancellationToken))
-                deleteCount++;
-        
-            log.LogInformation("Total sets deleted: {deleteCount}", deleteCount);
-        
-            return Ok($"Total sets deleted: {deleteCount}");
-        }
-        
-        log.LogError("dayOffset invalid. Cannot be 0 or less");
-        return BadRequest("Error: day offset invalid.");
-    }
 }
