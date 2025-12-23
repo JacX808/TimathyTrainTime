@@ -1,9 +1,10 @@
 using Microsoft.OpenApi.Models;
-using TTT.Database;
 using TTT.TrainData.Controller;
+using TTT.TrainData.Database;
 using TTT.TrainData.DataSets.OpenRail;
 using TTT.TrainData.Model;
 using TTT.TrainData.Service;
+using TTT.TrainData.Utility;
 
 namespace TTT;
 
@@ -41,6 +42,9 @@ internal abstract class Program
         
         // NR config & services
         builder.Services.Configure<NetRailOptions>(builder.Configuration.GetSection("OpenRail"));
+        
+        // any set constant vars that can be modified in the appsettings.json
+        builder.Services.Configure<Constants>(builder.Configuration.GetSection("Constants"));
         
         // Swagger & controllers
         builder.Services.AddControllers();

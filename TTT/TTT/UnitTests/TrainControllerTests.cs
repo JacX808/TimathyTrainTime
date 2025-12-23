@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using NUnit.Framework;
-using TTT.Database;
 using TTT.TrainData.Controller;
+using TTT.TrainData.Database;
 using TTT.TrainData.DataSets;
 using TTT.TrainData.Model;
 

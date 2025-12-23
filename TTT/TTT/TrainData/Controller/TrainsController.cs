@@ -26,13 +26,12 @@ public sealed class TrainsController(ITrainDataModel trainDataModel, ILogger<Tra
         
         var result = await trainDataModel.GetPosition(trainId, cancellationToken);
 
-        if (result == null)
-        {
-            log.LogInformation("Train not found.");
-            return BadRequest("Info: Train not found.");
-        }
+        if (result != null) 
+            return Ok(result);
         
-        return Ok(result);
+        log.LogInformation("Train not found.");
+        return BadRequest("Info: Train not found.");
+
     }
 
     /// <summary>
@@ -56,13 +55,12 @@ public sealed class TrainsController(ITrainDataModel trainDataModel, ILogger<Tra
         
         var result = await trainDataModel.GetMovements(trainId, from, timeOffset, cancellationToken);
 
-        if (result.Count == 0)
-        {
-            log.LogInformation("No trains found.");
-            return BadRequest("Info: No trains found.");
-        }
+        if (result.Count != 0) 
+            return Ok(result);
         
-        return Ok(result);
+        log.LogInformation("No trains found.");
+        return BadRequest("Info: No trains found.");
+
     }
 
     /// <summary>
@@ -84,12 +82,11 @@ public sealed class TrainsController(ITrainDataModel trainDataModel, ILogger<Tra
 
         var result = await trainDataModel.GetTrainIds(date, cancellationToken);
 
-        if (result.Count == 0)
-        {
-            log.LogInformation("TrainIds not found on {date}", date);
-            return Ok($"TrainIds not found on {date}");
-        }
+        if (result.Count != 0) 
+            return Ok(result);
         
-        return Ok(result);
+        log.LogInformation("TrainIds not found on {date}", date);
+        return Ok($"TrainIds not found on {date}");
+
     }
 }

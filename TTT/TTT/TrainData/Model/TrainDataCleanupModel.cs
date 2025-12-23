@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using TTT.Database;
+using TTT.TrainData.Database;
 
 namespace TTT.TrainData.Model;
 

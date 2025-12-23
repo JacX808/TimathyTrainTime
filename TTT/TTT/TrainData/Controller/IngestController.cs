@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using TTT.TrainData.Model;
+using TTT.TrainData.Utility;
 
 namespace TTT.TrainData.Controller;
 
@@ -8,19 +9,18 @@ namespace TTT.TrainData.Controller;
 public sealed class IngestController : ControllerBase
 {
     private readonly IMovementsIngestionService  _movementsIngestionService;
-    private readonly ITrainDataModel  _trainDataModel;
     private readonly ITrainDataCleanupModel _trainDataCleanupModel;
     private readonly ILogger<IngestController> _log;
-    private const int datecutoff = 1;
+    private readonly Constants _constants;
 
-    public IngestController(IServiceScopeFactory scopeFactory, ITrainDataModel trainDataModel,
-        ITrainDataCleanupModel trainDataCleanupModel, ILogger<IngestController> log)
+    public IngestController(IServiceScopeFactory scopeFactory,
+        ITrainDataCleanupModel trainDataCleanupModel, Constants constants, ILogger<IngestController> log)
     {
         var scope = scopeFactory.CreateScope();
         _movementsIngestionService = scope.ServiceProvider.GetRequiredService<IMovementsIngestionService>();
         _trainDataCleanupModel = trainDataCleanupModel;
-        _trainDataModel = trainDataModel;
         _log = log;
+        _constants = constants;
     }
 
     /// <summary>
@@ -47,13 +47,13 @@ public sealed class IngestController : ControllerBase
             return BadRequest("maxMessages or maxSeconds invalid. Cannot be less than 1");
         }
 
-        int totalDeleted = 
-            await Task.Run(() => _trainDataCleanupModel.DeleteAllMovementData(datecutoff, cancellationToken),
-                cancellationToken);
+        var totalDeleted = await Task.Run(() =>
+            _trainDataCleanupModel.DeleteAllMovementData(_constants.DeleteDateCutoff, cancellationToken),
+            cancellationToken);
         
         _log.LogInformation("Total old records deleted: {totalDeleted}", totalDeleted);
         
-        int totalAdded = await Task.Run(() => _movementsIngestionService.IntegstOnceServiceAsync(topic, maxMessages, maxSeconds,
+        var totalAdded = await Task.Run(() => _movementsIngestionService.IntegstOnceServiceAsync(topic, maxMessages, maxSeconds,
             cancellationToken), cancellationToken);
         
         _log.LogInformation("Total new records added: {totalAdded}", totalAdded);
@@ -73,7 +73,7 @@ public sealed class IngestController : ControllerBase
     {
         if (dayOffset > 0)
         {
-            int deleteCount = 0;
+            var deleteCount = 0;
 
             deleteCount += await _trainDataCleanupModel.DeleteAllOldMovementEvents(dayOffset, cancellationToken);
             deleteCount += await _trainDataCleanupModel.DeleteAllOldTrainPositions(dayOffset, cancellationToken);

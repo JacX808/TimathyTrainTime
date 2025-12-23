@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using TTT.Database;
+using TTT.TrainData.Database;
 using TTT.TrainData.DataSets;
 
 namespace TTT.TrainData.Model;
