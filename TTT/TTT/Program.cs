@@ -3,7 +3,7 @@ using TTT.Database;
 using TTT.TrainData.Controller;
 using TTT.TrainData.DataSets.OpenRail;
 using TTT.TrainData.Model;
-using TTT.TrainData.Services;
+using TTT.TrainData.Service;
 
 namespace TTT;
 
@@ -32,7 +32,11 @@ internal abstract class Program
         builder.Logging.AddFilter("Microsoft.EntityFrameworkCore.Database.Command", LogLevel.Information);
         builder.Logging.AddFilter("Microsoft.EntityFrameworkCore.Query", LogLevel.Warning);
         
+        // Models
         builder.Services.AddScoped<ITrainDataModel, TrainDataModel>();
+        builder.Services.AddScoped<ITrainDataCleanupModel, TrainDataCleanupModel>();
+        
+        // Background Services
         builder.Services.AddScoped<IMovementsIngestionService, MovementsIngestionService>();
         
         // NR config & services

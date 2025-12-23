@@ -30,12 +30,6 @@ public interface ITrainDataModel
         DateTimeOffset? since,
         int take,
         CancellationToken cancellationToken);
-    
-    Task<bool> DeleteAllOldTrainPositions(int dayOffest, CancellationToken cancellationToken);
-    
-    Task<bool> DeleteAllOldMovementEvents(int dayOffest, CancellationToken cancellationToken);
-    
-    Task<bool> DeleteAllOldTrains(int dateOffest, CancellationToken cancellationToken);
 
     Task<int> SaveChangesAsync(CancellationToken cancellationToken);
 }
