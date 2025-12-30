@@ -9,8 +9,16 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a138a5cd-f4a5-4b3e-9a2f-eb71b297574f" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/TTT/TrainData/Model/ITrainDataCleanupModel.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TTT/TrainData/Model/TrainDataCleanupModel.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/TTT/TrainData/Controller/RailImporterController.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/TTT/TrainData/DataSets/Options/RailReferenceImportOptions.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/TTT/TrainData/DataSets/RailLocation.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/TTT/TrainData/DataSets/TrainDataLite.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/TTT/TrainData/Exceptions/RailReferenceImportException.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/TTT/TrainData/Model/IRailReferenceDataImporter.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/TTT/TrainData/Model/IRailReferenceImportModel.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/TTT/TrainData/Model/RailReferenceImportModel.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/TTT/TrainData/Model/RailReferneceDataImporter.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/TTT/TrainData/Service/OsgbToWgs84.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/../.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../README.md" beforeDir="false" afterPath="$PROJECT_DIR$/../README.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.TTT/.idea/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.TTT/.idea/.gitignore" afterDir="false" />
@@ -25,17 +33,17 @@
       <change beforePath="$PROJECT_DIR$/TTT.sln" beforeDir="false" afterPath="$PROJECT_DIR$/TTT.sln" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/TTT.sln.DotSettings" beforeDir="false" afterPath="$PROJECT_DIR$/TTT.sln.DotSettings" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/TTT.sln.DotSettings.user" beforeDir="false" afterPath="$PROJECT_DIR$/TTT.sln.DotSettings.user" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TTT/Database/TttDbContext.cs" beforeDir="false" afterPath="$PROJECT_DIR$/TTT/Database/TttDbContext.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/TTT/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/TTT/Program.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/TTT/Properties/launchSettings.json" beforeDir="false" afterPath="$PROJECT_DIR$/TTT/Properties/launchSettings.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/TTT/TTT.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/TTT/TTT.csproj" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/TTT/TTT.http" beforeDir="false" afterPath="$PROJECT_DIR$/TTT/TTT.http" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TTT/TrainData/Controller/IMovementsIngestController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/TTT/TrainData/Service/IMovementsIngestionService.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TTT/TrainData/Controller/MovementsIngestController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/TTT/TrainData/Controller/IngestController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TTT/TrainData/Controller/IngestController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/TTT/TrainData/Controller/IngestController.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/TTT/TrainData/Controller/TrainsController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/TTT/TrainData/Controller/TrainsController.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TTT/TrainData/DataSets/OpenRail/NetRailOptions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/TTT/TrainData/DataSets/OpenRail/NetRailOptions.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TTT/TrainData/DataSets/OpenRail/NetRailOptions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/TTT/TrainData/DataSets/Options/NetRailOptions.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/TTT/TrainData/Model/ITrainDataModel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/TTT/TrainData/Model/ITrainDataModel.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/TTT/TrainData/Model/TrainDataModel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/TTT/TrainData/Model/TrainDataModel.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TTT/TrainData/Services/MovementsIngestionService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/TTT/TrainData/Service/MovementsIngestionService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TTT/TrainData/Service/MovementsIngestionService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/TTT/TrainData/Service/MovementsIngestionService.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/TTT/appsettings.Development.json" beforeDir="false" afterPath="$PROJECT_DIR$/TTT/appsettings.Development.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/TTT/appsettings.json" beforeDir="false" afterPath="$PROJECT_DIR$/TTT/appsettings.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/TTT/docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/TTT/docker-compose.yml" afterDir="false" />
@@ -73,9 +81,19 @@
     <setting file="file://$PROJECT_DIR$/TTT/Database/DBConfig.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/TTT/Database/TttDbContext.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/TTT/TrainData/Controller/IngestController.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/TTT/TrainData/Controller/RailImporterController.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/TTT/TrainData/Controller/TrainsController.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/TTT/TrainData/DataSets/Options/RailReferenceImportOptions.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/TTT/TrainData/DataSets/RailLocation.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/TTT/TrainData/DataSets/TrainDataLite.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/TTT/TrainData/Exceptions/RailReferenceImportException.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/TTT/TrainData/Model/IRailReferenceDataImporter.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/TTT/TrainData/Model/IRailReferenceImportModel.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/TTT/TrainData/Model/ITrainDataCleanupModel.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/TTT/TrainData/Model/RailReferenceImportModel.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/TTT/TrainData/Model/RailReferneceDataImporter.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/TTT/TrainData/Model/TrainDataCleanupModel.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/TTT/TrainData/Service/OsgbToWgs84.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/TTT/UnitTests/TrainControllerTests.cs" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="KubernetesApiPersistence">{}</component>
@@ -108,7 +126,7 @@
     "RunOnceActivity.git.unshallow": "true",
     "b399e10e-2da5-4795-8ae5-054a47e45e55.executor": "Debug",
     "d7f911cf-46d2-49c2-9e22-3e7d1b7e9357.executor": "Debug",
-    "git-widget-placeholder": "feature/add-delete-to-injestendpoint",
+    "git-widget-placeholder": "feature/add-getmapdatalite-endpoint",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -310,19 +328,6 @@
           <properties exception="TTT.OpenRail.OpenRailConnectTimeoutException" breakIfHandledByUserCode="true" displayValue="OpenRailConnectTimeoutException" namespaceName="TTT.OpenRail" />
           <option name="timeStamp" value="26" />
         </breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/TTT/UnitTests/TrainControllerTests.cs</url>
-          <line>113</line>
-          <properties documentPath="C:\Work\Projects\TTT\TimathyTrainTime\TTT\TTT\UnitTests\TrainControllerTests.cs" containingFunctionPresentation="Method 'GetPosition_NotFound_Returns404'">
-            <startOffsets>
-              <option value="3653" />
-            </startOffsets>
-            <endOffsets>
-              <option value="3732" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="164" />
-        </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
     <pin-to-top-manager>

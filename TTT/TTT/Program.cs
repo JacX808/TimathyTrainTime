@@ -1,7 +1,7 @@
 using Microsoft.OpenApi.Models;
 using TTT.Database;
 using TTT.TrainData.Controller;
-using TTT.TrainData.DataSets.OpenRail;
+using TTT.TrainData.DataSets.Options;
 using TTT.TrainData.Model;
 using TTT.TrainData.Service;
 
@@ -32,15 +32,22 @@ internal abstract class Program
         builder.Logging.AddFilter("Microsoft.EntityFrameworkCore.Database.Command", LogLevel.Information);
         builder.Logging.AddFilter("Microsoft.EntityFrameworkCore.Query", LogLevel.Warning);
         
+        // Rail location
+        builder.Services.Configure<RailReferenceImportOptions>(
+            builder.Configuration.GetSection("RailReferenceImport"));
+        
         // Models
         builder.Services.AddScoped<ITrainDataModel, TrainDataModel>();
         builder.Services.AddScoped<ITrainDataCleanupModel, TrainDataCleanupModel>();
+        builder.Services.AddScoped<IRailReferenceImportModel, RailReferenceImportModel>();
+        builder.Services.AddScoped<IRailReferenceDataImporter, RailReferenceDataImporter>();
         
         // Background Services
         builder.Services.AddScoped<IMovementsIngestionService, MovementsIngestionService>();
         
         // NR config & services
         builder.Services.Configure<NetRailOptions>(builder.Configuration.GetSection("OpenRail"));
+        
         
         // Swagger & controllers
         builder.Services.AddControllers();

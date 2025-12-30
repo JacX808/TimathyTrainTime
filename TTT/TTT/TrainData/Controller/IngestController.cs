@@ -8,7 +8,6 @@ namespace TTT.TrainData.Controller;
 public sealed class IngestController : ControllerBase
 {
     private readonly IMovementsIngestionService  _movementsIngestionService;
-    private readonly ITrainDataModel  _trainDataModel;
     private readonly ITrainDataCleanupModel _trainDataCleanupModel;
     private readonly ILogger<IngestController> _log;
     private const int datecutoff = 1;
@@ -19,7 +18,6 @@ public sealed class IngestController : ControllerBase
         var scope = scopeFactory.CreateScope();
         _movementsIngestionService = scope.ServiceProvider.GetRequiredService<IMovementsIngestionService>();
         _trainDataCleanupModel = trainDataCleanupModel;
-        _trainDataModel = trainDataModel;
         _log = log;
     }
 
