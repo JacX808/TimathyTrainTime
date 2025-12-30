@@ -9,16 +9,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a138a5cd-f4a5-4b3e-9a2f-eb71b297574f" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/TTT/TrainData/Controller/RailImporterController.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TTT/TrainData/DataSets/Options/RailReferenceImportOptions.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TTT/TrainData/DataSets/RailLocation.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TTT/TrainData/DataSets/TrainDataLite.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TTT/TrainData/Exceptions/RailReferenceImportException.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TTT/TrainData/Model/IRailReferenceDataImporter.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TTT/TrainData/Model/IRailReferenceImportModel.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TTT/TrainData/Model/RailReferenceImportModel.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TTT/TrainData/Model/RailReferneceDataImporter.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TTT/TrainData/Service/OsgbToWgs84.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/TTT/Data/BPLAN_GEO_PIF.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/TTT/Data/CORPUSExtract.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/../.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../README.md" beforeDir="false" afterPath="$PROJECT_DIR$/../README.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.TTT/.idea/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.TTT/.idea/.gitignore" afterDir="false" />
@@ -33,17 +25,14 @@
       <change beforePath="$PROJECT_DIR$/TTT.sln" beforeDir="false" afterPath="$PROJECT_DIR$/TTT.sln" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/TTT.sln.DotSettings" beforeDir="false" afterPath="$PROJECT_DIR$/TTT.sln.DotSettings" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/TTT.sln.DotSettings.user" beforeDir="false" afterPath="$PROJECT_DIR$/TTT.sln.DotSettings.user" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TTT/Database/TttDbContext.cs" beforeDir="false" afterPath="$PROJECT_DIR$/TTT/Database/TttDbContext.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/TTT/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/TTT/Program.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/TTT/Properties/launchSettings.json" beforeDir="false" afterPath="$PROJECT_DIR$/TTT/Properties/launchSettings.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/TTT/TTT.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/TTT/TTT.csproj" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/TTT/TTT.http" beforeDir="false" afterPath="$PROJECT_DIR$/TTT/TTT.http" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TTT/TrainData/Controller/IngestController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/TTT/TrainData/Controller/IngestController.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TTT/TrainData/Controller/TrainsController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/TTT/TrainData/Controller/TrainsController.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TTT/TrainData/DataSets/OpenRail/NetRailOptions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/TTT/TrainData/DataSets/Options/NetRailOptions.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TTT/TrainData/Model/ITrainDataModel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/TTT/TrainData/Model/ITrainDataModel.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TTT/TrainData/Model/TrainDataModel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/TTT/TrainData/Model/TrainDataModel.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TTT/TrainData/Service/MovementsIngestionService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/TTT/TrainData/Service/MovementsIngestionService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TTT/TrainData/Controller/RailImporterController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/TTT/TrainData/Controller/RailImporterController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TTT/TrainData/Model/IRailReferenceDataImporter.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/TTT/TrainData/Model/RailReferenceImportModel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/TTT/TrainData/Model/RailReferenceImportModel.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TTT/TrainData/Model/RailReferneceDataImporter.cs" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/TTT/appsettings.Development.json" beforeDir="false" afterPath="$PROJECT_DIR$/TTT/appsettings.Development.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/TTT/appsettings.json" beforeDir="false" afterPath="$PROJECT_DIR$/TTT/appsettings.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/TTT/docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/TTT/docker-compose.yml" afterDir="false" />
@@ -78,6 +67,7 @@
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/e9881a453a581134c1a18331ac1f8f1201a5382a685bf2a40777fa22619/DbContextOptions`.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/fddd663f895f1deb84b596bca944836d74f3422b3dd46a5085b2f46b981de9/Queryable.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$USER_HOME$/AppData/Roaming/Microsoft/UserSecrets/0aea6be8-55b1-4279-b48f-abd5b5ac206c/secrets.json" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/TTT/Data/CORPUSExtract.json" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/TTT/Database/DBConfig.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/TTT/Database/TttDbContext.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/TTT/TrainData/Controller/IngestController.cs" root0="FORCE_HIGHLIGHTING" />
@@ -328,6 +318,32 @@
           <properties exception="TTT.OpenRail.OpenRailConnectTimeoutException" breakIfHandledByUserCode="true" displayValue="OpenRailConnectTimeoutException" namespaceName="TTT.OpenRail" />
           <option name="timeStamp" value="26" />
         </breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/TTT/TrainData/Model/RailReferenceImportModel.cs</url>
+          <line>17</line>
+          <properties documentPath="C:\Work\Projects\TTT\TimathyTrainTime\TTT\TTT\TrainData\Model\RailReferenceImportModel.cs" containingFunctionPresentation="Method 'ImportRailAsync'">
+            <startOffsets>
+              <option value="586" />
+            </startOffsets>
+            <endOffsets>
+              <option value="613" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="166" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/TTT/TrainData/Controller/RailImporterController.cs</url>
+          <line>18</line>
+          <properties documentPath="C:\Work\Projects\TTT\TimathyTrainTime\TTT\TTT\TrainData\Controller\RailImporterController.cs" containingFunctionPresentation="Method 'ImportRailDataAsync'">
+            <startOffsets>
+              <option value="627" />
+            </startOffsets>
+            <endOffsets>
+              <option value="707" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="167" />
+        </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
     <pin-to-top-manager>

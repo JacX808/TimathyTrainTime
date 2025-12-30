@@ -40,7 +40,6 @@ internal abstract class Program
         builder.Services.AddScoped<ITrainDataModel, TrainDataModel>();
         builder.Services.AddScoped<ITrainDataCleanupModel, TrainDataCleanupModel>();
         builder.Services.AddScoped<IRailReferenceImportModel, RailReferenceImportModel>();
-        builder.Services.AddScoped<IRailReferenceDataImporter, RailReferenceDataImporter>();
         
         // Background Services
         builder.Services.AddScoped<IMovementsIngestionService, MovementsIngestionService>();

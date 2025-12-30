@@ -9,7 +9,7 @@ namespace TTT.TrainData.Controller;
 /// </summary>
 /// <param name="railReferenceImportModel"></param>
 /// <param name="log"></param>
-public class RailImporterController(RailReferenceImportModel railReferenceImportModel, ILogger<RailImporterController> log)
+public class RailImporterController(IRailReferenceImportModel railReferenceImportModel, ILogger<RailImporterController> log)
     : ControllerBase
 {
     
