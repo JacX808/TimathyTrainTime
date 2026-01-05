@@ -13,19 +13,34 @@ public class RailImporterController(IRailReferenceImportModel railReferenceImpor
     : ControllerBase
 {
     
-    [HttpGet("/rail importer")]
+    [HttpGet("/railImporter")]
     public async Task<IActionResult> ImportRailDataAsync(CancellationToken cancellationToken)
     {
-        bool result = await railReferenceImportModel.ImportRailAsync(cancellationToken);
+        try
+        {
+            var result = await railReferenceImportModel.ImportRailAsync(cancellationToken);
+            log.LogInformation($"{result} rail data import.");
+            return Ok($"{result} Rail data import.");
+        }
+        catch (Exception ex)
+        {
+            log.LogError(ex.Message);
+            return StatusCode(500, "Internal Server Error");
+        }
+    }
+
+    [HttpPost("/corpusCheck")]
+    public async Task<IActionResult> RunCorpusCheckAsync(CancellationToken cancellationToken)
+    {
+        var result = await railReferenceImportModel.RunCorpusCheckAsync(cancellationToken);
 
         if (result)
         {
-            log.LogInformation("Rail data imported.");
-            return Ok("Rail data imported.");
+            log.LogInformation("Corpus check successful.");
+            return Ok("Corpus check successful.");
         }
-
-        log.LogError("Rail data import failed.");
-        return Ok("Error: Rail data import failed.");
         
+        log.LogError("Corpus check failed.");
+        return StatusCode(500, "Corpus check failed.");
     }
 }

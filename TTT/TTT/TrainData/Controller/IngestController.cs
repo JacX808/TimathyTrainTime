@@ -25,7 +25,7 @@ public sealed class IngestController : ControllerBase
     /// Pulls TRUST movement data once, bounded by message count and/or time window,
     /// and upserts TrainRuns / MovementEvents / CurrentTrainPosition.
     /// </summary>
-    [HttpPost("ingest")]
+    [HttpPost("/ingest")]
     public async Task<IActionResult> IngestOnce(
         [FromQuery] int maxMessages = 1000,
         [FromQuery] int maxSeconds = 20,

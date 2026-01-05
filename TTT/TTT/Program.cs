@@ -41,12 +41,12 @@ internal abstract class Program
         builder.Services.AddScoped<ITrainDataCleanupModel, TrainDataCleanupModel>();
         builder.Services.AddScoped<IRailReferenceImportModel, RailReferenceImportModel>();
         
-        // Background Services
-        builder.Services.AddScoped<IMovementsIngestionService, MovementsIngestionService>();
-        
-        // NR config & services
+        // NR config
         builder.Services.Configure<NetRailOptions>(builder.Configuration.GetSection("OpenRail"));
         
+        // Services
+        builder.Services.AddHttpClient<CorpusReferenceFileService>();
+        builder.Services.AddScoped<IMovementsIngestionService, MovementsIngestionService>();
         
         // Swagger & controllers
         builder.Services.AddControllers();

@@ -11,16 +11,21 @@ using TTT.TrainData.Service;
 namespace TTT.TrainData.Model;
 
 public sealed class RailReferenceImportModel(TttDbContext database, IOptions<RailReferenceImportOptions> opts,
-    ILogger<RailReferenceImportModel> log) : IRailReferenceImportModel
+    CorpusReferenceFileService corpusReferenceFileService, ILogger<RailReferenceImportModel> log) 
+    : IRailReferenceImportModel
 {
-    public async Task<bool> ImportRailAsync(CancellationToken cancellationToken)
+    private static readonly CultureInfo Invariant = CultureInfo.InvariantCulture;
+    private const string BplanDateFormat = "dd-MM-yyyy HH:mm:ss";
+    
+    public async Task<int> ImportRailAsync(CancellationToken cancellationToken)
     {
         var optsValue = opts.Value;
+        var total = 0;
 
         try
         {
             log.LogInformation("Auto-importing rail reference data...");
-            var total = await ImportAsync(optsValue.CorpusPath, optsValue.BplanPath, cancellationToken);
+            total = await ImportAsync(optsValue.CorpusPath, optsValue.BplanPath, cancellationToken);
             log.LogInformation($"Rail reference data imported. Total: {total}");
             
         }
@@ -30,14 +35,26 @@ public sealed class RailReferenceImportModel(TttDbContext database, IOptions<Rai
                 "Error importing rail reference data. CorpusPath={CorpusPath}, BplanPath={BplanPath}",
                 optsValue.CorpusPath,
                 optsValue.BplanPath);
-            return false;
+            return total;
         }
 
-        return true;
+        return total;
     }
-    
-    private static readonly CultureInfo Invariant = CultureInfo.InvariantCulture;
-    private const string BplanDateFormat = "dd-MM-yyyy HH:mm:ss";
+
+    public async Task<bool> RunCorpusCheckAsync(CancellationToken cancellationToken)
+    {
+        try
+        {
+            var result = await corpusReferenceFileService.DownloadAndExtractCorpusAsync(cancellationToken);
+            log.LogInformation($"Corpus check complete and stored in {result}");
+            return true;
+        }
+        catch (Exception e)
+        {
+            log.LogError($"Corpus check failed {e.Message}");
+            return false;
+        }
+    }
 
     private async Task<int> ImportAsync(string corpusPath, string bplanPath, CancellationToken ct)
     {

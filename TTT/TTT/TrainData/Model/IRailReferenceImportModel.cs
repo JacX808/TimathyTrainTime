@@ -2,5 +2,6 @@
 
 public interface IRailReferenceImportModel
 {
-    Task<bool> ImportRailAsync(CancellationToken cancellationToken);
+    Task<int> ImportRailAsync(CancellationToken cancellationToken);
+    Task<bool> RunCorpusCheckAsync(CancellationToken ct);
 }
