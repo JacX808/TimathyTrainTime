@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using TTT.TrainData.DataSets;
-using TTT.TrainData.DataSets.RailLocations;
+using TTT.DataSets;
+using TTT.DataSets.RailLocations;
 
 namespace TTT.Database;
 

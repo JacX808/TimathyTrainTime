@@ -1,10 +1,9 @@
 using Microsoft.OpenApi.Models;
 using TTT.Database;
-using TTT.TrainData.Controller;
-using TTT.TrainData.DataSets.Options;
-using TTT.TrainData.Model;
-using TTT.TrainData.Service;
-using TTT.TrainData.Service.RailLoctaionServices;
+using TTT.DataSets.Options;
+using TTT.Model;
+using TTT.Service;
+using TTT.Service.RailLocationServices;
 
 namespace TTT;
 
@@ -37,19 +36,19 @@ internal abstract class Program
         builder.Services.Configure<RailReferenceImportOptions>(
             builder.Configuration.GetSection("RailReferenceImport"));
         
-        // Models
-        builder.Services.AddScoped<ITrainDataModel, TrainDataModel>();
-        builder.Services.AddScoped<ITrainDataCleanupModel, TrainDataCleanupModel>();
-        builder.Services.AddScoped<IRailReferenceImportModel, RailReferenceImportModel>();
-        
         // NR config
         builder.Services.Configure<NetRailOptions>(builder.Configuration.GetSection("OpenRail"));
         
         // Services
-        builder.Services.AddHttpClient<CorpusReferenceFileService>();
+        builder.Services.AddScoped<ICorpusReferenceFileService, CorpusReferenceFileService>();
         builder.Services.AddScoped<IMovementsIngestionService, MovementsIngestionService>();
         builder.Services.AddScoped<IPlanBService, PlanBService>();
         builder.Services.AddScoped<ICorpusService, CorpusService>();
+        
+        // Models
+        builder.Services.AddScoped<ITrainDataModel, TrainDataModel>();
+        builder.Services.AddScoped<ITrainDataCleanupModel, TrainDataCleanupModel>();
+        builder.Services.AddScoped<IRailReferenceImportModel, RailReferenceImportModel>();
         
         // Swagger & controllers
         builder.Services.AddControllers();
