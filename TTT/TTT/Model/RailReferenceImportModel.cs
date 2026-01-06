@@ -10,7 +10,7 @@ using TTT.Utility;
 namespace TTT.Model;
 
 public sealed class RailReferenceImportModel(TttDbContext database, IOptions<RailReferenceImportOptions> options,
-    CorpusReferenceFileService corpusReferenceFileService, IPlanBService planBService, ICorpusService corpusService,
+    ICorpusReferenceFileService corpusReferenceFileService, IPlanBService planBService, ICorpusService corpusService,
     ILogger<RailReferenceImportModel> log) : IRailReferenceImportModel
 {
     
@@ -37,7 +37,7 @@ public sealed class RailReferenceImportModel(TttDbContext database, IOptions<Rai
         return total;
     }
 
-    public async Task<bool> RunCorpusCheckAsync(CancellationToken cancellationToken)
+    public async Task<bool> CorpusCheckAsync(CancellationToken cancellationToken)
     {
         try
         {

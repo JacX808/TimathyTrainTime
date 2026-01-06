@@ -6,9 +6,8 @@ using TTT.DataSets.Options;
 
 namespace TTT.Service.RailLocationServices;
 
-public sealed class CorpusReferenceFileService(IOptions<NetRailOptions> netRailOptions,
-    IWebHostEnvironment env,
-    ILogger<CorpusReferenceFileService> log)
+public sealed class CorpusReferenceFileService(IOptions<NetRailOptions> netRailOptions, IWebHostEnvironment env,
+    ILogger<CorpusReferenceFileService> log) : ICorpusReferenceFileService
 {
 
     /// <summary>

@@ -9,8 +9,8 @@ namespace TTT.Controller;
 /// </summary>
 /// <param name="railReferenceImportModel"></param>
 /// <param name="log"></param>
-public class RailImporterController(IRailReferenceImportModel railReferenceImportModel, ILogger<RailImporterController> log)
-    : ControllerBase
+public class RailImporterController(IRailReferenceImportModel railReferenceImportModel,
+    ILogger<RailImporterController> log) : ControllerBase
 {
  
     /// <summary>
@@ -40,9 +40,9 @@ public class RailImporterController(IRailReferenceImportModel railReferenceImpor
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
     [HttpPost("/corpusCheck")]
-    public async Task<IActionResult> RunCorpusCheckAsync(CancellationToken cancellationToken)
+    public async Task<IActionResult> CorpusCheckAsync(CancellationToken cancellationToken)
     {
-        var result = await railReferenceImportModel.RunCorpusCheckAsync(cancellationToken);
+        var result = await railReferenceImportModel.CorpusCheckAsync(cancellationToken);
 
         if (result)
         {
