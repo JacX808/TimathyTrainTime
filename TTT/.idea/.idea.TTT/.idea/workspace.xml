@@ -9,7 +9,6 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a138a5cd-f4a5-4b3e-9a2f-eb71b297574f" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/TTT/Service/RailLocationServices/ICorpusReferenceFileService.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/../.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../README.md" beforeDir="false" afterPath="$PROJECT_DIR$/../README.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.TTT/.idea/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.TTT/.idea/.gitignore" afterDir="false" />
@@ -23,13 +22,12 @@
       <change beforePath="$PROJECT_DIR$/.idea/.idea.TTT/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.TTT/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/TTT.sln" beforeDir="false" afterPath="$PROJECT_DIR$/TTT.sln" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/TTT.sln.DotSettings" beforeDir="false" afterPath="$PROJECT_DIR$/TTT.sln.DotSettings" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TTT.sln.DotSettings.user" beforeDir="false" afterPath="$PROJECT_DIR$/TTT.sln.DotSettings.user" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TTT/Controller/RailImporterController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/TTT/Controller/RailImporterController.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TTT/Model/IRailReferenceImportModel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/TTT/Model/IRailReferenceImportModel.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TTT/Model/RailReferenceImportModel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/TTT/Model/RailReferenceImportModel.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TTT/Controller/TrainsController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/TTT/Controller/TrainsController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TTT/DataSets/TrainDataLite.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/TTT/Model/ITrainDataModel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/TTT/Model/ITrainDataModel.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TTT/Model/TrainDataModel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/TTT/Model/TrainDataModel.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/TTT/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/TTT/Program.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/TTT/Properties/launchSettings.json" beforeDir="false" afterPath="$PROJECT_DIR$/TTT/Properties/launchSettings.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TTT/Service/RailLocationServices/CorpusReferenceFileService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/TTT/Service/RailLocationServices/CorpusReferenceFileService.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/TTT/TTT.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/TTT/TTT.csproj" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/TTT/TTT.http" beforeDir="false" afterPath="$PROJECT_DIR$/TTT/TTT.http" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/TTT/appsettings.Development.json" beforeDir="false" afterPath="$PROJECT_DIR$/TTT/appsettings.Development.json" afterDir="false" />

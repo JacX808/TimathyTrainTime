@@ -43,31 +43,7 @@ public sealed class TrainDataModel(TttDbContext dbContext, ILogger<TrainDataMode
         
         return pos;
     }
-
-    public Task<List<TrainDataLite>> GetCurrentMapPositionLiteAsync(CancellationToken cancellationToken)
-    {
-        
-        var queryable = dbContext.CurrentTrainPosition.AsNoTracking().Where(x =>
-            x.ReportedAt >= DateTimeOffset.Now);
-        
-        
-        var allLiteData = new List<TrainDataLite>();
-
-        foreach (var item in queryable)
-        {
-            var liteData = new TrainDataLite
-            {
-                TrainId = item.TrainId,
-                LocStanox = item.LocStanox,
-                Direction = item.Direction
-            };
-
-            allLiteData.Add(liteData);
-        }
-
-        return Task.FromResult(allLiteData);
-    }
-
+    
     public async Task<List<MovementEvent>> GetMovements(string trainId, DateTimeOffset? from,
         DateTimeOffset? timeOffset,
         CancellationToken cancellationToken)
