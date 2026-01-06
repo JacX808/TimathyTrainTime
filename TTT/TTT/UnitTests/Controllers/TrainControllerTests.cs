@@ -1,12 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using NUnit.Framework;
-using TTT.TrainData.Controller;
-using TTT.TrainData.Database;
-using TTT.TrainData.DataSets;
-using TTT.TrainData.Model;
+using TTT.Controller;
+using TTT.Database;
+using TTT.DataSets;
+using TTT.Model;
 
-namespace TTT.UnitTests;
+namespace TTT.UnitTests.Controllers;
 
 [TestFixture]
 public class TrainsControllerTests

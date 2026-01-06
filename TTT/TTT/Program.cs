@@ -1,10 +1,9 @@
 using Microsoft.OpenApi.Models;
 using TTT.Database;
-using TTT.TrainData.Controller;
-using TTT.TrainData.DataSets.Options;
-using TTT.TrainData.Model;
-using TTT.TrainData.Service;
-using TTT.TrainData.Service.RailLoctaionServices;
+using TTT.DataSets.Options;
+using TTT.Model;
+using TTT.Service;
+using TTT.Service.RailLocationServices;
 
 namespace TTT;
 
