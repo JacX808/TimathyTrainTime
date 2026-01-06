@@ -9,13 +9,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a138a5cd-f4a5-4b3e-9a2f-eb71b297574f" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/TTT/TrainData/DataSets/RailLocations/RailLocationLite.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TTT/TrainData/Records/BlanB.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TTT/TrainData/Service/RailLoctaionServices/CorpusService.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TTT/TrainData/Service/RailLoctaionServices/ICorpusService.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TTT/TrainData/Service/RailLoctaionServices/IPlanBService.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TTT/TrainData/Service/RailLoctaionServices/PlanBService.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TTT/TrainData/Utility/Constants.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/TTT/UnitTests/Helpers/ListLogger.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/TTT/UnitTests/Helpers/SqliteInMemoryDb.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/TTT/UnitTests/Models/RailLocationModelTests.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/TTT/UnitTests/Models/RailReferenceImportModelTests.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/TTT/UnitTests/Models/TrainDataModelTests.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/../.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../README.md" beforeDir="false" afterPath="$PROJECT_DIR$/../README.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.TTT/.idea/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.TTT/.idea/.gitignore" afterDir="false" />
@@ -30,20 +28,13 @@
       <change beforePath="$PROJECT_DIR$/TTT.sln" beforeDir="false" afterPath="$PROJECT_DIR$/TTT.sln" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/TTT.sln.DotSettings" beforeDir="false" afterPath="$PROJECT_DIR$/TTT.sln.DotSettings" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/TTT.sln.DotSettings.user" beforeDir="false" afterPath="$PROJECT_DIR$/TTT.sln.DotSettings.user" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TTT/Database/TttDbContext.cs" beforeDir="false" afterPath="$PROJECT_DIR$/TTT/Database/TttDbContext.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/TTT/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/TTT/Program.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/TTT/Properties/launchSettings.json" beforeDir="false" afterPath="$PROJECT_DIR$/TTT/Properties/launchSettings.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/TTT/TTT.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/TTT/TTT.csproj" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/TTT/TTT.http" beforeDir="false" afterPath="$PROJECT_DIR$/TTT/TTT.http" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TTT/TrainData/Controller/IngestController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/TTT/TrainData/Controller/IngestController.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TTT/TrainData/Controller/RailImporterController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/TTT/TrainData/Controller/RailImporterController.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TTT/TrainData/DataSets/RailLocation.cs" beforeDir="false" afterPath="$PROJECT_DIR$/TTT/TrainData/DataSets/RailLocations/RailLocation.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TTT/TrainData/Model/IRailReferenceImportModel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/TTT/TrainData/Model/IRailReferenceImportModel.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TTT/TrainData/Model/RailReferenceImportModel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/TTT/TrainData/Model/RailReferenceImportModel.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TTT/TrainData/Service/CorpusReferenceFileService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/TTT/TrainData/Service/RailLoctaionServices/CorpusReferenceFileService.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TTT/TrainData/Service/IMovementsIngestionService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/TTT/TrainData/Service/IMovementsIngestionService.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TTT/TrainData/Service/MovementsIngestionService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/TTT/TrainData/Service/MovementsIngestionService.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TTT/TrainData/Utility/Converters.cs" beforeDir="false" afterPath="$PROJECT_DIR$/TTT/TrainData/Utility/Converters.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TTT/TrainData/Service/RailLoctaionServices/PlanBService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/TTT/TrainData/Service/RailLoctaionServices/PlanBService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TTT/TrainData/Utility/Constants.cs" beforeDir="false" afterPath="$PROJECT_DIR$/TTT/TrainData/Utility/Constants.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TTT/UnitTests/TrainControllerTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/TTT/UnitTests/Controllers/TrainControllerTests.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/TTT/appsettings.Development.json" beforeDir="false" afterPath="$PROJECT_DIR$/TTT/appsettings.Development.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/TTT/appsettings.json" beforeDir="false" afterPath="$PROJECT_DIR$/TTT/appsettings.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/TTT/docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/TTT/docker-compose.yml" afterDir="false" />
@@ -94,14 +85,19 @@
     <setting file="file://$PROJECT_DIR$/TTT/TrainData/Model/RailReferenceImportModel.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/TTT/TrainData/Model/TrainDataCleanupModel.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/TTT/TrainData/Records/BlanB.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/TTT/TrainData/Service/CorpusReferenceFileService.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/TTT/TrainData/Service/CorpusService.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/TTT/TrainData/Service/ICorpusService.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/TTT/TrainData/Service/IPlanBService.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/TTT/TrainData/Service/OsgbToWgs84.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/TTT/TrainData/Service/PlanBService.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/TTT/TrainData/Service/RailLoctaionServices/CorpusReferenceFileService.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/TTT/TrainData/Service/RailLoctaionServices/CorpusService.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/TTT/TrainData/Service/RailLoctaionServices/ICorpusService.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/TTT/TrainData/Service/RailLoctaionServices/IPlanBService.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/TTT/TrainData/Service/RailLoctaionServices/PlanBService.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/TTT/TrainData/Utility/Constants.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/TTT/UnitTests/TrainControllerTests.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/TTT/UnitTests/Controllers/TrainControllerTests.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/TTT/UnitTests/Helpers/ListLogger.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/TTT/UnitTests/Helpers/SqliteInMemoryDb.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/TTT/UnitTests/Models/RailLocationModelTests.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/TTT/UnitTests/Models/RailReferenceImportModelTests.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/TTT/UnitTests/Models/TrainDataModelTests.cs" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="KubernetesApiPersistence">{}</component>
   <component name="KubernetesApiProvider">{
@@ -297,7 +293,8 @@
       <workItem from="1766398468178" duration="3997000" />
       <workItem from="1767612029054" duration="4636000" />
       <workItem from="1767639698395" duration="347000" />
-      <workItem from="1767692676465" duration="5751000" />
+      <workItem from="1767692676465" duration="8376000" />
+      <workItem from="1767711994360" duration="705000" />
     </task>
     <servers />
   </component>

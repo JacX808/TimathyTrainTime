@@ -6,8 +6,6 @@ namespace TTT.TrainData.Service.RailLoctaionServices;
 
 public class PlanBService : IPlanBService
 {
-    private const string BplanDateFormat = "dd-MM-yyyy HH:mm:ss";
-    
     public async IAsyncEnumerable<BplanLocRow> ReadBplanLocAsync(string path, [System.Runtime.CompilerServices.EnumeratorCancellation] CancellationToken ct)
     {
         using var fs = File.OpenRead(path);
@@ -49,7 +47,7 @@ public class PlanBService : IPlanBService
     {
         if (string.IsNullOrWhiteSpace(s)) return null;
 
-        if (DateTime.TryParseExact(s.Trim(), BplanDateFormat, Constants.Invariant, DateTimeStyles.AssumeUniversal, out var dt))
+        if (DateTime.TryParseExact(s.Trim(), Constants.BplanDateFormat, Constants.Invariant, DateTimeStyles.AssumeUniversal, out var dt))
             return new DateTimeOffset(DateTime.SpecifyKind(dt, DateTimeKind.Utc));
 
         return null;
