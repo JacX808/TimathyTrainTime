@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using TTT.TrainData.Model;
+using TTT.TrainData.Service;
 
 namespace TTT.TrainData.Controller;
 
@@ -8,7 +9,6 @@ namespace TTT.TrainData.Controller;
 public sealed class IngestController : ControllerBase
 {
     private readonly IMovementsIngestionService  _movementsIngestionService;
-    private readonly ITrainDataModel  _trainDataModel;
     private readonly ITrainDataCleanupModel _trainDataCleanupModel;
     private readonly ILogger<IngestController> _log;
     private const int datecutoff = 1;
@@ -19,7 +19,6 @@ public sealed class IngestController : ControllerBase
         var scope = scopeFactory.CreateScope();
         _movementsIngestionService = scope.ServiceProvider.GetRequiredService<IMovementsIngestionService>();
         _trainDataCleanupModel = trainDataCleanupModel;
-        _trainDataModel = trainDataModel;
         _log = log;
     }
 
@@ -27,7 +26,7 @@ public sealed class IngestController : ControllerBase
     /// Pulls TRUST movement data once, bounded by message count and/or time window,
     /// and upserts TrainRuns / MovementEvents / CurrentTrainPosition.
     /// </summary>
-    [HttpPost("ingest")]
+    [HttpPost("/ingest")]
     public async Task<IActionResult> IngestOnce(
         [FromQuery] int maxMessages = 1000,
         [FromQuery] int maxSeconds = 20,

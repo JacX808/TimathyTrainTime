@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using TTT.TrainData.DataSets;
+using TTT.TrainData.DataSets.RailLocations;
 
 namespace TTT.Database;
 
@@ -8,6 +9,7 @@ public sealed class TttDbContext(DbContextOptions<TttDbContext> options, DbConfi
     public DbSet<TrainRun> TrainRuns => Set<TrainRun>();
     public DbSet<MovementEvent> MovementEvents => Set<MovementEvent>();
     public DbSet<CurrentTrainPosition> CurrentTrainPosition => Set<CurrentTrainPosition>();
+    public DbSet<RailLocation> RailLocations => Set<RailLocation>();
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
@@ -25,19 +27,29 @@ public sealed class TttDbContext(DbContextOptions<TttDbContext> options, DbConfi
             $"password={dbConfig.Password};");
     }
     
-    protected override void OnModelCreating(ModelBuilder b)
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        b.Entity<TrainRun>().HasKey(x => x.TrainId); // natural key
-        b.Entity<TrainRun>().Property(x => x.TrainId).HasMaxLength(32);
+        modelBuilder.Entity<TrainRun>().HasKey(movementEvent => movementEvent.TrainId); // natural key
+        modelBuilder.Entity<TrainRun>().Property(movementEvent => movementEvent.TrainId).HasMaxLength(32);
 
-        b.Entity<MovementEvent>().HasKey(x => x.Id);
-        b.Entity<MovementEvent>().HasIndex(x => new { x.TrainId, x.ActualTimestampMs, x.LocStanox, x.EventType }).IsUnique();
-        b.Entity<MovementEvent>().Property(x => x.TrainId).HasMaxLength(32);
-        b.Entity<MovementEvent>().Property(x => x.EventType).HasMaxLength(16);
-        b.Entity<MovementEvent>().Property(x => x.LocStanox).HasMaxLength(16);
+        modelBuilder.Entity<MovementEvent>().HasKey(movementEvent => movementEvent.Id);
+        modelBuilder.Entity<MovementEvent>().HasIndex(movementEvent => 
+            new { movementEvent.TrainId, movementEvent.ActualTimestampMs, movementEvent.LocStanox, 
+                movementEvent.EventType }).IsUnique();
+        
+        modelBuilder.Entity<MovementEvent>().Property(movementEvent => movementEvent.TrainId).HasMaxLength(32);
+        modelBuilder.Entity<MovementEvent>().Property(movementEvent => movementEvent.EventType).HasMaxLength(16);
+        modelBuilder.Entity<MovementEvent>().Property(movementEvent => movementEvent.LocStanox).HasMaxLength(16);
 
-        b.Entity<CurrentTrainPosition>().HasKey(x => x.TrainId);
-        b.Entity<CurrentTrainPosition>().Property(x => x.TrainId).HasMaxLength(32);
-        b.Entity<CurrentTrainPosition>().Property(x => x.LocStanox).HasMaxLength(16);
+        modelBuilder.Entity<CurrentTrainPosition>().HasKey(x => x.TrainId);
+        modelBuilder.Entity<CurrentTrainPosition>().Property(x => x.TrainId).HasMaxLength(32);
+        modelBuilder.Entity<CurrentTrainPosition>().Property(x => x.LocStanox).HasMaxLength(16);
+        
+        modelBuilder.Entity<RailLocation>(entityTypeBuilder =>
+        {
+            entityTypeBuilder.HasIndex(railLocation => new { railLocation.Stanox, railLocation.Tiploc }).IsUnique();
+            entityTypeBuilder.HasIndex(railLocation => railLocation.Stanox);
+            entityTypeBuilder.HasIndex(railLocation => railLocation.Tiploc);
+        });
     }
 }

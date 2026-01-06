@@ -92,4 +92,18 @@ public sealed class TrainsController(ITrainDataModel trainDataModel, ILogger<Tra
         
         return Ok(result);
     }
+
+    [HttpGet("/mapposition")]
+    public async Task<IActionResult> GetCurrentMapPositionLite(CancellationToken cancellationToken)
+    {
+        var result = await trainDataModel.GetCurrentMapPositionLiteAsync(cancellationToken);
+
+        if (result.Count == 1)
+        {
+            log.LogError("Error: Current map positions not found.");
+            return Ok("Error: Current map positions not found.");
+        }
+        
+        return Ok(result);
+    }
 }

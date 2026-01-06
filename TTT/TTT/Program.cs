@@ -1,9 +1,10 @@
 using Microsoft.OpenApi.Models;
 using TTT.Database;
 using TTT.TrainData.Controller;
-using TTT.TrainData.DataSets.OpenRail;
+using TTT.TrainData.DataSets.Options;
 using TTT.TrainData.Model;
 using TTT.TrainData.Service;
+using TTT.TrainData.Service.RailLoctaionServices;
 
 namespace TTT;
 
@@ -32,15 +33,23 @@ internal abstract class Program
         builder.Logging.AddFilter("Microsoft.EntityFrameworkCore.Database.Command", LogLevel.Information);
         builder.Logging.AddFilter("Microsoft.EntityFrameworkCore.Query", LogLevel.Warning);
         
+        // Rail location
+        builder.Services.Configure<RailReferenceImportOptions>(
+            builder.Configuration.GetSection("RailReferenceImport"));
+        
         // Models
         builder.Services.AddScoped<ITrainDataModel, TrainDataModel>();
         builder.Services.AddScoped<ITrainDataCleanupModel, TrainDataCleanupModel>();
+        builder.Services.AddScoped<IRailReferenceImportModel, RailReferenceImportModel>();
         
-        // Background Services
-        builder.Services.AddScoped<IMovementsIngestionService, MovementsIngestionService>();
-        
-        // NR config & services
+        // NR config
         builder.Services.Configure<NetRailOptions>(builder.Configuration.GetSection("OpenRail"));
+        
+        // Services
+        builder.Services.AddHttpClient<CorpusReferenceFileService>();
+        builder.Services.AddScoped<IMovementsIngestionService, MovementsIngestionService>();
+        builder.Services.AddScoped<IPlanBService, PlanBService>();
+        builder.Services.AddScoped<ICorpusService, CorpusService>();
         
         // Swagger & controllers
         builder.Services.AddControllers();

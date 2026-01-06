@@ -9,7 +9,7 @@ public class HealthController : ControllerBase
     /// <summary>
     /// Simple POST timeOffset verify the server is running.
     /// </summary>
-    [HttpPost("PingServer")]
+    [HttpPost("/pingServer")]
     [ProducesResponseType(typeof(PingResponse), StatusCodes.Status200OK)]
     public ActionResult<PingResponse> PingServer()
     {
