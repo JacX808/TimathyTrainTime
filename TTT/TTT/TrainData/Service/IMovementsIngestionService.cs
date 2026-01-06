@@ -2,7 +2,7 @@
 
 using System.Text.Json;
 
-namespace TTT.TrainData.Controller;
+namespace TTT.TrainData.Service;
 
 public interface IMovementsIngestionService
 {

@@ -24,6 +24,8 @@ public interface ITrainDataModel
     
     Task<CurrentTrainPosition?> GetPosition(string trainId, CancellationToken cancellationToken);
     
+    Task<List<TrainDataLite>> GetCurrentMapPositionLiteAsync(CancellationToken cancellationToken);
+    
     Task<IReadOnlyList<CurrentTrainPosition>> FindCurrentPositionsAsync(
         string? trainId,
         string? stanox,

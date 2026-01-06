@@ -3,10 +3,9 @@ using Apache.NMS;
 using Apache.NMS.ActiveMQ;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
-using TTT.TrainData.Controller;
-using TTT.TrainData.Database;
+using TTT.Database;
 using TTT.TrainData.DataSets;
-using TTT.TrainData.DataSets.OpenRail;
+using TTT.TrainData.DataSets.Options;
 using TTT.TrainData.Model;
 using TTT.TrainData.Utility;
 
@@ -61,14 +60,13 @@ public sealed class MovementsIngestionService : BackgroundService, IMovementsIng
             catch (Exception ex)
             {
                 _log.LogError(ex, "Ingestion crashed; retrying in 2s");
-                
                 try
                 {
                     await Task.Delay(TimeSpan.FromSeconds(2), stoppingToken);
                 }
                 catch (Exception e)
                 {
-                    _log.LogError(e, "Ingestion crashed on delay.");
+                    // ignored
                 }
             }
         }
@@ -95,7 +93,7 @@ public sealed class MovementsIngestionService : BackgroundService, IMovementsIng
         var session = await conn.CreateSessionAsync(AcknowledgementMode.AutoAcknowledge);
 
         var consumers = new List<IMessageConsumer>();
-
+        
         foreach (var topic in _options.Topics)
         {
             // TODO - Need better solution
@@ -116,42 +114,29 @@ public sealed class MovementsIngestionService : BackgroundService, IMovementsIng
         // Keep the connection alive until cancellation
         while (!cancellationToken.IsCancellationRequested)
             await Task.Delay(500, cancellationToken);
+
+        // disposal of consumers/session/connection happens via using{}
     }
 
     /// <summary>
     /// 
     /// </summary>
-    /// <param name="message"></param>
-    private void HandleMessage(IMessage message)
+    /// <param name="msg"></param>
+    private void HandleMessage(IMessage msg)
     {
-        if (message is not ITextMessage text || string.IsNullOrWhiteSpace(text.Text))
-        {
-            _log.LogError("Received empty message");
+        if (msg is not ITextMessage text || string.IsNullOrWhiteSpace(text.Text))
             return;
-        }
 
         try
         {
             var doc = JsonDocument.Parse(text.Text);
             var root = doc.RootElement;
 
-            switch (root.ValueKind)
-            {
-                case JsonValueKind.Array:
-                {
-                    foreach (var element in root.EnumerateArray())
-                    {
-                        ProcessEnvelope(element.Clone());
-                    }
-
-                    break;
-                }
-                case JsonValueKind.Object:
-                {
-                    ProcessEnvelope(root.Clone());
-                    break;
-                }
-            }
+            if (root.ValueKind == JsonValueKind.Array)
+                foreach (var el in root.EnumerateArray())
+                    ProcessEnvelope(el.Clone());
+            else if (root.ValueKind == JsonValueKind.Object)
+                ProcessEnvelope(root.Clone());
         }
         catch (Exception ex)
         {
@@ -187,10 +172,7 @@ public sealed class MovementsIngestionService : BackgroundService, IMovementsIng
                     break;
                 }
                 default:
-                {
-                    _log.LogError("Message type not recognized or empty");
                     break;
-                }
             }
         }
         catch (Exception ex)
@@ -261,20 +243,15 @@ public sealed class MovementsIngestionService : BackgroundService, IMovementsIng
 
         // TrainRun touch (in case activation was missed)
         var run = await db.TrainRuns.FindAsync(trainMovementBody.TrainId);
-        
         if (run is null)
-        {
             db.TrainRuns.Add(new TrainRun
             {
                 TrainId = trainMovementBody.TrainId, TocId = trainMovementBody.TocId,
                 FirstSeenUtc = DateTimeOffset.UtcNow,
                 LastSeenUtc = DateTimeOffset.UtcNow
             });
-        }
         else
-        {
             run.LastSeenUtc = DateTimeOffset.UtcNow;
-        }
 
         try
         {
@@ -282,7 +259,7 @@ public sealed class MovementsIngestionService : BackgroundService, IMovementsIng
         }
         catch (DbUpdateException)
         {
-            _log.LogInformation("Duplicate event found, ignore");
+            /* duplicate event -> ignore */
         }
     }
 
@@ -294,26 +271,20 @@ public sealed class MovementsIngestionService : BackgroundService, IMovementsIng
     private static DateOnly? ServiceDateFromActivation(TrainActivationBody a)
     {
         if (a.OriginDepTimestamp > 0)
-        {
             return DateOnly.FromDateTime(DateTimeOffset.FromUnixTimeMilliseconds(a.OriginDepTimestamp).UtcDateTime
                 .Date);
-        }
-
         if (!string.IsNullOrWhiteSpace(a.TpOriginTimestamp) && DateOnly.TryParse(a.TpOriginTimestamp, out var d))
-        {
             return d;
-        }
-
         return null;
     }
 
+    // TODO: Fix IsDaylightSavingTime
     private static DateTimeOffset FixDst(long epochMs)
     {
-        var timeMilliseconds = DateTimeOffset.FromUnixTimeMilliseconds(epochMs);
-        var timeZoneById = TimeZoneInfo.FindSystemTimeZoneById("Europe/London");
-        var local = TimeZoneInfo.ConvertTime(timeMilliseconds, timeZoneById);
-
-        return TimeZoneInfo.Local.IsDaylightSavingTime(local) ? timeMilliseconds.AddHours(-1) : timeMilliseconds;
+        var t = DateTimeOffset.FromUnixTimeMilliseconds(epochMs);
+        var tz = TimeZoneInfo.FindSystemTimeZoneById("Europe/London");
+        var local = TimeZoneInfo.ConvertTime(t, tz);
+        return t; //TimeZoneInfo.IsDaylightSavingTime(local) ? t.AddHours(-1) : t;
     }
 
     public async Task<int> HandleEnvelopeAsync(JsonElement element, CancellationToken cancellationToken)
@@ -395,13 +366,14 @@ public sealed class MovementsIngestionService : BackgroundService, IMovementsIng
                     run.LastSeenUtc = DateTimeOffset.UtcNow;
                 }
 
+                // Ignore duplicate exceptions (at-least-once)
                 try
                 {
                     await _trainDataModel.SaveChangesAsync(cancellationToken);
                 }
                 catch (DbUpdateException)
                 {
-                    _log.LogInformation("Duplicate event found, ignoring.");
+                    /* dup */
                 }
 
                 return 1;
@@ -464,6 +436,7 @@ public sealed class MovementsIngestionService : BackgroundService, IMovementsIng
                 {
                     _log.LogError(ex, "Failed timeOffset process message payload.");
                     return processed;
+                    // TODO add error 500 
                 }
             }
 

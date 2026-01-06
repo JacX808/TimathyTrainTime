@@ -1,9 +1,9 @@
-﻿namespace TTT.TrainData.Utility;
+﻿using System.Globalization;
 
-public sealed class Constants
+namespace TTT.TrainData.Utility;
+
+public abstract class Constants
 {
-    /// <summary>
-    /// Min number of day for deleting old records
-    /// </summary>
-    public int DeleteDateCutoff { get; set; }
+    public static readonly CultureInfo Invariant = CultureInfo.InvariantCulture;
+    public const string BplanDateFormat = "dd-MM-yyyy HH:mm:ss";
 }
