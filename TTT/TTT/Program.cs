@@ -4,6 +4,7 @@ using TTT.TrainData.Controller;
 using TTT.TrainData.DataSets.Options;
 using TTT.TrainData.Model;
 using TTT.TrainData.Service;
+using TTT.TrainData.Service.RailLoctaionServices;
 
 namespace TTT;
 
@@ -47,6 +48,8 @@ internal abstract class Program
         // Services
         builder.Services.AddHttpClient<CorpusReferenceFileService>();
         builder.Services.AddScoped<IMovementsIngestionService, MovementsIngestionService>();
+        builder.Services.AddScoped<IPlanBService, PlanBService>();
+        builder.Services.AddScoped<ICorpusService, CorpusService>();
         
         // Swagger & controllers
         builder.Services.AddControllers();

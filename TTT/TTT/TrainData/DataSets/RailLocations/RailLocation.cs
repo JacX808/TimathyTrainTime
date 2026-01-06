@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace TTT.TrainData.DataSets;
+namespace TTT.TrainData.DataSets.RailLocations;
 
 public sealed class RailLocation
 {

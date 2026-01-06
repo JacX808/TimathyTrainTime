@@ -12,7 +12,12 @@ namespace TTT.TrainData.Controller;
 public class RailImporterController(IRailReferenceImportModel railReferenceImportModel, ILogger<RailImporterController> log)
     : ControllerBase
 {
-    
+ 
+    /// <summary>
+    /// Import/Update all stanox and PlanB data
+    /// </summary>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
     [HttpGet("/railImporter")]
     public async Task<IActionResult> ImportRailDataAsync(CancellationToken cancellationToken)
     {
@@ -29,6 +34,11 @@ public class RailImporterController(IRailReferenceImportModel railReferenceImpor
         }
     }
 
+    /// <summary>
+    /// Check and update corpus data
+    /// </summary>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
     [HttpPost("/corpusCheck")]
     public async Task<IActionResult> RunCorpusCheckAsync(CancellationToken cancellationToken)
     {
@@ -42,5 +52,47 @@ public class RailImporterController(IRailReferenceImportModel railReferenceImpor
         
         log.LogError("Corpus check failed.");
         return StatusCode(500, "Corpus check failed.");
+    }
+    
+    /// <summary>
+    /// Return all rail stanox with lat and long.
+    /// </summary>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    [HttpGet("/allraillocationsLite")]
+    public async Task<IActionResult> GetAllRailLocationsLiteAsync(CancellationToken cancellationToken)
+    {
+        var result = await railReferenceImportModel.GetAllRailLocationLiteAsync(cancellationToken);
+
+        if (result.Count < 1)
+        {
+            log.LogInformation("No Rail locations found.");
+            return StatusCode(200, "No Rail locations found.");
+        }
+        
+        return Ok(result);
+    }
+
+    /// <summary>
+    /// Return all data on stanox
+    /// </summary>
+    /// <param name="stanox"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    [HttpGet("/getrailLocationByStanox")]
+    public async Task<IActionResult> GetRailLocationByStanoxAsync([FromQuery] string stanox, CancellationToken cancellationToken)
+    {
+        if(stanox.Equals(""))
+            return BadRequest("Stanox must be specified.");
+        
+        var result = await railReferenceImportModel.GetRailLocationAsync(stanox, cancellationToken);
+
+        if (result == null)
+        {
+            log.LogInformation("Rail location not found.");
+            return NotFound("Rail location not found.");
+        }
+        
+        return Ok(result);
     }
 }

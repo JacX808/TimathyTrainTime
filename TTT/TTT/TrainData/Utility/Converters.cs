@@ -19,6 +19,23 @@ public abstract class Converters
         => !string.IsNullOrWhiteSpace(s) &&
            (s.Equals("true", StringComparison.OrdinalIgnoreCase) ||
             s.Equals("1"));
+    
+    internal static string NormalizeTiploc(string tiploc)
+        => tiploc.Trim().ToUpperInvariant();
+    
+    internal static string? NormalizeStanox(string? stanoxRaw)
+    {
+        if (string.IsNullOrWhiteSpace(stanoxRaw)) return null;
+        var trim = stanoxRaw.Trim();
+
+        // Some feeds might include non-digits; keep only digits
+        trim = new string(trim.Where(char.IsDigit).ToArray());
+        if (trim.Length == 0) return null;
+
+        // Preserve leading zeros
+        return trim.PadLeft(5, '0')[^5..];
+    }
+    
 }
 
 internal sealed class StringOrNumberToLongConverter : JsonConverter<long?>
