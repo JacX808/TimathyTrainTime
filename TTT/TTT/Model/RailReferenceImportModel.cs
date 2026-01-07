@@ -23,7 +23,10 @@ public sealed class RailReferenceImportModel(TttDbContext database, IOptions<Rai
         {
             total = await ImportAsync(optsValue.CorpusPath, optsValue.BplanPath, cancellationToken);
             log.LogInformation($"Rail reference data imported. Total: {total}");
-            
+
+            var totalLite = await ImportRailLocationLiteAsync(cancellationToken);
+            log.LogInformation($"RailLocationLite data created. Total: {totalLite}");
+
         }
         catch (RailReferenceImportException referenceImportException)
         {
@@ -101,16 +104,16 @@ public sealed class RailReferenceImportModel(TttDbContext database, IOptions<Rai
         
     }
 
-    private async Task<int> ImportAsync(string corpusPath, string bplanPath, CancellationToken ct)
+    private async Task<int> ImportAsync(string corpusPath, string bplanPath, CancellationToken cancellationToken)
     {
         // 1) Load CORPUS (TIPLOC -> STANOX)
-        var tiplocToStanox = await corpusService.LoadCorpusTipLocMapAsync(corpusPath, ct);
+        var tiplocToStanox = await corpusService.LoadCorpusTipLocMapAsync(corpusPath, cancellationToken);
 
         // 2) Parse BPLAN LOC records into RailLocations
         var now = DateTimeOffset.UtcNow;
         var toInsert = new List<RailLocation>(capacity: 50_000);
 
-        await foreach (var loc in planBService.ReadBplanLocAsync(bplanPath, ct))
+        await foreach (var loc in planBService.ReadBplanLocAsync(bplanPath, cancellationToken))
         {
             // Must have coords
             if (loc.OsEasting is null || loc.OsNorthing is null) continue;
@@ -144,9 +147,9 @@ public sealed class RailReferenceImportModel(TttDbContext database, IOptions<Rai
         }
 
         // 3) Full refresh insert
-        await using var tx = await database.Database.BeginTransactionAsync(ct);
+        await using var transactionAsync = await database.Database.BeginTransactionAsync(cancellationToken);
 
-        var deleted = await database.RailLocations.ExecuteDeleteAsync(ct);
+        var deleted = await database.RailLocations.ExecuteDeleteAsync(cancellationToken);
         log.LogInformation("RailLocations full refresh: deleted {deleted} rows.", deleted);
 
         const int batchSize = 5000;
@@ -155,16 +158,54 @@ public sealed class RailReferenceImportModel(TttDbContext database, IOptions<Rai
         for (var i = 0; i < toInsert.Count; i += batchSize)
         {
             var batch = toInsert.Skip(i).Take(batchSize).ToList();
-            await database.RailLocations.AddRangeAsync(batch, ct);
-            total += await database.SaveChangesAsync(ct);
+            await database.RailLocations.AddRangeAsync(batch, cancellationToken);
+            total += await database.SaveChangesAsync(cancellationToken);
 
             // keep change tracker small
             database.ChangeTracker.Clear();
         }
 
-        await tx.CommitAsync(ct);
+        await transactionAsync.CommitAsync(cancellationToken);
 
         log.LogInformation("RailLocations full refresh: inserted {count} rows.", total);
+        return total;
+    }
+
+    private async Task<int> ImportRailLocationLiteAsync(CancellationToken cancellationToken)
+    {
+        var toInsert = new List<RailLocationLite>(capacity: 50_000);
+
+        foreach (var rail in database.RailLocations)
+        {
+            toInsert.Add(new RailLocationLite
+            {
+                Stanox = rail.Stanox,
+                Latitude = rail.Latitude,
+                Longitude = rail.Longitude
+            });
+        }
+        
+        await using var transactionAsync = await database.Database.BeginTransactionAsync(cancellationToken);
+        
+        var deleted = await database.RailLocationLite.ExecuteDeleteAsync(cancellationToken);
+        log.LogInformation("RailLocationsLite full refresh: deleted {deleted} rows.", deleted);
+        
+        const int batchSize = 5000;
+        var total = 0;
+
+        for (var i = 0; i < toInsert.Count; i += batchSize)
+        {
+            var batch = toInsert.Skip(i).Take(batchSize).ToList();
+            await database.RailLocationLite.AddRangeAsync(batch, cancellationToken);
+            total += await database.SaveChangesAsync(cancellationToken);
+
+            // keep change tracker small
+            database.ChangeTracker.Clear();
+        }
+        
+        await transactionAsync.CommitAsync(cancellationToken);
+        log.LogInformation("RailLocationsLite full refresh: inserted {count} rows.", total);
+        
         return total;
     }
 }

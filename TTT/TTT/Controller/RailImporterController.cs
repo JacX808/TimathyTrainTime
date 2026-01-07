@@ -15,6 +15,7 @@ public class RailImporterController(IRailReferenceImportModel railReferenceImpor
  
     /// <summary>
     /// Import/Update all stanox and PlanB data
+    /// Only need to do twice a year when the data is updated by National Rail
     /// </summary>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
