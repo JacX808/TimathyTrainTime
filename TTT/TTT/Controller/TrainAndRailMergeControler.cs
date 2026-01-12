@@ -3,6 +3,8 @@ using TTT.Model;
 
 namespace TTT.Controller;
 
+[ApiController]
+[Route("api/[controller]")]
 public class TrainAndRailMergeControler(ITrainAndRailMergeModel trainAndRailMergeModel, 
     ILogger<TrainAndRailMergeControler> log) : ControllerBase
 {
@@ -28,6 +30,13 @@ public class TrainAndRailMergeControler(ITrainAndRailMergeModel trainAndRailMerg
         }
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="date"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    [HttpGet("/getAllTrainMapData")]
     public async Task<IActionResult> GetAllTrainLocationsOnMap(DateTimeOffset date, CancellationToken cancellationToken)
     {
         try

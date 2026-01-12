@@ -3,12 +3,15 @@ using TTT.Model;
 
 namespace TTT.Controller;
 
+
 /// <summary>
 /// Controller for the rail data endpoint.
 /// This will import all loc positions to the database for the map position usage
 /// </summary>
 /// <param name="railReferenceImportModel"></param>
 /// <param name="log"></param>
+[ApiController]
+[Route("api/[controller]")]
 public class RailImporterController(IRailReferenceImportModel railReferenceImportModel,
     ILogger<RailImporterController> log) : ControllerBase
 {
