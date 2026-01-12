@@ -4,6 +4,8 @@ namespace TTT.DataSets.TrainAndRail;
 
 public class TrainAndRailMergeLite
 {
+    public int Id { get; set; }
+    
     [MaxLength(32)]
     public string TrainId { get; set; } = default!;
     

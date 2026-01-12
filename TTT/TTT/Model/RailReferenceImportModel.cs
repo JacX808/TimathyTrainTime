@@ -14,14 +14,14 @@ public sealed class RailReferenceImportModel(TttDbContext database, IOptions<Rai
     ILogger<RailReferenceImportModel> log) : IRailReferenceImportModel
 {
     
-    public async Task<int> ImportRailAsync(CancellationToken cancellationToken)
+    public async Task<int> ImportAllRailAsync(CancellationToken cancellationToken)
     {
         var optsValue = options.Value;
         var total = 0;
 
         try
         {
-            total = await ImportAsync(optsValue.CorpusPath, optsValue.BplanPath, cancellationToken);
+            total = await ImportRailLocationAsync(cancellationToken);
             log.LogInformation($"Rail reference data imported. Total: {total}");
 
             var totalLite = await ImportRailLocationLiteAsync(cancellationToken);
@@ -55,7 +55,7 @@ public sealed class RailReferenceImportModel(TttDbContext database, IOptions<Rai
         }
     }
 
-    public async Task<List<RailLocationLite>> GetAllRailLocationLiteAsync(CancellationToken cancellationToken)
+    public async Task<List<RailLocationLiteConverted>> GetAllRailLocationLiteAsync(CancellationToken cancellationToken)
     {
         try
         {
@@ -63,7 +63,7 @@ public sealed class RailReferenceImportModel(TttDbContext database, IOptions<Rai
                 .AsNoTracking()
                 .Where(railLocation => railLocation.Latitude != null && railLocation.Longitude != null) // optional but usually helpful
                 .OrderBy(railLocation => railLocation.Stanox)
-                .Select(railLocation => new RailLocationLite
+                .Select(railLocation => new RailLocationLiteConverted
                 {
                     Stanox = railLocation.Stanox,
                     Latitude = railLocation.Latitude,
@@ -104,16 +104,16 @@ public sealed class RailReferenceImportModel(TttDbContext database, IOptions<Rai
         
     }
 
-    private async Task<int> ImportAsync(string corpusPath, string bplanPath, CancellationToken cancellationToken)
+    public async Task<int> ImportRailLocationAsync(CancellationToken cancellationToken)
     {
         // 1) Load CORPUS (TIPLOC -> STANOX)
-        var tiplocToStanox = await corpusService.LoadCorpusTipLocMapAsync(corpusPath, cancellationToken);
+        var tiplocToStanox = await corpusService.LoadCorpusTipLocMapAsync(options.Value.CorpusPath, cancellationToken);
 
         // 2) Parse BPLAN LOC records into RailLocations
         var now = DateTimeOffset.UtcNow;
         var toInsert = new List<RailLocation>(capacity: 50_000);
 
-        await foreach (var loc in planBService.ReadBplanLocAsync(bplanPath, cancellationToken))
+        await foreach (var loc in planBService.ReadBplanLocAsync(options.Value.BplanPath, cancellationToken))
         {
             // Must have coords
             if (loc.OsEasting is null || loc.OsNorthing is null) continue;
@@ -171,7 +171,7 @@ public sealed class RailReferenceImportModel(TttDbContext database, IOptions<Rai
         return total;
     }
 
-    private async Task<int> ImportRailLocationLiteAsync(CancellationToken cancellationToken)
+    public async Task<int> ImportRailLocationLiteAsync(CancellationToken cancellationToken)
     {
         var toInsert = new List<RailLocationLite>(capacity: 50_000);
 
@@ -192,15 +192,27 @@ public sealed class RailReferenceImportModel(TttDbContext database, IOptions<Rai
         
         const int batchSize = 5000;
         var total = 0;
-
-        for (var i = 0; i < toInsert.Count; i += batchSize)
+        
+        try
         {
-            var batch = toInsert.Skip(i).Take(batchSize).ToList();
-            await database.RailLocationLite.AddRangeAsync(batch, cancellationToken);
-            total += await database.SaveChangesAsync(cancellationToken);
+            for (var i = 0; i < toInsert.Count; i += batchSize)
+            {
+                var batch = toInsert.Skip(i).Take(batchSize).ToList();
+                await database.RailLocationLite.AddRangeAsync(batch, cancellationToken);
+                total += await database.SaveChangesAsync(cancellationToken);
 
-            // keep change tracker small
-            database.ChangeTracker.Clear();
+                // keep change tracker small
+                database.ChangeTracker.Clear();
+            }
+        }
+        catch (DbUpdateException ex)
+        {
+            log.LogError(ex,
+                "DB update failed. Message={Message} Inner={Inner}",
+                ex.Message,
+                ex.InnerException?.Message);
+
+            throw;
         }
         
         await transactionAsync.CommitAsync(cancellationToken);

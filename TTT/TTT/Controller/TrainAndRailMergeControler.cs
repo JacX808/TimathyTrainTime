@@ -27,4 +27,28 @@ public class TrainAndRailMergeControler(ITrainAndRailMergeModel trainAndRailMerg
             return StatusCode(500, "Error merging train data.");
         }
     }
+
+    public async Task<IActionResult> GetAllTrainLocationsOnMap(DateTimeOffset date, CancellationToken cancellationToken)
+    {
+        try
+        {
+            // update train lite data
+            var response = await trainAndRailMergeModel.MergeTrainAndRailDataAsync(cancellationToken);
+
+            log.LogInformation($"Lite data updated: {response} merged.");
+            
+            // Get all train data from the lite tables 
+            var result = await trainAndRailMergeModel.GetAllTrainMapDataAsync(date,
+                cancellationToken);
+            
+            log.LogInformation($"Lite data sent to client: {result.Count} recoreds.");
+            
+            return Ok(result);
+        }
+        catch (Exception e)
+        {
+            log.LogError("Error getting all train map data");
+            return StatusCode(500, "Error getting all train map data.");
+        }
+    }
 }

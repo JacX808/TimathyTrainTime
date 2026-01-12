@@ -35,7 +35,7 @@ public sealed class TttDbContext(DbContextOptions<TttDbContext> options, DbConfi
         modelBuilder.Entity<TrainRun>().HasKey(movementEvent => movementEvent.TrainId); // natural key
         modelBuilder.Entity<TrainRun>().Property(movementEvent => movementEvent.TrainId).HasMaxLength(32);
 
-        modelBuilder.Entity<MovementEvent>().HasKey(movementEvent => movementEvent.Id);
+        modelBuilder.Entity<MovementEvent>().HasKey(movementEvent => movementEvent.TrainId);
         modelBuilder.Entity<MovementEvent>().HasIndex(movementEvent =>
             new
             {
@@ -51,22 +51,40 @@ public sealed class TttDbContext(DbContextOptions<TttDbContext> options, DbConfi
         modelBuilder.Entity<CurrentTrainPosition>().Property(x => x.TrainId).HasMaxLength(32);
         modelBuilder.Entity<CurrentTrainPosition>().Property(x => x.LocStanox).HasMaxLength(16);
 
-        modelBuilder.Entity<RailLocation>(entityTypeBuilder =>
-        {
-            entityTypeBuilder.HasIndex(railLocation => new { railLocation.Stanox, railLocation.Tiploc }).IsUnique();
-            entityTypeBuilder.HasIndex(railLocation => railLocation.Stanox);
-            entityTypeBuilder.HasIndex(railLocation => railLocation.Tiploc);
-        });
-
         modelBuilder.Entity<RailLocationLite>(entityTypeBuilder =>
         {
-            entityTypeBuilder.HasIndex(lite => new { lite.Stanox }).IsUnique();
-            entityTypeBuilder.Property(lite => lite.Stanox).HasMaxLength(5);
+            entityTypeBuilder.ToTable("RailLocationLite");
+            entityTypeBuilder.HasKey(lite => lite.Id);
+            entityTypeBuilder.Property(lite => lite.Id).ValueGeneratedOnAdd();
+            entityTypeBuilder.Property(lite => lite.Stanox).IsRequired().HasMaxLength(5).HasColumnType("char(5)"); 
+            entityTypeBuilder.Property(lite => lite.Latitude).HasColumnType("double");
+            entityTypeBuilder.Property(lite => lite.Longitude).HasColumnType("double");
+            entityTypeBuilder.HasIndex(lite => lite.Stanox).IsUnique();
+            entityTypeBuilder.HasIndex(lite => new { lite.Latitude, lite.Longitude });
+        });
+        
+        modelBuilder.Entity<RailLocation>(entityTypeBuilder =>
+        {
+            entityTypeBuilder.ToTable("RailLocations");
+
+            entityTypeBuilder.HasKey(railLocation => railLocation.Id);
+
+            entityTypeBuilder.Property(railLocation => railLocation.Stanox).IsRequired().HasMaxLength(5)
+                .HasColumnType("char(5)");
+            entityTypeBuilder.Property(railLocation => railLocation.Tiploc).IsRequired().HasMaxLength(7)
+                .HasColumnType("char(7)");
+            entityTypeBuilder.Property(railLocation => railLocation.Name).HasMaxLength(32);
+            entityTypeBuilder.Property(railLocation => railLocation.Source).IsRequired().HasMaxLength(32);
+
+            entityTypeBuilder.HasIndex(x => new { x.Stanox, x.Tiploc }).IsUnique();
+            entityTypeBuilder.HasIndex(x => x.Stanox);
+            entityTypeBuilder.HasIndex(x => x.Tiploc);
         });
 
         modelBuilder.Entity<TrainAndRailMergeLite>(entityTypeBuilder =>
         {
-            entityTypeBuilder.HasIndex(lite => new { lite.TrainId, lite.LocStanox }).IsUnique();
+            entityTypeBuilder.HasKey(lite => new { lite.Id });
+            entityTypeBuilder.HasIndex(lite => new { lite.TrainId, lite.LocStanox });
             entityTypeBuilder.Property(lite => lite.TrainId).HasMaxLength(32);
             entityTypeBuilder.Property(lite => lite.LocStanox).HasMaxLength(5);
             entityTypeBuilder.Property(lite => lite.Direction).HasMaxLength(4);
