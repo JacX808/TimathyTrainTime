@@ -6,7 +6,6 @@ using Microsoft.Extensions.Options;
 using TTT.DataSets.Options;
 using TTT.DataSets.Train;
 using TTT.DataSets.Trust;
-using TTT.Service;
 using TTT.Utility;
 
 namespace TTT.Model;
@@ -62,7 +61,12 @@ public sealed class MovementsIngestionModel : IMovementsIngestionModel
         return t; //TimeZoneInfo.IsDaylightSavingTime(local) ? t.AddHours(-1) : t;
     }
     
-    [Obsolete]
+    /// <summary>
+    /// Used to get all Activation and MovementEvents data from National Rail
+    /// </summary>
+    /// <param name="element"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
     private async Task<int> HandleEnvelopeAsync(JsonElement element, CancellationToken cancellationToken)
     {
         var envelope = element.Deserialize<TrustEnvelope>();
@@ -159,6 +163,12 @@ public sealed class MovementsIngestionModel : IMovementsIngestionModel
         return 0;
     }
     
+    /// <summary>
+    /// Used to get only the necessary TrainData from a movement Event.
+    /// </summary>
+    /// <param name="element"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
     private async Task<int> HandleEnvelopeLiteAsync(JsonElement element, CancellationToken cancellationToken)
     {
         var envelope = element.Deserialize<TrustEnvelope>();
@@ -170,6 +180,7 @@ public sealed class MovementsIngestionModel : IMovementsIngestionModel
         {
             case "0001": // Activation
             {
+                // to be done if needed
                 return 0;
             }
 

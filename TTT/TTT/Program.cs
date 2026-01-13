@@ -41,11 +41,11 @@ internal abstract class Program
         
         // Services
         builder.Services.AddScoped<ICorpusReferenceFileService, CorpusReferenceFileService>();
-        builder.Services.AddScoped<IMovementsIngestionModel, MovementsIngestionModel>();
         builder.Services.AddScoped<IPlanBService, PlanBService>();
         builder.Services.AddScoped<ICorpusService, CorpusService>();
         
         // Models
+        builder.Services.AddScoped<IMovementsIngestionModel, MovementsIngestionModel>();
         builder.Services.AddScoped<ITrainDataModel, TrainDataModel>();
         builder.Services.AddScoped<ITrainDataCleanupModel, TrainDataCleanupModel>();
         builder.Services.AddScoped<IRailReferenceImportModel, RailReferenceImportModel>();
