@@ -101,15 +101,7 @@ public class TrainAndRailMergeModel(TttDbContext dbContext, ILogger<TrainAndRail
     public Task<List<TrainAndRailMergeLite>> GetAllTrainMapDataAsync(DateTimeOffset? date, CancellationToken cancellationToken)
     {
         var queryable = dbContext.TrainAndRailMergeLite.AsNoTracking();
-
-        if (date is null)
-        {
-            log.LogInformation("GetAllTrainMapDataAsync: No dates found.");
-            return Task.FromResult(new List<TrainAndRailMergeLite>());
-        }
-
         var trainData = queryable.Where(lite => lite.ReportedAt == date).ToList();
-        
         return Task.FromResult(trainData);
     }
 

@@ -37,8 +37,15 @@ public class TrainAndRailMergeControler(ITrainAndRailMergeModel trainAndRailMerg
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
     [HttpGet("/getAllTrainMapData")]
-    public async Task<IActionResult> GetAllTrainLocationsOnMap(DateTimeOffset date, CancellationToken cancellationToken)
+    public async Task<IActionResult> GetAllTrainLocationsOnMap([FromQuery] DateTimeOffset? date, CancellationToken cancellationToken)
     {
+
+        if (date is null)
+        {
+           log.LogError("Date cannot be null.");
+           return BadRequest("Date cannot be null.");
+        }
+        
         try
         {
             // update train lite data
