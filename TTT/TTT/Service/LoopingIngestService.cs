@@ -23,6 +23,9 @@ public sealed class LoopingIngestService : BackgroundService
         {
             while (true)
             {
+                // TODO: Scrub old data in TrainAndRialMergeLite & TRainMinimumData
+                // TODO: Also make sure that the data does not overflow in the tables
+                
                 await _movementsIngestionModel.IntegstOnceServiceAsync(Utility.Constants.ingestTopic, 
                     Utility.Constants.maxIngestMessage, Utility.Constants.maxIngestSeconds,
                     cancellationToken);

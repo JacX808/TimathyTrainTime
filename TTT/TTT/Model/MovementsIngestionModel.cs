@@ -244,7 +244,6 @@ public sealed class MovementsIngestionModel(IOptions<NetRailOptions> options, IT
                 await StartNationRailConnection(topic);
             }
             
-
             int read = 0, processed = 0;
 
             while (!cancellationToken.IsCancellationRequested && read < maxMessages &&
