@@ -5,7 +5,7 @@ using TTT.Service;
 namespace TTT.Controller;
 
 [ApiController]
-[Route("api/admin/movements")]
+[Route("api/admin/movementsData")]
 public sealed class IngestController : ControllerBase
 {
     private readonly IMovementsIngestionService  _movementsIngestionService;

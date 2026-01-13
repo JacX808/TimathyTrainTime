@@ -2,8 +2,6 @@
 
 public sealed class MovementEvent
 {
-    public long Id { get; set; }
-
     // Core identifiers
     public string TrainId { get; set; } = default!;
     public string LocStanox { get; set; } = default!;

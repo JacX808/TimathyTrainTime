@@ -3,27 +3,31 @@ using TTT.Model;
 
 namespace TTT.Controller;
 
+
 /// <summary>
 /// Controller for the rail data endpoint.
 /// This will import all loc positions to the database for the map position usage
 /// </summary>
 /// <param name="railReferenceImportModel"></param>
 /// <param name="log"></param>
+[ApiController]
+[Route("api/[controller]")]
 public class RailImporterController(IRailReferenceImportModel railReferenceImportModel,
     ILogger<RailImporterController> log) : ControllerBase
 {
  
     /// <summary>
     /// Import/Update all stanox and PlanB data
+    /// Only need to do twice a year when the data is updated by National Rail
     /// </summary>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    [HttpGet("/railImporter")]
+    [HttpGet("/allRailImporter")]
     public async Task<IActionResult> ImportRailDataAsync(CancellationToken cancellationToken)
     {
         try
         {
-            var result = await railReferenceImportModel.ImportRailAsync(cancellationToken);
+            var result = await railReferenceImportModel.ImportAllRailAsync(cancellationToken);
             log.LogInformation($"{result} rail data import.");
             return Ok($"{result} Rail data import.");
         }
@@ -34,6 +38,51 @@ public class RailImporterController(IRailReferenceImportModel railReferenceImpor
         }
     }
 
+#if IsDevelopment
+    /// <summary>
+    /// Extra endpoints to handle RailLocation imports separate for testing
+    /// </summary>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    [HttpGet("/RailLocationImporter")]
+    public async Task<IActionResult> ImportRailLocationDataAsync(CancellationToken cancellationToken)
+    {
+        try
+        {
+            var result = await railReferenceImportModel.ImportRailLocationAsync(cancellationToken);
+            log.LogInformation($"{result} rail data import.");
+            return Ok($"{result} Rail data import.");
+        }
+        catch (Exception ex)
+        {
+            log.LogError(ex.Message);
+            return StatusCode(500, "Internal Server Error");
+        }
+    }
+    
+    /// <summary>
+    /// Extra endpoints to handle RailLocationLite imports separate for testing
+    /// </summary>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    [HttpGet("/allRailLocationLiteImporter")]
+    public async Task<IActionResult> ImportRailLocationLiteDataAsync(CancellationToken cancellationToken)
+    {
+        try
+        {
+            var result = await railReferenceImportModel.ImportRailLocationLiteAsync(cancellationToken);
+            log.LogInformation($"{result} rail data import.");
+            return Ok($"{result} Rail data import.");
+        }
+        catch (Exception ex)
+        {
+            log.LogError(ex.Message);
+            return StatusCode(500, "Internal Server Error");
+        }
+    }
+    
+#endif
+    
     /// <summary>
     /// Check and update corpus data
     /// </summary>
@@ -64,7 +113,7 @@ public class RailImporterController(IRailReferenceImportModel railReferenceImpor
     {
         var result = await railReferenceImportModel.GetAllRailLocationLiteAsync(cancellationToken);
 
-        if (result.Count < 1)
+        if (result == null || result.Count < 1)
         {
             log.LogInformation("No Rail locations found.");
             return StatusCode(200, "No Rail locations found.");

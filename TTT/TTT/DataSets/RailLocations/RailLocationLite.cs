@@ -4,8 +4,9 @@ namespace TTT.DataSets.RailLocations;
 
 public class RailLocationLite
 {
-    /// <summary>STANOX, kept as 5-char string (leading zeros preserved)</summary>
-    [Required, MaxLength(5)]
+    public int Id { get; set; } 
+    
+    [MaxLength(5)]
     public string Stanox { get; set; } = default!;
     
     public double? Latitude { get; set; }

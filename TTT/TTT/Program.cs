@@ -49,6 +49,7 @@ internal abstract class Program
         builder.Services.AddScoped<ITrainDataModel, TrainDataModel>();
         builder.Services.AddScoped<ITrainDataCleanupModel, TrainDataCleanupModel>();
         builder.Services.AddScoped<IRailReferenceImportModel, RailReferenceImportModel>();
+        builder.Services.AddScoped<ITrainAndRailMergeModel, TrainAndRailMergeModel>();
         
         // Swagger & controllers
         builder.Services.AddControllers();

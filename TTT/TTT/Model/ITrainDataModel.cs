@@ -19,7 +19,7 @@ public interface ITrainDataModel
     Task<List<MovementEvent>> GetMovements(string trainId, DateTimeOffset? from, DateTimeOffset? timeOffset,
         CancellationToken cancellationToken);
 
-    Task<List<string>> GetTrainIds([FromQuery] DateOnly? date,
+    Task<List<string>> GetTrainIds(DateOnly? date,
         CancellationToken cancellationToken = default);
     
     Task<CurrentTrainPosition?> GetPosition(string trainId, CancellationToken cancellationToken);

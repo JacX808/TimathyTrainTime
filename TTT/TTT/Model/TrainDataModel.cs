@@ -59,8 +59,7 @@ public sealed class TrainDataModel(TttDbContext dbContext, ILogger<TrainDataMode
         return list;
     }
 
-    public async Task<List<string>> GetTrainIds([FromQuery] DateOnly? date,
-        CancellationToken cancellationToken = default)
+    public async Task<List<string>> GetTrainIds(DateOnly? date, CancellationToken cancellationToken = default)
     {
         var queryable = dbContext.TrainRuns.AsNoTracking();
         if (date is not null) 
