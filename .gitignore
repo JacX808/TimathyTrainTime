@@ -52,3 +52,7 @@ CodeCoverage/
 *.VisualState.xml
 TestResult.xml
 nunit-*.xml
+TTT/TTT/Data
+TTT/.idea/.idea.TTT/.idea/workspace.xml
+TTT/.idea/.idea.TTT/.idea/data_source_mapping.xml
+TTT/TTT.sln.DotSettings.user
