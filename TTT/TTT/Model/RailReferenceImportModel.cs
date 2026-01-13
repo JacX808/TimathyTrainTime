@@ -145,8 +145,7 @@ public sealed class RailReferenceImportModel(TttDbContext database, IOptions<Rai
                 UpdatedAt = now
             });
         }
-
-        // 3) Full refresh insert
+        
         await using var transactionAsync = await database.Database.BeginTransactionAsync(cancellationToken);
 
         var deleted = await database.RailLocations.ExecuteDeleteAsync(cancellationToken);

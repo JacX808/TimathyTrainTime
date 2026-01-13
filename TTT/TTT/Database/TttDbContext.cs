@@ -89,7 +89,7 @@ public sealed class TttDbContext(DbContextOptions<TttDbContext> options, DbConfi
             entityTypeBuilder.HasIndex(lite => new { lite.TrainId, lite.LocStanox });
             entityTypeBuilder.Property(lite => lite.TrainId).HasMaxLength(32);
             entityTypeBuilder.Property(lite => lite.LocStanox).HasMaxLength(5);
-            entityTypeBuilder.Property(lite => lite.Direction).HasMaxLength(4);
+            entityTypeBuilder.Property(lite => lite.NextLocStanox).HasMaxLength(5);
         });
 
         modelBuilder.Entity<TrainMinimumData>(entityTypeBuilder =>

@@ -22,11 +22,12 @@ public sealed class IngestController : ControllerBase
         _log = log;
     }
 
+#if IsDevelopment
     /// <summary>
     /// Pulls TRUST movement data once, bounded by message count and/or time window,
     /// and upserts TrainRuns / MovementEvents / CurrentTrainPosition.
     /// </summary>
-    [HttpPost("/ingest")]
+    [HttpPost("developDebug/ingest")]
     public async Task<IActionResult> IngestOnce(
         [FromQuery] int maxMessages = 1000,
         [FromQuery] int maxSeconds = 20,
@@ -66,7 +67,7 @@ public sealed class IngestController : ControllerBase
     /// <param name="dayOffset">Date offset of how long ago you want to delete. Cannot be 0 or less</param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    [HttpPost("/deleteOldData")]
+    [HttpPost("developDebug/deleteOldData")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<IActionResult> DeleteAllOldData([FromQuery] int dayOffset, CancellationToken cancellationToken = default)
     {
@@ -86,4 +87,6 @@ public sealed class IngestController : ControllerBase
         _log.LogError("dayOffset invalid. Cannot be 0 or less");
         return BadRequest("Error: day offset invalid.");
     }
+#endif
+    
 }

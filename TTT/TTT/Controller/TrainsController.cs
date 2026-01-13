@@ -5,9 +5,65 @@ namespace TTT.Controller;
 
 [ApiController]
 [Route("api/trains")]
-public sealed class TrainsController(ITrainDataModel trainDataModel, ILogger<TrainsController> log) : ControllerBase
+public sealed class TrainsController(MinimumTrainDataModel minimumTrainDataModel, ILogger<TrainsController> log) : ControllerBase
 {
+    [HttpGet("/getTrainDataById/{trainId}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetTrainDataByIdAsync(string trainId, CancellationToken cancellationToken)
+    {
+        if (trainId.Equals(""))
+        {
+            log.LogError("TrainId cannot be empty.");
+            return BadRequest("Error: TrainId cannot be empty.");
+        }
+
+        try
+        {
+            var result = await minimumTrainDataModel.FindDataByIdAsync(trainId, cancellationToken);
+           
+            if (result != null)
+            {
+                return Ok(result);
+            }
+        }
+        catch (InvalidOperationException)
+        {
+            log.LogInformation("TrainId not found.");
+            return Ok("TrainId not found.");
+        }
+        
+        return Ok();
+    }
+
+    [HttpGet("/getStanoxById/{trainId}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetStanoxByIdAsync(string trainId, CancellationToken cancellationToken)
+    {
+        if (trainId.Equals(""))
+        {
+            log.LogError("TrainId cannot be empty.");
+            return BadRequest("Error: TrainId cannot be empty.");
+        }
+
+        try
+        {
+            var result = await minimumTrainDataModel.FindStanoxByIdAsync(trainId, cancellationToken);
+
+            if (result != null)
+            {
+                return Ok(result);
+            }
+        }
+        catch (InvalidOperationException)
+        {
+            log.LogInformation("TrainId not found.");
+            return Ok($"No Stanox found with trainId {trainId}.");
+        }
+        
+        return Ok();
+    }
     
+#if IsDevelopment
     /// <summary>
     /// Gets train position using ID from database
     /// </summary>
@@ -89,4 +145,7 @@ public sealed class TrainsController(ITrainDataModel trainDataModel, ILogger<Tra
         return Ok($"TrainIds not found on {date}");
 
     }
+#endif
+
+
 }

@@ -13,28 +13,44 @@ namespace TTT.Model;
 /// <summary>
 /// 
 /// </summary>
-public sealed class MovementsIngestionModel : IMovementsIngestionModel
+public sealed class MovementsIngestionModel(IOptions<NetRailOptions> options, ITrainDataModel trainDataModel,
+    ILogger<MovementsIngestionModel> log, IMinimumTrainDataModel trainMinimumDataModel,
+    ITrainAndRailMergeModel trainAndRailMergeModel) : IMovementsIngestionModel
 {
-    private readonly ILogger<MovementsIngestionModel> _log;
-    private readonly NetRailOptions _options;
-    private readonly ITrainDataModel _trainDataModel;
-    private readonly IMinimumTrainDataModel _trainMinimumDataModel;
+    
+    private bool ConnectedToNationalRail { get; set; } = false;
+    private IMessageConsumer? _consumer;
 
-    /// <summary>
-    /// Add database connection for endpoints timeOffset add data from National Rail data
-    /// </summary>
-    /// <param name="options"></param>
-    /// <param name="trainDataModel"></param>
-    /// <param name="log"></param>
-    /// <param name="trainMinimumDataModel"></param>
-    /// <param name="scopeFactory"></param>
-    public MovementsIngestionModel(IOptions<NetRailOptions> options, ITrainDataModel trainDataModel,
-        ILogger<MovementsIngestionModel> log, IMinimumTrainDataModel trainMinimumDataModel)
+    private async Task<bool> StartNationRailConnection(string topic)
     {
-        _options = options.Value;
-        _trainDataModel = trainDataModel;
-        _log = log;
-        _trainMinimumDataModel = trainMinimumDataModel;
+        try
+        {
+            var factory = new ConnectionFactory(options.Value.ConnectUrl);
+            var connectionAsync = string.IsNullOrWhiteSpace(options.Value.Username)
+                ? await factory.CreateConnectionAsync()
+                : await factory.CreateConnectionAsync(options.Value.Username, options.Value.Password);
+
+            if (options.Value.UseDurableSubscription)
+                connectionAsync.ClientId = options.Value.ClientId;
+
+            await connectionAsync.StartAsync();
+            
+            var session = await connectionAsync?.CreateSessionAsync(AcknowledgementMode.AutoAcknowledge)!; 
+            var dest = await session.GetTopicAsync(topic);
+            
+            _consumer = options.Value.UseDurableSubscription
+                ? await session?.CreateDurableConsumerAsync(dest, $"{connectionAsync?.ClientId}-{topic}",
+                    null, false)! : await session?.CreateConsumerAsync(dest)!;
+            
+            ConnectedToNationalRail = true;
+        }
+        catch (Exception e)
+        {
+            log.LogError("Connection to National rail failed");
+            return false;
+        }
+        
+        return true;
     }
 
     /// <summary>
@@ -82,7 +98,7 @@ public sealed class MovementsIngestionModel : IMovementsIngestionModel
                 if (activationBody is null) return 0;
 
                 var now = DateTimeOffset.UtcNow;
-                var run = await _trainDataModel.FindTrainRunAsync(activationBody.TrainId, cancellationToken);
+                var run = await trainDataModel.FindTrainRunAsync(activationBody.TrainId, cancellationToken);
                 if (run is null)
                 {
                     run = new TrainRun
@@ -94,7 +110,7 @@ public sealed class MovementsIngestionModel : IMovementsIngestionModel
                         FirstSeenUtc = now,
                         LastSeenUtc = now
                     };
-                    await _trainDataModel.AddTrainRunAsync(run, cancellationToken);
+                    await trainDataModel.AddTrainRunAsync(run, cancellationToken);
                 }
                 else
                 {
@@ -115,10 +131,10 @@ public sealed class MovementsIngestionModel : IMovementsIngestionModel
 
                 // History (unique key protects against duplicates)
                 var movementEvent = Mappers.TrainMoveBodyToMoveEvent(movementBody);
-                await _trainDataModel.AddMovementEventAsync(movementEvent, cancellationToken);
+                await trainDataModel.AddMovementEventAsync(movementEvent, cancellationToken);
 
                 // Latest position snapshot
-                var position = await _trainDataModel.FindCurrentPositionAsync(movementBody.TrainId, cancellationToken)
+                var position = await trainDataModel.FindCurrentPositionAsync(movementBody.TrainId, cancellationToken)
                                ?? new CurrentTrainPosition { TrainId = movementBody.TrainId };
 
                 position.LocStanox = movementBody.LocStanox;
@@ -127,13 +143,13 @@ public sealed class MovementsIngestionModel : IMovementsIngestionModel
                 position.Line = null; // movementBody.;
                 position.VariationStatus = movementBody.VariationStatus;
 
-                await _trainDataModel.UpsertCurrentPositionAsync(position, cancellationToken);
+                await trainDataModel.UpsertCurrentPositionAsync(position, cancellationToken);
 
                 // Touch TrainRun (in case activation missed)
-                var run = await _trainDataModel.FindTrainRunAsync(movementBody.TrainId, cancellationToken);
+                var run = await trainDataModel.FindTrainRunAsync(movementBody.TrainId, cancellationToken);
                 if (run is null)
                 {
-                    await _trainDataModel.AddTrainRunAsync(new TrainRun
+                    await trainDataModel.AddTrainRunAsync(new TrainRun
                     {
                         TrainId = movementBody.TrainId,
                         TocId = movementBody.TocId,
@@ -149,7 +165,7 @@ public sealed class MovementsIngestionModel : IMovementsIngestionModel
                 // Ignore duplicate exceptions (at-least-once)
                 try
                 {
-                    await _trainDataModel.SaveChangesAsync(cancellationToken);
+                    await trainDataModel.SaveChangesAsync(cancellationToken);
                 }
                 catch (DbUpdateException)
                 {
@@ -190,7 +206,7 @@ public sealed class MovementsIngestionModel : IMovementsIngestionModel
                 if (movementBody is null) 
                     return 0;
 
-                await _trainMinimumDataModel.AddMinimumTrainDataAsync(new TrainMinimumData
+                await trainMinimumDataModel.AddMinimumTrainDataAsync(new TrainMinimumData
                 {
                     TrainId = movementBody.TrainId,
                     LocStanox = movementBody.LocStanox,
@@ -202,7 +218,7 @@ public sealed class MovementsIngestionModel : IMovementsIngestionModel
                 // Ignore duplicate exceptions (at-least-once)
                 try
                 {
-                    await _trainMinimumDataModel.SaveChangesAsync(cancellationToken);
+                    await trainMinimumDataModel.SaveChangesAsync(cancellationToken);
                 }
                 catch (DbUpdateException)
                 {
@@ -223,29 +239,18 @@ public sealed class MovementsIngestionModel : IMovementsIngestionModel
         {
             var startNew = System.Diagnostics.Stopwatch.StartNew();
 
-            // OpenWire connection (use provider factory; no "activemq:" prefix)
-            var factory = new ConnectionFactory(_options.ConnectUrl);
-            var connectionAsync = string.IsNullOrWhiteSpace(_options.Username)
-                ? await factory.CreateConnectionAsync()
-                : await factory.CreateConnectionAsync(_options.Username, _options.Password);
-
-            if (_options.UseDurableSubscription)
-                connectionAsync.ClientId = _options.ClientId;
-
-            connectionAsync.Start();
-            var session = connectionAsync.CreateSession(AcknowledgementMode.AutoAcknowledge);
-            var dest = session.GetTopic(topic);
-
-            var consumer = _options.UseDurableSubscription
-                ? await session.CreateDurableConsumerAsync(dest, $"{connectionAsync.ClientId}-{topic}",
-                    null, false) : await session.CreateConsumerAsync(dest);
+            if (!ConnectedToNationalRail)
+            {
+                await StartNationRailConnection(topic);
+            }
+            
 
             int read = 0, processed = 0;
 
             while (!cancellationToken.IsCancellationRequested && read < maxMessages &&
                    startNew.Elapsed < TimeSpan.FromSeconds(maxSeconds))
             {
-                var message = consumer.Receive(TimeSpan.FromMilliseconds(500)) as ITextMessage;
+                var message = await _consumer.ReceiveAsync(TimeSpan.FromMilliseconds(500)) as ITextMessage;
                 if (message is null) continue;
 
                 read++;
@@ -267,17 +272,21 @@ public sealed class MovementsIngestionModel : IMovementsIngestionModel
                 }
                 catch (Exception ex)
                 {
-                    _log.LogError(ex, "Failed timeOffset process message payload.");
+                    log.LogError(ex, "Failed timeOffset process message payload.");
                     return processed;
                 }
             }
 
-            _log.LogInformation($"Database has been updated at {DateTime.Now}. Processed: {processed}.");
+            log.LogInformation($"Database has been updated at {DateTime.Now}. Processed: {processed}.");
+
+            log.LogInformation("Started MergeTrainAndRailData");
+            await trainAndRailMergeModel.MergeTrainAndRailDataAsync(cancellationToken);
+            
             return processed;
         }
         catch (Exception exception) // TODO add custom exception
         {
-            _log.LogError($"Failed timeOffset process message payload: {exception.StackTrace}");
+            log.LogError($"Failed timeOffset process message payload: {exception.StackTrace}");
             return 0;
         }
     }

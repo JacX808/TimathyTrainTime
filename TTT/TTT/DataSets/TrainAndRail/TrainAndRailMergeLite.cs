@@ -14,7 +14,7 @@ public class TrainAndRailMergeLite
     public DateTimeOffset ReportedAt { get; set; }
     
     [MaxLength(4)]
-    public string? Direction { get; set; }
+    public string? NextLocStanox { get; set; }
     public double? Latitude { get; set; }
     public double? Longitude { get; set; }
 }

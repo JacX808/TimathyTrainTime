@@ -36,7 +36,7 @@ public abstract class Mappers
         DelayMonitoringPoint = Converters.ToBool(movementBody.DelayMonitoringPoint),
         AutoExpected         = Converters.ToBool(movementBody.AutoExpected),
 
-        // Direction / platform / line / route
+        // NextLocStanox / platform / line / route
         DirectionInd = movementBody.DirectionInd,
         Platform     = movementBody.Platform?.Trim(),
         Line         = "", // is captured elsewhere

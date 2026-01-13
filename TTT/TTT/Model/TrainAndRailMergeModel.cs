@@ -10,14 +10,13 @@ public class TrainAndRailMergeModel(TttDbContext dbContext, ILogger<TrainAndRail
     {
         try
         {
-            // Load current positions
-            var current = await dbContext.CurrentTrainPosition
+            var current = await dbContext.TrainMinimumData
                 .AsNoTracking()
                 .ToListAsync(cancellationToken);
 
             if (current.Count == 0)
             {
-                log.LogWarning("MergeTrainAndRailDataAsync: No CurrentTrainPosition rows found. Clearing merge table.");
+                log.LogWarning("MergeTrainAndRailDataAsync: No TrainMinimumData rows found. Clearing merge table.");
                 await ClearMergeTableAsync(cancellationToken);
                 return 0;
             }
@@ -44,15 +43,15 @@ public class TrainAndRailMergeModel(TttDbContext dbContext, ILogger<TrainAndRail
             var matchedCount = 0;
             var missingCoordCount = 0;
 
-            foreach (var pos in current)
+            foreach (var trainMinimumData in current)
             {
-                var stanox = Utility.Converters.NormalizeStanox(pos.LocStanox);
+                var stanox = Utility.Converters.NormalizeStanox(trainMinimumData.LocStanox);
                 if (stanox is null)
                 {
                     invalidStanoxCount++;
                     log.LogWarning(
                         "MergeTrainAndRailDataAsync: Skipping TrainId={TrainId} due to invalid LocStanox='{LocStanox}'.",
-                        pos.TrainId, pos.LocStanox);
+                        trainMinimumData.TrainId, trainMinimumData.LocStanox);
                     continue;
                 }
 
@@ -65,10 +64,10 @@ public class TrainAndRailMergeModel(TttDbContext dbContext, ILogger<TrainAndRail
 
                 merged.Add(new TrainAndRailMergeLite
                 {
-                    TrainId = pos.TrainId,
+                    TrainId = trainMinimumData.TrainId,
                     LocStanox = stanox,
-                    ReportedAt = pos.ReportedAt,
-                    Direction = pos.Direction,
+                    ReportedAt = trainMinimumData.LastSeenUtc,
+                    NextLocStanox = trainMinimumData.NextLocStanox,
                     Latitude = railLite?.Latitude,
                     Longitude = railLite?.Longitude
                 });

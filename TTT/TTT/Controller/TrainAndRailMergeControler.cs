@@ -8,7 +8,8 @@ namespace TTT.Controller;
 public class TrainAndRailMergeControler(ITrainAndRailMergeModel trainAndRailMergeModel, 
     ILogger<TrainAndRailMergeControler> log) : ControllerBase
 {
-    [HttpPost("/mergeTrainAndRailData")]
+#if IsDevelopment
+    [HttpPost("developDebug/mergeTrainAndRailData")]
     public async Task<IActionResult> MergeTrainAndRailDataAsync(CancellationToken cancellationToken)
     {
         try
@@ -29,9 +30,11 @@ public class TrainAndRailMergeControler(ITrainAndRailMergeModel trainAndRailMerg
             return StatusCode(500, "Error merging train data.");
         }
     }
+#endif
+    
 
     /// <summary>
-    /// 
+    /// Returns all train locations on the map. Last seen on data
     /// </summary>
     /// <param name="date"></param>
     /// <param name="cancellationToken"></param>
@@ -48,12 +51,6 @@ public class TrainAndRailMergeControler(ITrainAndRailMergeModel trainAndRailMerg
         
         try
         {
-            // update train lite data
-            var response = await trainAndRailMergeModel.MergeTrainAndRailDataAsync(cancellationToken);
-
-            log.LogInformation($"Lite data updated: {response} merged.");
-            
-            // Get all train data from the lite tables 
             var result = await trainAndRailMergeModel.GetAllTrainMapDataAsync(date,
                 cancellationToken);
             

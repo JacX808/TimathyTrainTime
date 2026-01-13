@@ -45,13 +45,14 @@ internal abstract class Program
         builder.Services.AddScoped<ICorpusService, CorpusService>();
         
         // Models
+        builder.Services.AddScoped<IMinimumTrainDataModel, MinimumTrainDataModel>();
         builder.Services.AddScoped<IMovementsIngestionModel, MovementsIngestionModel>();
         builder.Services.AddScoped<ITrainDataModel, TrainDataModel>();
         builder.Services.AddScoped<ITrainDataCleanupModel, TrainDataCleanupModel>();
         builder.Services.AddScoped<IRailReferenceImportModel, RailReferenceImportModel>();
         builder.Services.AddScoped<ITrainAndRailMergeModel, TrainAndRailMergeModel>();
         
-        // Swagger & controllers
+        // Swagger
         builder.Services.AddControllers();
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen(options =>
@@ -63,6 +64,9 @@ internal abstract class Program
                Description = "Nation rail train mapper",
            });
         });
+        
+        // Background Service
+        builder.Services.AddHostedService<LoopingIngestService>();
 
         var app = builder.Build();
 

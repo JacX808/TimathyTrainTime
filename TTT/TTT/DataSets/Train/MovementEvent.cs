@@ -23,7 +23,7 @@ public sealed class MovementEvent
     public bool DelayMonitoringPoint { get; set; }        // delay_monitoring_point
     public bool AutoExpected { get; set; }                // auto_expected
 
-    // Direction / platform / line / route
+    // NextLocStanox / platform / line / route
     public string? DirectionInd { get; set; }             // direction_ind (e.g., UP/DOWN)
     public string? Platform { get; set; }                 // platform (string; may contain spaces)
     public string? Line { get; set; }                     // line_ind (if you capture it elsewhere)
