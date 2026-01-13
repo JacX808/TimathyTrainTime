@@ -1,74 +1,57 @@
 using Microsoft.OpenApi.Models;
-using TTT.Database;
-using TTT.DataSets.Options;
-using TTT.Model;
-using TTT.Service;
-using TTT.Service.RailLocationServices;
+using System.Reflection;
 
-namespace TTT;
+var builder = WebApplication.CreateBuilder(args);
 
-internal abstract class Program
+// Controllers
+builder.Services.AddControllers();
+
+// Swagger/OpenAPI
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen(options =>
 {
-    static void Main(string[] args)
+    options.SwaggerDoc("v1", new OpenApiInfo
     {
-        var builder = WebApplication.CreateBuilder(args);
-
-        // DB Connection
-        DbConfig dbConfig = new DbConfig(
-            builder.Configuration["DB_HOST"] ?? "localhost",
-            3307,
-            builder.Configuration["DB_DATABASE"] ?? "ttt",
-            builder.Configuration["DB_USERNAME"] ?? "root",
-            builder.Configuration["DB_PASSWORD"] ?? "train");
-        
-        builder.Services.AddSingleton(dbConfig);
-        builder.Services.AddDbContext<TttDbContext>(options =>
+        Title = "TTT API",
+        Version = "v1",
+        Description = "HTTP API for the TTT backend.",
+        Contact = new OpenApiContact
         {
-            var dev = builder.Environment.IsDevelopment();
-            options.EnableSensitiveDataLogging(dev);
-            options.EnableDetailedErrors(dev);
-        });
-        
-        builder.Logging.AddFilter("Microsoft.EntityFrameworkCore.Database.Command", LogLevel.Information);
-        builder.Logging.AddFilter("Microsoft.EntityFrameworkCore.Query", LogLevel.Warning);
-        
-        // Rail location
-        builder.Services.Configure<RailReferenceImportOptions>(
-            builder.Configuration.GetSection("RailReferenceImport"));
-        
-        // NR config
-        builder.Services.Configure<NetRailOptions>(builder.Configuration.GetSection("OpenRail"));
-        
-        // Services
-        builder.Services.AddScoped<ICorpusReferenceFileService, CorpusReferenceFileService>();
-        builder.Services.AddScoped<IMovementsIngestionService, MovementsIngestionService>();
-        builder.Services.AddScoped<IPlanBService, PlanBService>();
-        builder.Services.AddScoped<ICorpusService, CorpusService>();
-        
-        // Models
-        builder.Services.AddScoped<ITrainDataModel, TrainDataModel>();
-        builder.Services.AddScoped<ITrainDataCleanupModel, TrainDataCleanupModel>();
-        builder.Services.AddScoped<IRailReferenceImportModel, RailReferenceImportModel>();
-        builder.Services.AddScoped<ITrainAndRailMergeModel, TrainAndRailMergeModel>();
-        
-        // Swagger & controllers
-        builder.Services.AddControllers();
-        builder.Services.AddEndpointsApiExplorer();
-        builder.Services.AddSwaggerGen(options =>
-        {
-           options.SwaggerDoc("v1", new OpenApiInfo
-           {
-               Title = "TTT",
-               Version = "v1",
-               Description = "Nation rail train mapper",
-           });
-        });
+            Name = "Christoff Steenkamp",
+            Email = "jacX808@gmail.com"
+        }
+    });
 
-        var app = builder.Build();
-
-        app.UseSwagger();
-        app.UseSwaggerUI(uiOption => uiOption.SwaggerEndpoint("/swagger/v1/swagger.json", "TTT"));
-        app.MapControllers();
-        app.Run();
+    // Include XML comments if generated
+    var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+    var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+    if (File.Exists(xmlPath))
+    {
+        options.IncludeXmlComments(xmlPath, includeControllerXmlComments: true);
     }
+});
+
+var app = builder.Build();
+
+// Pipeline
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI(c =>
+    {
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "TTT API v1");
+        c.RoutePrefix = "swagger"; // browse at /swagger
+    });
 }
+
+// Optional: redirect root to Swagger UI in dev
+if (app.Environment.IsDevelopment())
+{
+    app.MapGet("/", () => Results.Redirect("/swagger"));
+}
+
+app.UseHttpsRedirection();
+app.UseAuthorization();
+app.MapControllers();
+
+app.Run();
