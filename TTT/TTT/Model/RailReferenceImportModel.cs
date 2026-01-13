@@ -81,7 +81,7 @@ public sealed class RailReferenceImportModel(TttDbContext database, IOptions<Rai
     }
         
 
-    public async Task<RailLocation> GetRailLocationAsync(string stanox, CancellationToken cancellationToken)
+    public async Task<RailLocations> GetRailLocationAsync(string stanox, CancellationToken cancellationToken)
     {
         var normalized = Converters.NormalizeStanox(stanox);
 
@@ -111,7 +111,7 @@ public sealed class RailReferenceImportModel(TttDbContext database, IOptions<Rai
 
         // 2) Parse BPLAN LOC records into RailLocations
         var now = DateTimeOffset.UtcNow;
-        var toInsert = new List<RailLocation>(capacity: 50_000);
+        var toInsert = new List<RailLocations>(capacity: 50_000);
 
         await foreach (var loc in planBService.ReadBplanLocAsync(options.Value.BplanPath, cancellationToken))
         {
@@ -130,7 +130,7 @@ public sealed class RailReferenceImportModel(TttDbContext database, IOptions<Rai
 
             var (lat, lon) = Mappers.OsgbToWgs84.Convert(loc.OsEasting.Value, loc.OsNorthing.Value);
 
-            toInsert.Add(new RailLocation
+            toInsert.Add(new RailLocations
             {
                 Stanox = stanox,
                 Tiploc = loc.Tiploc,

@@ -1,4 +1,4 @@
-﻿namespace TTT.DataSets;
+﻿namespace TTT.DataSets.Train;
 
 public sealed class CurrentTrainPosition
 {

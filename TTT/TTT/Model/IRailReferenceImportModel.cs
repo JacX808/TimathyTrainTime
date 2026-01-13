@@ -9,5 +9,5 @@ public interface IRailReferenceImportModel
     Task<int> ImportRailLocationLiteAsync(CancellationToken cancellationToken);
     Task<bool> CorpusCheckAsync(CancellationToken ct);
     Task<List<RailLocationLiteConverted>>  GetAllRailLocationLiteAsync(CancellationToken cancellationToken);
-    Task<RailLocation>  GetRailLocationAsync(string stanox, CancellationToken cancellationToken);
+    Task<RailLocations>  GetRailLocationAsync(string stanox, CancellationToken cancellationToken);
 }

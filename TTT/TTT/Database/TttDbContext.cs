@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using TTT.DataSets;
 using TTT.DataSets.RailLocations;
+using TTT.DataSets.Train;
 using TTT.DataSets.TrainAndRail;
 
 namespace TTT.Database;
@@ -10,9 +11,10 @@ public sealed class TttDbContext(DbContextOptions<TttDbContext> options, DbConfi
     public DbSet<TrainRun> TrainRuns => Set<TrainRun>();
     public DbSet<MovementEvent> MovementEvents => Set<MovementEvent>();
     public DbSet<CurrentTrainPosition> CurrentTrainPosition => Set<CurrentTrainPosition>();
-    public DbSet<RailLocation> RailLocations => Set<RailLocation>();
+    public DbSet<RailLocations> RailLocations => Set<RailLocations>();
     public DbSet<RailLocationLite> RailLocationLite => Set<RailLocationLite>();
     public DbSet<TrainAndRailMergeLite>  TrainAndRailMergeLite => Set<TrainAndRailMergeLite>();
+    public DbSet<TrainMinimumData>  TrainMinimumData => Set<TrainMinimumData>();
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
@@ -63,7 +65,7 @@ public sealed class TttDbContext(DbContextOptions<TttDbContext> options, DbConfi
             entityTypeBuilder.HasIndex(lite => new { lite.Latitude, lite.Longitude });
         });
         
-        modelBuilder.Entity<RailLocation>(entityTypeBuilder =>
+        modelBuilder.Entity<RailLocations>(entityTypeBuilder =>
         {
             entityTypeBuilder.ToTable("RailLocations");
 
@@ -88,6 +90,27 @@ public sealed class TttDbContext(DbContextOptions<TttDbContext> options, DbConfi
             entityTypeBuilder.Property(lite => lite.TrainId).HasMaxLength(32);
             entityTypeBuilder.Property(lite => lite.LocStanox).HasMaxLength(5);
             entityTypeBuilder.Property(lite => lite.Direction).HasMaxLength(4);
+        });
+
+        modelBuilder.Entity<TrainMinimumData>(entityTypeBuilder =>
+        {
+            entityTypeBuilder.ToTable("TrainMinimumData");
+
+            entityTypeBuilder.HasKey(x => x.TrainId);
+
+            entityTypeBuilder.Property(x => x.TrainId).IsRequired().HasMaxLength(32)
+                .HasColumnType("varchar(32)");
+
+            entityTypeBuilder.Property(x => x.LocStanox).IsRequired().HasMaxLength(5)
+                .HasColumnType("char(5)");
+            
+            entityTypeBuilder.Property(x => x.NextLocStanox).IsRequired().HasMaxLength(5)
+                .HasColumnType("char(5)");
+            
+            entityTypeBuilder.Property(x => x.LastSeenUtc).IsRequired().HasColumnType("datetime(6)");
+
+            entityTypeBuilder.Property(x => x.VariationStatus).HasMaxLength(32)
+                .HasColumnType("varchar(32)");
         });
     }
 }

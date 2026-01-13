@@ -40,7 +40,7 @@ public class RailImporterController(IRailReferenceImportModel railReferenceImpor
 
 #if IsDevelopment
     /// <summary>
-    /// Extra endpoints to handle RailLocation imports separate for testing
+    /// Extra endpoints to handle RailLocations imports separate for testing
     /// </summary>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>

@@ -8,7 +8,7 @@ namespace TTT.Controller;
 [Route("api/admin/movementsData")]
 public sealed class IngestController : ControllerBase
 {
-    private readonly IMovementsIngestionService  _movementsIngestionService;
+    private readonly IMovementsIngestionModel  _movementsIngestionModel;
     private readonly ITrainDataCleanupModel _trainDataCleanupModel;
     private readonly ILogger<IngestController> _log;
     private const int datecutoff = 1;
@@ -17,7 +17,7 @@ public sealed class IngestController : ControllerBase
         ITrainDataCleanupModel trainDataCleanupModel, ILogger<IngestController> log)
     {
         var scope = scopeFactory.CreateScope();
-        _movementsIngestionService = scope.ServiceProvider.GetRequiredService<IMovementsIngestionService>();
+        _movementsIngestionModel = scope.ServiceProvider.GetRequiredService<IMovementsIngestionModel>();
         _trainDataCleanupModel = trainDataCleanupModel;
         _log = log;
     }
@@ -52,7 +52,7 @@ public sealed class IngestController : ControllerBase
         
         _log.LogInformation("Total old records deleted: {totalDeleted}", totalDeleted);
         
-        int totalAdded = await Task.Run(() => _movementsIngestionService.IntegstOnceServiceAsync(topic, maxMessages, maxSeconds,
+        int totalAdded = await Task.Run(() => _movementsIngestionModel.IntegstOnceServiceAsync(topic, maxMessages, maxSeconds,
             cancellationToken), cancellationToken);
         
         _log.LogInformation("Total new records added: {totalAdded}", totalAdded);

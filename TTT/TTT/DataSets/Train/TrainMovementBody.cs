@@ -1,7 +1,7 @@
 ﻿using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace TTT.DataSets;
+namespace TTT.DataSets.Train;
 
 public sealed class TrainMovementBody
 {

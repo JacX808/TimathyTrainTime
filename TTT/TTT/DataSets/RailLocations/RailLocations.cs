@@ -2,7 +2,7 @@
 
 namespace TTT.DataSets.RailLocations;
 
-public sealed class RailLocation
+public sealed class RailLocations
 {
     public int Id { get; set; }
 

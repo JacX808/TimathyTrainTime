@@ -41,7 +41,7 @@ internal abstract class Program
         
         // Services
         builder.Services.AddScoped<ICorpusReferenceFileService, CorpusReferenceFileService>();
-        builder.Services.AddScoped<IMovementsIngestionService, MovementsIngestionService>();
+        builder.Services.AddScoped<IMovementsIngestionModel, MovementsIngestionModel>();
         builder.Services.AddScoped<IPlanBService, PlanBService>();
         builder.Services.AddScoped<ICorpusService, CorpusService>();
         
