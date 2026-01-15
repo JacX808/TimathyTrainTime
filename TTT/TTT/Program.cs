@@ -67,6 +67,9 @@ internal abstract class Program
         
         // Background Service
         builder.Services.AddHostedService<LoopingIngestService>();
+        
+        // Filters
+        builder.Logging.AddFilter("Microsoft.EntityFrameworkCore.Database.Command", LogLevel.None);
 
         var app = builder.Build();
 

@@ -6,12 +6,16 @@ public sealed class LoopingIngestService : BackgroundService
 {
     private readonly ILogger<LoopingIngestService> _logger;
     private readonly IMovementsIngestionModel _movementsIngestionModel;
+    private readonly IMinimumTrainDataModel _minimumTrainDataModel;
     private int _timeOutCounter = 0;
 
     public LoopingIngestService(IServiceScopeFactory serviceScopeFactory, ILogger<LoopingIngestService> logger)
     {
         _movementsIngestionModel = serviceScopeFactory.CreateScope().ServiceProvider
             .GetRequiredService<IMovementsIngestionModel>();
+        
+        _minimumTrainDataModel = serviceScopeFactory.CreateScope().ServiceProvider
+            .GetRequiredService<IMinimumTrainDataModel>();
         
         _logger = logger;
         logger.LogInformation("Ingest Service startup");
@@ -23,10 +27,8 @@ public sealed class LoopingIngestService : BackgroundService
         {
             while (true)
             {
-                // TODO: Scrub old data in TrainAndRialMergeLite & TRainMinimumData
-                // TODO: Also make sure that the data does not overflow in the tables
-                
-                await _movementsIngestionModel.IntegstOnceServiceAsync(Utility.Constants.ingestTopic, 
+                await _minimumTrainDataModel.DeleteOldTrainDataAsync(cancellationToken);
+                await _movementsIngestionModel.IntegstOnceServiceAsync(Utility.Constants.IngestTopic, 
                     Utility.Constants.maxIngestMessage, Utility.Constants.maxIngestSeconds,
                     cancellationToken);
                

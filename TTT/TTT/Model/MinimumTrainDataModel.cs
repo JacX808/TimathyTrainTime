@@ -38,6 +38,13 @@ public class MinimumTrainDataModel(TttDbContext dbContext, ILogger<TrainAndRailM
             }
             else
             {
+                if (trainMinimumData.LastSeenUtc < DateTimeOffset.Now.AddHours(-1) &&
+                    trainMinimumData.NextLocStanox.Equals(Utility.Constants.LastStanoxNotAvailable))
+                {
+                    log.LogInformation($"Entry dropped as it was end of line {trainMinimumData.TrainId}");
+                    return false;
+                }
+                
                 existing.TrainId = trainMinimumData.TrainId;
                 existing.LocStanox = trainMinimumData.LocStanox;
                 existing.NextLocStanox = trainMinimumData.NextLocStanox;
@@ -58,19 +65,19 @@ public class MinimumTrainDataModel(TttDbContext dbContext, ILogger<TrainAndRailM
         }
     }
 
-    public async Task<int> DeleteOldTrainDataAsync(int dateOffset, CancellationToken cancellationToken)
+    public async Task<int> DeleteOldTrainDataAsync(CancellationToken cancellationToken)
     {
-        var cutoff = DateTimeOffset.UtcNow - TimeSpan.FromDays(dateOffset);
+        var cutoff = DateTimeOffset.Now.AddHours(Utility.Constants.OldDataCutoff);
 
         try
         {
             var deleted = await dbContext.TrainMinimumData
-                .Where(trainMinimumData => trainMinimumData.LastSeenUtc < cutoff)
+                .Where(trainMinimumData =>
+                    trainMinimumData.LastSeenUtc < cutoff &&
+                    trainMinimumData.NextLocStanox.Equals(Utility.Constants.LastStanoxNotAvailable))
                 .ExecuteDeleteAsync(cancellationToken);
-
-            if (deleted > 0)
-                log.LogInformation("Deleted {count} old TrainMinimumData rows older than {cutoff}.",
-                    deleted, cutoff);
+            
+            log.LogInformation("Deleted {count} old TrainMinimumData rows older than {cutoff}.", deleted, cutoff);
 
             return deleted;
         }
@@ -83,4 +90,5 @@ public class MinimumTrainDataModel(TttDbContext dbContext, ILogger<TrainAndRailM
     
     public Task<int> SaveChangesAsync(CancellationToken cancellationToken) 
         => dbContext.SaveChangesAsync(cancellationToken);
+    
 }

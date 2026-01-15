@@ -83,4 +83,5 @@ public class TrainDataCleanupModel(ILogger<TrainDataCleanupModel> log, TttDbCont
 
         return totalDeleted;
     }
+    
 }

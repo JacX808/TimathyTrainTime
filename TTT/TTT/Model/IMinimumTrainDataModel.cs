@@ -29,7 +29,7 @@ public interface IMinimumTrainDataModel
     /// <param name="dateOffset"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task<int> DeleteOldTrainDataAsync(int dateOffset, CancellationToken cancellationToken);
+    Task<int> DeleteOldTrainDataAsync(CancellationToken cancellationToken);
 
     Task<int> SaveChangesAsync(CancellationToken cancellationToken);
 }

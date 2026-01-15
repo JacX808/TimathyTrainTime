@@ -3,6 +3,7 @@ using Apache.NMS;
 using Apache.NMS.ActiveMQ;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
+using Microsoft.Win32.SafeHandles;
 using TTT.DataSets.Options;
 using TTT.DataSets.Train;
 using TTT.DataSets.Trust;
@@ -206,14 +207,18 @@ public sealed class MovementsIngestionModel(IOptions<NetRailOptions> options, IT
                 if (movementBody is null) 
                     return 0;
 
-                await trainMinimumDataModel.AddMinimumTrainDataAsync(new TrainMinimumData
+                if(!await trainMinimumDataModel.AddMinimumTrainDataAsync(new TrainMinimumData
                 {
                     TrainId = movementBody.TrainId,
                     LocStanox = movementBody.LocStanox,
-                    NextLocStanox = movementBody.NextReportStanox ?? "N/A",
+                    NextLocStanox = movementBody.NextReportStanox ?? Constants.LastStanoxNotAvailable,
                     VariationStatus = movementBody.VariationStatus,
                     LastSeenUtc = DateTimeOffset.UtcNow
-                },cancellationToken);
+                },cancellationToken))
+                {
+                    // not added
+                    return 0;
+                }
 
                 // Ignore duplicate exceptions (at-least-once)
                 try
@@ -223,6 +228,7 @@ public sealed class MovementsIngestionModel(IOptions<NetRailOptions> options, IT
                 catch (DbUpdateException)
                 {
                     /* dup */
+                    log.LogInformation("Duplicate detected");
                 }
 
                 return 1;
@@ -244,12 +250,12 @@ public sealed class MovementsIngestionModel(IOptions<NetRailOptions> options, IT
                 await StartNationRailConnection(topic);
             }
             
-            int read = 0, processed = 0;
+            int read = 0, processed = 0, total = 0;
 
             while (!cancellationToken.IsCancellationRequested && read < maxMessages &&
                    startNew.Elapsed < TimeSpan.FromSeconds(maxSeconds))
             {
-                var message = await _consumer.ReceiveAsync(TimeSpan.FromMilliseconds(500)) as ITextMessage;
+                var message = await _consumer?.ReceiveAsync(TimeSpan.FromMilliseconds(500))! as ITextMessage;
                 if (message is null) continue;
 
                 read++;
@@ -262,11 +268,15 @@ public sealed class MovementsIngestionModel(IOptions<NetRailOptions> options, IT
                     if (root.ValueKind == JsonValueKind.Array)
                     {
                         foreach (var element in root.EnumerateArray())
+                        {
                             processed += await HandleEnvelopeLiteAsync(element.Clone(), cancellationToken);
+                            total++;
+                        }
                     }
                     else if (root.ValueKind == JsonValueKind.Object)
                     {
                         processed += await HandleEnvelopeLiteAsync(root.Clone(), cancellationToken);
+                        total++;
                     }
                 }
                 catch (Exception ex)
@@ -276,7 +286,7 @@ public sealed class MovementsIngestionModel(IOptions<NetRailOptions> options, IT
                 }
             }
 
-            log.LogInformation($"Database has been updated at {DateTime.Now}. Processed: {processed}.");
+            log.LogInformation($"Database has been updated at {DateTime.Now}. Total: {total}, Processed: {processed}.");
 
             log.LogInformation("Started MergeTrainAndRailData");
             await trainAndRailMergeModel.MergeTrainAndRailDataAsync(cancellationToken);

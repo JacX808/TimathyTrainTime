@@ -62,6 +62,12 @@ public class TrainAndRailMergeModel(TttDbContext dbContext, ILogger<TrainAndRail
                 else
                     matchedCount++;
 
+                // skip any trains with end of line reported an hour ago
+                if ((trainMinimumData.LastSeenUtc < DateTimeOffset.Now.AddMinutes(-30)) && neededStanox.Contains("N/A"))
+                {
+                    continue;
+                }
+
                 merged.Add(new TrainAndRailMergeLite
                 {
                     TrainId = trainMinimumData.TrainId,
@@ -85,7 +91,8 @@ public class TrainAndRailMergeModel(TttDbContext dbContext, ILogger<TrainAndRail
             }
 
             log.LogInformation(
-                "MergeTrainAndRailDataAsync complete. CurrentPositions={CurrentCount}, Inserted={Inserted}, MatchedWithCoords={Matched}, MissingCoords={MissingCoords}, InvalidStanoxSkipped={InvalidStanox}.",
+                "MergeTrainAndRailDataAsync complete. CurrentCount={CurrentCount}, Inserted={Inserted}," +
+                " MatchedWithCoords={Matched}, MissingCoords={MissingCoords}, InvalidStanoxSkipped={InvalidStanox}.",
                 current.Count, merged.Count, matchedCount, missingCoordCount, invalidStanoxCount);
 
             return merged.Count;
